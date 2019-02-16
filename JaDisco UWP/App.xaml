@@ -1,9 +1,7 @@
-﻿<Application
-    x:Class="JaDisco_UWP.App"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:JaDisco_UWP"
-    RequestedTheme="Dark">
+﻿<Application x:Class="JaDisco_UWP.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             RequestedTheme="Dark">
 
     <Application.Resources>
         <!--                     TITLEBAR                 -->

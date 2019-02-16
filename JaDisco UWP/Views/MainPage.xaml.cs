@@ -1,6 +1,7 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using JaDisco_UWP.ViewModels;
+using System;
 using Windows.ApplicationModel.Core;
-using Windows.System;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -18,11 +19,14 @@ namespace JaDisco_UWP
         private readonly ToolTip chatHideToolTip = new ToolTip();
 
         private readonly ApplicationView view = ApplicationView.GetForCurrentView();
-        //Debug.WriteLine(ChatHideIcon.Glyph);
+
+        private readonly MainPageViewModel vm = new MainPageViewModel();
+
         public MainPage()
         {
             InitializeComponent();
-            //StatusParser(); // add stream status parsing
+            vm.StartStatusParse();
+            StatusTextBlock.Text = vm.Status;
 
             CoreApplicationViewTitleBar CoreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             CoreTitleBar.ExtendViewIntoTitleBar = false;
@@ -37,7 +41,7 @@ namespace JaDisco_UWP
             titleBar.ButtonInactiveBackgroundColor = Colors.Black;
         }
 
-        private async void ChatHideButton_Click(object sender, RoutedEventArgs e)
+        private void ChatHideButton_Click(object sender, RoutedEventArgs e)
         {
             if (HiddenChat == false)
             {
@@ -53,8 +57,6 @@ namespace JaDisco_UWP
                     ChatPositionButton.IsEnabled = false;
 
                     ChatWebView.Navigate(new Uri("about:blank"));
-                    await WebView.ClearTemporaryWebDataAsync();
-                    GC.Collect();
                 }
                 else if (LeftChat == true)
                 {
@@ -64,8 +66,6 @@ namespace JaDisco_UWP
                     ChatPositionButton.IsEnabled = false;
 
                     ChatWebView.Navigate(new Uri("about:blank"));
-                    await WebView.ClearTemporaryWebDataAsync();
-                    GC.Collect();
                 }
 
                 HiddenChat = true;
@@ -144,7 +144,7 @@ namespace JaDisco_UWP
             }
         }
 
-        private void StreamWebView_ContainsFullScreenElementChanged(WebView sender, object args) //TODO: nie działa maybe useragent :c
+        private void StreamWebView_ContainsFullScreenElementChanged(WebView sender, object args)
         {
             if (sender.ContainsFullScreenElement)
             {
@@ -158,7 +158,7 @@ namespace JaDisco_UWP
             }
         }
 
-        private async void RefreshButton_Click(object sender, RoutedEventArgs e)
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             StreamWebView.Source = StreamUri;
             StreamWebView.Refresh();
@@ -166,80 +166,39 @@ namespace JaDisco_UWP
             ChatWebView.Source = ChatUri;
             ChatWebView.Refresh();
 
-            await WebView.ClearTemporaryWebDataAsync();
-            GC.Collect();
+            vm.StartStatusParse();
+            StatusTextBlock.Text = vm.Status;
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
+            vm.MemoryCleanup();
         }
 
-        private async void Facebook_Tapped(object sender, TappedRoutedEventArgs e)
+        private void DonateButton_Click(object sender, RoutedEventArgs e)
         {
-            _ = await Launcher.LaunchUriAsync(new Uri(@"https://www.facebook.com/VersatileSoftware"));
+            vm.LaunchUri(new Uri(@"https://streamlabs.com/wonziu"));
         }
 
-        private async void Wykop_Tapped(object sender, TappedRoutedEventArgs e)
+        private void Facebook_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            _ = await Launcher.LaunchUriAsync(new Uri(@"https://www.wykop.pl/tag/jadiscouwp/"));
+            vm.LaunchUri(new Uri(@"https://www.facebook.com/VersatileSoftware"));
         }
 
-        private async void StreamWebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        private void Wykop_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            await WebView.ClearTemporaryWebDataAsync();
-            GC.Collect();
+            vm.LaunchUri(new Uri(@"https://www.wykop.pl/tag/jadiscouwp/"));
         }
 
-        private async void ChatWebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        private void StreamWebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
-            await WebView.ClearTemporaryWebDataAsync();
-            GC.Collect();
+            vm.MemoryCleanup();
         }
 
-        private async void DonateButton_Click(object sender, RoutedEventArgs e)
+        private void ChatWebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
-            _ = await Launcher.LaunchUriAsync(new Uri(@"https://streamlabs.com/wonziu"));
+            vm.MemoryCleanup();
         }
-
-        //private async void StatusParser()
-        //{
-        //    HtmlDocument doc = new HtmlWeb().Load("https://jadisco.pl/");
-        //    //string div = doc.DocumentNode.SelectSingleNode("//div[@class='flex-navbar-item jd-title']//text()[normalize-space()]").InnerText;
-
-        //    var divs = doc.DocumentNode.SelectNodes("//div[contains(@class,'flex-navbar')]");
-        //    foreach (HtmlNode div in divs)
-        //    {
-        //        var node = div.SelectSingleNode("text()[normalize-space()]");
-        //        StatusTextBlock.Text = node.InnerText.Trim();
-        //    }
-
-        //    //string html = await GetResponseFromURI(new Uri("https://jadisco.pl/"));
-
-        //    //HtmlDocument doc = new HtmlDocument();
-        //    //doc.LoadHtml(html);
-        //    //HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes("//div[@class=\"flex-navbar-item jd-title\"]");
-        //    //if (nodes != null)
-        //    //{
-        //    //    StatusTextBlock.Text = nodes.Select(node => node.InnerText).FirstOrDefault();
-        //    //}
-
-        //    //Debug.WriteLine(node + "   asdasdad");
-        //    //StatusTextBlock.Text = nodes.ToString();
-        //}
-
-        //private static async Task<string> GetResponseFromURI(Uri uri)
-        //{
-        //    string response = "";
-        //    using (HttpClient client = new HttpClient())
-        //    {
-        //        HttpResponseMessage result = await client.GetAsync(uri);
-        //        if (result.IsSuccessStatusCode)
-        //        {
-        //            response = await result.Content.ReadAsStringAsync();
-        //        }
-        //    }
-        //    return response;
-        //}
     }
 }
