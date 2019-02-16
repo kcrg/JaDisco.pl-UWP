@@ -62,8 +62,9 @@
                     <TextBlock x:Name="StatusTextBlock" Margin="12,10"/>
                 </CommandBar.Content>
             </CommandBar>
+            <ProgressBar x:Name="ProgressBar" IsIndeterminate="True" VerticalAlignment="Bottom" Canvas.ZIndex="5"/>
         </Grid>
-        <WebView x:Name="StreamWebView" Grid.Column="0" Grid.Row="1" DefaultBackgroundColor="Black" Source="https://player.twitch.tv/?channel=wonziu" ContainsFullScreenElementChanged="StreamWebView_ContainsFullScreenElementChanged" NavigationCompleted="StreamWebView_NavigationCompleted"/>
-        <WebView x:Name="ChatWebView" Grid.Column="1" Grid.Row="1" DefaultBackgroundColor="Black" Source="https://client.poorchat.net/jadisco" NavigationCompleted="ChatWebView_NavigationCompleted"/>
+        <WebView x:Name="StreamWebView" Grid.Column="0" Grid.Row="1" DefaultBackgroundColor="Black" Source="https://player.twitch.tv/?channel=wonziu" ContainsFullScreenElementChanged="StreamWebView_ContainsFullScreenElementChanged"/>
+        <WebView x:Name="ChatWebView" Grid.Column="1" Grid.Row="1" DefaultBackgroundColor="Black" Source="https://client.poorchat.net/jadisco"/>
     </Grid>
 </Page>

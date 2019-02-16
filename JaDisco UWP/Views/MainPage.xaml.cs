@@ -19,14 +19,14 @@ namespace JaDisco_UWP
         private readonly ToolTip chatHideToolTip = new ToolTip();
 
         private readonly ApplicationView view = ApplicationView.GetForCurrentView();
+        private readonly WebView webView = new WebView();
 
         private readonly MainPageViewModel vm = new MainPageViewModel();
 
         public MainPage()
         {
             InitializeComponent();
-            vm.StartStatusParse();
-            StatusTextBlock.Text = vm.Status;
+            StartStatusParse();
 
             CoreApplicationViewTitleBar CoreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             CoreTitleBar.ExtendViewIntoTitleBar = false;
@@ -39,6 +39,9 @@ namespace JaDisco_UWP
 
             titleBar.InactiveBackgroundColor = Colors.Black;
             titleBar.ButtonInactiveBackgroundColor = Colors.Black;
+
+            webView.NavigationCompleted += webView_NavigationCompleted;
+            webView.NavigationStarting += webView_NavigationStarting;
         }
 
         private void ChatHideButton_Click(object sender, RoutedEventArgs e)
@@ -166,8 +169,7 @@ namespace JaDisco_UWP
             ChatWebView.Source = ChatUri;
             ChatWebView.Refresh();
 
-            vm.StartStatusParse();
-            StatusTextBlock.Text = vm.Status;
+            StartStatusParse();
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
@@ -191,14 +193,33 @@ namespace JaDisco_UWP
             vm.LaunchUri(new Uri(@"https://www.wykop.pl/tag/jadiscouwp/"));
         }
 
-        private void StreamWebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        private void StartStatusParse()
         {
-            vm.MemoryCleanup();
+            webView.Navigate(new Uri("https://jadisco.pl/"));
         }
 
-        private void ChatWebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        private async void webView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
-            vm.MemoryCleanup();
+            if (args.IsSuccess == true)
+            {
+                string HTML = await webView.InvokeScriptAsync("eval", new string[] { "document.documentElement.outerHTML;" });
+
+                HtmlDocument htmlDoc = new HtmlDocument();
+
+                htmlDoc.LoadHtml(HTML);
+
+                //flex-navbar-item jd-title
+                string Status = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='flex-navbar-item jd-title']").InnerText;
+
+                StatusTextBlock.Text = Status;
+                ProgressBar.Visibility = Visibility.Collapsed;
+                vm.MemoryCleanup();
+            }
+        }
+
+        private void webView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
+        {
+            ProgressBar.Visibility = Visibility.Visible;
         }
     }
 }
