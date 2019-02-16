@@ -18,7 +18,7 @@ namespace JaDisco_UWP
         private readonly ToolTip chatHideToolTip = new ToolTip();
 
         private readonly ApplicationView view = ApplicationView.GetForCurrentView();
-        private readonly WebView webView = new WebView();
+        private readonly WebView statusWebView = new WebView();
 
         private readonly MainPageViewModel vm = new MainPageViewModel();
 
@@ -28,8 +28,8 @@ namespace JaDisco_UWP
             StartStatusParse();
             vm.TitleBarCustomization();
 
-            webView.NavigationCompleted += webView_NavigationCompleted;
-            webView.NavigationStarting += webView_NavigationStarting;
+            statusWebView.NavigationCompleted += webView_NavigationCompleted;
+            statusWebView.NavigationStarting += webView_NavigationStarting;
         }
 
         private void ChatHideButton_Click(object sender, RoutedEventArgs e)
@@ -151,7 +151,15 @@ namespace JaDisco_UWP
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            //StreamWebView.Source = StreamUri;
+            if (IsDzej.IsChecked == true)
+            {
+                StreamWebView.Source = DzejUri;
+            }
+            else if (IsDzej.IsChecked == false)
+            {
+                StreamWebView.Source = WonziuUri;
+            }
+
             StreamWebView.Refresh();
 
             ChatWebView.Source = ChatUri;
@@ -187,14 +195,14 @@ namespace JaDisco_UWP
 
         private void StartStatusParse()
         {
-            webView.Navigate(new Uri("https://jadisco.pl/"));
+            statusWebView.Navigate(new Uri("https://jadisco.pl/"));
         }
 
         private async void webView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             if (args.IsSuccess == true)
             {
-                string HTML = await webView.InvokeScriptAsync("eval", new string[] { "document.documentElement.outerHTML;" });
+                string HTML = await statusWebView.InvokeScriptAsync("eval", new string[] { "document.documentElement.outerHTML;" });
                 HtmlDocument htmlDoc = new HtmlDocument();
                 htmlDoc.LoadHtml(HTML);
 
@@ -206,11 +214,6 @@ namespace JaDisco_UWP
             }
         }
 
-        //private void WonziuButton_Checked(object sender, RoutedEventArgs e)
-        //{
-        //    StreamWebView.Navigate(WonziuUri);
-        //}
-
         private void DzejButton_Checked(object sender, RoutedEventArgs e)
         {
             if (IsDzej.IsChecked == true)
@@ -221,11 +224,6 @@ namespace JaDisco_UWP
             {
                 StreamWebView.Navigate(WonziuUri);
             }
-        }
-
-        private void GarbageButton_Click(object sender, RoutedEventArgs e)
-        {
-            vm.MemoryCleanup();
         }
 
         private void webView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)

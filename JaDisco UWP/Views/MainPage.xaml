@@ -19,7 +19,7 @@
         <Grid Grid.Row="0" Grid.ColumnSpan="2">
             <CommandBar x:Name="TopCommandBar" Background="Black">
                 <CommandBar.PrimaryCommands>
-                    <AppBarButton x:Name="DonateButton" ToolTipService.ToolTip="Wesprzyj ojca" Click="DonateButton_Click">
+                    <AppBarButton x:Name="DonateButton" ToolTipService.ToolTip="Wesprzyj Wonzia" Click="DonateButton_Click">
                         <AppBarButton.Icon>
                             <FontIcon Glyph="&#xEB51;"/>
                         </AppBarButton.Icon>
@@ -37,15 +37,15 @@
                             <FontIcon x:Name="ChatHideIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9A8;"/>
                         </AppBarButton.Icon>
                     </AppBarButton>
-                    <AppBarButton Icon="Refresh" ToolTipService.ToolTip="Odśwież stream" Click="RefreshButton_Click"/>
+                    <AppBarButton Icon="Refresh" ToolTipService.ToolTip="Odśwież wszystko" Click="RefreshButton_Click"/>
 
                     <AppBarSeparator/>
 
-                    <AppBarButton Icon="Switch" ToolTipService.ToolTip="Zmień strimera" Click="SwitchButton_Click">
+                    <AppBarButton Icon="Switch" ToolTipService.ToolTip="Zmień ojca" Click="SwitchButton_Click">
                         <FlyoutBase.AttachedFlyout>
                             <Flyout LightDismissOverlayMode="Auto">
                                 <StackPanel>
-                                    <TextBlock Text="Zmień strimera" FontSize="14"/>
+                                    <TextBlock Text="Zmień ojca" FontSize="14"/>
                                     <RadioButton x:Name="IsWonziu" Content="Wonziu" GroupName="Strim" IsChecked="True"/>
                                     <RadioButton x:Name="IsDzej" Content="Dzej" GroupName="Strim" Checked="DzejButton_Checked" Unchecked="DzejButton_Checked"/>
                                 </StackPanel>
@@ -60,8 +60,7 @@
                                     <RadioButton Content="Włączone" GroupName="Notifi" IsEnabled="False"/>
                                     <RadioButton Content="Wyłączone" GroupName="Notifi" IsChecked="True" IsEnabled="False"/>
 
-                                    <Button Content="Wymuś garbage collectora" Click="GarbageButton_Click"/>
-
+                                    <TextBlock Text="Tip: Jeśli nie wiesz co robi przycisk, najedź myszką"/>
                                     <HyperlinkButton Content="Nasz profil na facebooku" Tapped="Facebook_Tapped"/>
                                     <HyperlinkButton Content="Wykop - tu pisz propozycje zmian" Tapped="Wykop_Tapped"/>
                                     <TextBlock Text="Versatile Software - JaDisco.pl UWP v0.2.0.0"/>
