@@ -38,9 +38,20 @@
                         </AppBarButton.Icon>
                     </AppBarButton>
                     <AppBarButton Icon="Refresh" ToolTipService.ToolTip="Odśwież stream" Click="RefreshButton_Click"/>
-                    
+
                     <AppBarSeparator/>
 
+                    <AppBarButton Icon="Switch" ToolTipService.ToolTip="Zmień strimera" Click="SwitchButton_Click">
+                        <FlyoutBase.AttachedFlyout>
+                            <Flyout LightDismissOverlayMode="Auto">
+                                <StackPanel>
+                                    <TextBlock Text="Zmień strimera" FontSize="14"/>
+                                    <RadioButton x:Name="IsWonziu" Content="Wonziu" GroupName="Strim" IsChecked="True"/>
+                                    <RadioButton x:Name="IsDzej" Content="Dzej" GroupName="Strim" Checked="DzejButton_Checked" Unchecked="DzejButton_Checked"/>
+                                </StackPanel>
+                            </Flyout>
+                        </FlyoutBase.AttachedFlyout>
+                    </AppBarButton>
                     <AppBarButton Icon="Setting" ToolTipService.ToolTip="Ustawienia" Click="SettingsButton_Click">
                         <FlyoutBase.AttachedFlyout>
                             <Flyout LightDismissOverlayMode="Auto">
@@ -49,9 +60,11 @@
                                     <RadioButton Content="Włączone" GroupName="Notifi" IsEnabled="False"/>
                                     <RadioButton Content="Wyłączone" GroupName="Notifi" IsChecked="True" IsEnabled="False"/>
 
+                                    <Button Content="Wymuś garbage collectora" Click="GarbageButton_Click"/>
+
                                     <HyperlinkButton Content="Nasz profil na facebooku" Tapped="Facebook_Tapped"/>
                                     <HyperlinkButton Content="Wykop - tu pisz propozycje zmian" Tapped="Wykop_Tapped"/>
-                                    <TextBlock Text="Versatile Software - JaDisco.pl UWP v0.1.0.0"/>
+                                    <TextBlock Text="Versatile Software - JaDisco.pl UWP v0.2.0.0"/>
                                 </StackPanel>
                             </Flyout>
                         </FlyoutBase.AttachedFlyout>
@@ -59,7 +72,7 @@
                 </CommandBar.PrimaryCommands>
 
                 <CommandBar.Content>
-                    <TextBlock x:Name="StatusTextBlock" Margin="12,10"/>
+                    <TextBlock x:Name="StatusTextBlock" Text="Ładowanie statusu..." Margin="12,10"/>
                 </CommandBar.Content>
             </CommandBar>
             <ProgressBar x:Name="ProgressBar" IsIndeterminate="True" VerticalAlignment="Bottom" Canvas.ZIndex="5"/>

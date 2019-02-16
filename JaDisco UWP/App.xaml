@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              RequestedTheme="Dark">
 
-    <Application.Resources>
-        <!--                     TITLEBAR                 -->
+    <!--<Application.Resources>
+        --><!--                     TITLEBAR                 --><!--
         <Style x:Key="DragAreaGrid" TargetType="Grid">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Height" Value="34"/>
@@ -29,5 +29,5 @@
             <Setter Property="VerticalAlignment" Value="Top"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
-    </Application.Resources>
+    </Application.Resources>-->
 </Application>
