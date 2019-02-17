@@ -11,10 +11,11 @@ namespace JaDisco_UWP
 {
     public sealed partial class MainPage : Page
     {
-        private bool LeftChat, HiddenChat = false;
+        private bool LeftChat, HiddenChat, IsStatusParse = false;
         private readonly Uri ChatUri = new Uri("https://client.poorchat.net/jadisco");
         private readonly Uri WonziuUri = new Uri("https://player.twitch.tv/?channel=wonziu");
         private readonly Uri DzejUri = new Uri("https://player.twitch.tv/?channel=dzejth");
+        private readonly Uri BlankUri = new Uri("about:blank");
         private readonly ToolTip chatHideToolTip = new ToolTip();
 
         private readonly ApplicationView view = ApplicationView.GetForCurrentView();
@@ -47,7 +48,7 @@ namespace JaDisco_UWP
                     ChatWebView.Visibility = Visibility.Collapsed;
                     ChatPositionButton.IsEnabled = false;
 
-                    ChatWebView.Navigate(new Uri("about:blank"));
+                    ChatWebView.Navigate(BlankUri);
                 }
                 else if (LeftChat == true)
                 {
@@ -56,7 +57,7 @@ namespace JaDisco_UWP
                     ChatWebView.Visibility = Visibility.Collapsed;
                     ChatPositionButton.IsEnabled = false;
 
-                    ChatWebView.Navigate(new Uri("about:blank"));
+                    ChatWebView.Navigate(BlankUri);
                 }
 
                 HiddenChat = true;
@@ -165,6 +166,7 @@ namespace JaDisco_UWP
             ChatWebView.Source = ChatUri;
             ChatWebView.Refresh();
 
+            IsStatusParse = false;
             StartStatusParse();
         }
 
@@ -193,27 +195,6 @@ namespace JaDisco_UWP
             vm.LaunchUri(new Uri(@"https://www.wykop.pl/tag/jadiscouwp/"));
         }
 
-        private void StartStatusParse()
-        {
-            statusWebView.Navigate(new Uri("https://jadisco.pl/"));
-        }
-
-        private async void webView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
-        {
-            if (args.IsSuccess == true)
-            {
-                string HTML = await statusWebView.InvokeScriptAsync("eval", new string[] { "document.documentElement.outerHTML;" });
-                HtmlDocument htmlDoc = new HtmlDocument();
-                htmlDoc.LoadHtml(HTML);
-
-                //flex-navbar-item jd-title
-                StatusTextBlock.Text = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='flex-navbar-item jd-title']").InnerText;
-
-                ProgressBar.Visibility = Visibility.Collapsed;
-                vm.MemoryCleanup();
-            }
-        }
-
         private void DzejButton_Checked(object sender, RoutedEventArgs e)
         {
             if (IsDzej.IsChecked == true)
@@ -226,10 +207,40 @@ namespace JaDisco_UWP
             }
         }
 
+        private void StartStatusParse()
+        {
+            statusWebView.Navigate(new Uri("https://jadisco.pl/"));
+        }
+
+        private async void webView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        {
+            if (args.IsSuccess == true)
+            {
+                if (IsStatusParse == false)
+                {
+                    string HTML = await statusWebView.InvokeScriptAsync("eval", new string[] { "document.documentElement.outerHTML;" });
+                    HtmlDocument htmlDoc = new HtmlDocument();
+                    htmlDoc.LoadHtml(HTML);
+
+                    //flex-navbar-item jd-title
+                    StatusTextBlock.Text = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='flex-navbar-item jd-title']").InnerText;
+                    ProgressBar.Visibility = Visibility.Collapsed;
+
+                    IsStatusParse = true;
+                    statusWebView.Navigate(BlankUri);
+
+                    vm.MemoryCleanup();
+                }
+            }
+        }
+
         private void webView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
-            StatusTextBlock.Text = "Ładowanie statusu...";
-            ProgressBar.Visibility = Visibility.Visible;
+            if (IsStatusParse == false)
+            {
+                StatusTextBlock.Text = "Ładowanie statusu...";
+                ProgressBar.Visibility = Visibility.Visible;
+            }
         }
     }
 }
