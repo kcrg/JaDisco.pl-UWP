@@ -16,18 +16,20 @@ namespace JaDisco_UWP
         private readonly Uri WonziuUri = new Uri("https://player.twitch.tv/?channel=wonziu");
         private readonly Uri DzejUri = new Uri("https://player.twitch.tv/?channel=dzejth");
         private readonly Uri BlankUri = new Uri("about:blank");
-        private readonly ToolTip chatHideToolTip = new ToolTip();
 
         private readonly ApplicationView view = ApplicationView.GetForCurrentView();
-        private readonly WebView statusWebView = new WebView();
 
+        private readonly WebView statusWebView = new WebView();
+        private readonly ToolTip chatHideToolTip = new ToolTip();
         private readonly MainPageViewModel vm = new MainPageViewModel();
 
         public MainPage()
         {
             InitializeComponent();
             StartStatusParse();
+
             vm.TitleBarCustomization();
+            Window.Current.SetTitleBar(DragArea);
 
             statusWebView.NavigationCompleted += webView_NavigationCompleted;
             statusWebView.NavigationStarting += webView_NavigationStarting;
@@ -71,7 +73,7 @@ namespace JaDisco_UWP
                 if (LeftChat == false)
                 {
                     RightColumn.Width = new GridLength(20, GridUnitType.Star);
-                    RightColumn.MinWidth = 200;
+                    RightColumn.MinWidth = 250;
                     ChatWebView.Visibility = Visibility.Visible;
                     ChatPositionButton.IsEnabled = true;
 
@@ -80,7 +82,7 @@ namespace JaDisco_UWP
                 else if (LeftChat == true)
                 {
                     LeftColumn.Width = new GridLength(20, GridUnitType.Star);
-                    LeftColumn.MinWidth = 200;
+                    LeftColumn.MinWidth = 250;
                     ChatWebView.Visibility = Visibility.Visible;
                     ChatPositionButton.IsEnabled = true;
 
@@ -116,7 +118,7 @@ namespace JaDisco_UWP
                 LeftColumn.Width = new GridLength(80, GridUnitType.Star);
                 LeftColumn.MinWidth = 0;
                 RightColumn.Width = new GridLength(20, GridUnitType.Star);
-                RightColumn.MinWidth = 200;
+                RightColumn.MinWidth = 250;
 
                 LeftChat = false;
             }
@@ -131,7 +133,7 @@ namespace JaDisco_UWP
             }
             else if (view.IsFullScreenMode == false)
             {
-                TopRow.Height = new GridLength(36);
+                TopRow.Height = new GridLength(74);
                 TopCommandBar.Visibility = Visibility.Visible;
             }
         }
@@ -170,29 +172,28 @@ namespace JaDisco_UWP
             StartStatusParse();
         }
 
-        private void SwitchButton_Click(object sender, RoutedEventArgs e)
-        {
-            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
-        }
-
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        private void ShowFlyout_Click(object sender, RoutedEventArgs e)
         {
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
         private void DonateButton_Click(object sender, RoutedEventArgs e)
         {
-            vm.LaunchUri(new Uri(@"https://streamlabs.com/wonziu"));
+            vm.LaunchUri("https://streamlabs.com/wonziu");
+        }
+        private void Donate_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            vm.LaunchUri("https://tinyurl.com/DonateMohairApps");
         }
 
         private void Facebook_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            vm.LaunchUri(new Uri(@"https://www.facebook.com/VersatileSoftware"));
+            vm.LaunchUri("https://www.facebook.com/VersatileSoftware");
         }
 
         private void Wykop_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            vm.LaunchUri(new Uri(@"https://www.wykop.pl/tag/jadiscouwp/"));
+            vm.LaunchUri("https://www.wykop.pl/tag/jadiscouwp/");
         }
 
         private void DzejButton_Checked(object sender, RoutedEventArgs e)
@@ -224,7 +225,7 @@ namespace JaDisco_UWP
 
                     //flex-navbar-item jd-title
                     StatusTextBlock.Text = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='flex-navbar-item jd-title']").InnerText;
-                    ProgressBar.Visibility = Visibility.Collapsed;
+                    ProgressBar.IsIndeterminate = false;
 
                     IsStatusParse = true;
                     statusWebView.Navigate(BlankUri);
@@ -239,7 +240,7 @@ namespace JaDisco_UWP
             if (IsStatusParse == false)
             {
                 StatusTextBlock.Text = "Ładowanie statusu...";
-                ProgressBar.Visibility = Visibility.Visible;
+                ProgressBar.IsIndeterminate = true;
             }
         }
     }
