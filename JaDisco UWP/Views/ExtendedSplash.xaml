@@ -13,11 +13,11 @@
                             AutoPlay="True"
                             Source="ms-appx:///Assets/SplashScreenAssets/SplashVideo_Trim.mp4"/>
 
-        <ProgressRing Width="100"
+        <!--<ProgressRing Width="100"
                       Height="100"
                       VerticalAlignment="Bottom"
                       Foreground="White"
                       Margin="0,0,0,50"
-                      IsActive="True"/>
+                      IsActive="True"/>-->
     </Grid>
 </Page>

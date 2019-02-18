@@ -105,7 +105,7 @@ namespace JaDisco_UWP
                 ChatWebView.SetValue(Grid.ColumnProperty, 0);
 
                 LeftColumn.Width = new GridLength(20, GridUnitType.Star);
-                LeftColumn.MinWidth = 200;
+                LeftColumn.MinWidth = 250;
                 RightColumn.Width = new GridLength(80, GridUnitType.Star);
 
                 LeftChat = true;
