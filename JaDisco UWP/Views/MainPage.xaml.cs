@@ -6,6 +6,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
 
 namespace JaDisco_UWP
 {
@@ -27,8 +28,9 @@ namespace JaDisco_UWP
         {
             InitializeComponent();
             StartStatusParse();
-
             vm.TitleBarCustomization();
+
+            NavigationCacheMode = NavigationCacheMode.Required;
             Window.Current.SetTitleBar(DragArea);
 
             statusWebView.NavigationCompleted += webView_NavigationCompleted;
