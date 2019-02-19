@@ -1,6 +1,7 @@
-﻿using HtmlAgilityPack;
-using JaDisco_UWP.ViewModels;
+﻿using JaDisco_UWP.ViewModels;
 using System;
+using System.Diagnostics;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,21 +21,29 @@ namespace JaDisco_UWP
 
         private readonly ApplicationView view = ApplicationView.GetForCurrentView();
 
-        private readonly WebView statusWebView = new WebView();
         private readonly ToolTip chatHideToolTip = new ToolTip();
         private readonly MainPageViewModel vm = new MainPageViewModel();
 
+        private readonly Api.JadiscoApi jadiscoApi = new Api.JadiscoApi();
+
         public MainPage()
         {
+            jadiscoApi.OnStatusChanged += JadiscoApi_OnStatusChanged;
+            jadiscoApi.Connect();
+
             InitializeComponent();
-            StartStatusParse();
             vm.TitleBarCustomization();
 
             NavigationCacheMode = NavigationCacheMode.Required;
             Window.Current.SetTitleBar(DragArea);
+        }
 
-            statusWebView.NavigationCompleted += webView_NavigationCompleted;
-            statusWebView.NavigationStarting += webView_NavigationStarting;
+        private async void JadiscoApi_OnStatusChanged(Api.Data.Message obj)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                StatusTextBlock.Text = obj.Data.Topic.Text;
+            });
         }
 
         private void ChatHideButton_Click(object sender, RoutedEventArgs e)
@@ -171,7 +180,6 @@ namespace JaDisco_UWP
             ChatWebView.Refresh();
 
             IsStatusParse = false;
-            StartStatusParse();
         }
 
         private void ShowFlyout_Click(object sender, RoutedEventArgs e)
@@ -210,40 +218,5 @@ namespace JaDisco_UWP
             }
         }
 
-        private void StartStatusParse()
-        {
-            statusWebView.Navigate(new Uri("https://jadisco.pl/"));
-        }
-
-        private async void webView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
-        {
-            if (args.IsSuccess == true)
-            {
-                if (IsStatusParse == false)
-                {
-                    string HTML = await statusWebView.InvokeScriptAsync("eval", new string[] { "document.documentElement.outerHTML;" });
-                    HtmlDocument htmlDoc = new HtmlDocument();
-                    htmlDoc.LoadHtml(HTML);
-
-                    //flex-navbar-item jd-title
-                    StatusTextBlock.Text = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='flex-navbar-item jd-title']").InnerText;
-                    ProgressBar.IsIndeterminate = false;
-
-                    IsStatusParse = true;
-                    statusWebView.Navigate(BlankUri);
-
-                    vm.MemoryCleanup();
-                }
-            }
-        }
-
-        private void webView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
-        {
-            if (IsStatusParse == false)
-            {
-                StatusTextBlock.Text = "Ładowanie statusu...";
-                ProgressBar.IsIndeterminate = true;
-            }
-        }
     }
 }
