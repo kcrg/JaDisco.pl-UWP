@@ -9,6 +9,9 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
+using Jadisco.Api;
+using Jadisco.Api.Data;
+
 namespace JaDisco_UWP
 {
     public sealed partial class MainPage : Page
@@ -24,11 +27,11 @@ namespace JaDisco_UWP
         private readonly ToolTip chatHideToolTip = new ToolTip();
         private readonly MainPageViewModel vm = new MainPageViewModel();
 
-        private readonly Api.JadiscoApi jadiscoApi = new Api.JadiscoApi();
+        private readonly JadiscoApi jadiscoApi = new JadiscoApi();
 
         public MainPage()
         {
-            jadiscoApi.OnStatusChanged += JadiscoApi_OnStatusChanged;
+            jadiscoApi.OnTopicChanged += JadiscoApi_OnTopicChanged;
             jadiscoApi.Connect();
 
             InitializeComponent();
@@ -38,11 +41,11 @@ namespace JaDisco_UWP
             Window.Current.SetTitleBar(DragArea);
         }
 
-        private async void JadiscoApi_OnStatusChanged(Api.Data.Message obj)
+        private async void JadiscoApi_OnTopicChanged(Topic topic)
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                StatusTextBlock.Text = obj.Data.Topic.Text;
+                StatusTextBlock.Text = topic.Text;
             });
         }
 

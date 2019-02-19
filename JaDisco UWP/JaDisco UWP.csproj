@@ -123,13 +123,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Api\Data\Message.cs" />
-    <Compile Include="Api\Data\MessageData.cs" />
-    <Compile Include="Api\Data\Service.cs" />
-    <Compile Include="Api\Data\Stream.cs" />
-    <Compile Include="Api\Data\Streamer.cs" />
-    <Compile Include="Api\Data\Topic.cs" />
-    <Compile Include="Api\JadiscoApi.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -218,14 +211,13 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.9</Version>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="PureWebSockets">
-      <Version>2.4.2</Version>
-    </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Jadisco.Api\Jadisco.Api.csproj">
+      <Project>{09a387c1-37d2-49dc-a6b8-5534eb47b640}</Project>
+      <Name>Jadisco.Api</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
