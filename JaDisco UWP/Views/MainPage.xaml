@@ -4,84 +4,102 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" SizeChanged="Page_SizeChanged" Background="#171717">
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d" Background="#171717">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Views/Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="LeftColumn" Width="80*"/>
-            <ColumnDefinition x:Name="RightColumn" Width="20*" MinWidth="250"/>
-        </Grid.ColumnDefinitions>
+        <Grid Style="{StaticResource DragAreaGrid}"
+              x:Name="DragArea">
 
-        <Grid.RowDefinitions>
-            <RowDefinition x:Name="TopRow" Height="74"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
-            <Grid Style="{StaticResource DragAreaGrid}"
-                  x:Name="DragArea">
-
-                <Image Style="{StaticResource AppLogoImage}"/>
-                <TextBlock x:Name="StatusTextBlock" Style="{StaticResource StatusText}"/>
-            </Grid>
-
+            <Image Style="{StaticResource AppLogoImage}"/>
+            <TextBlock x:Name="StatusTextBlock" Style="{StaticResource StatusText}"/>
             <ProgressBar x:Name="ProgressBar" Style="{StaticResource ProgressBar}"/>
+        </Grid>
 
-            <CommandBar x:Name="TopCommandBar" Style="{StaticResource CommandBar}">
-                <CommandBar.PrimaryCommands>
-                    <AppBarButton x:Name="DonateButton" ToolTipService.ToolTip="Wesprzyj Wonzia" Click="DonateButton_Click">
-                        <AppBarButton.Icon>
-                            <FontIcon Glyph="&#xEB51;"/>
-                        </AppBarButton.Icon>
-                    </AppBarButton>
+        <muxc:NavigationView x:Name="NavView" 
+                             Style="{StaticResource NavigationView}" 
+                             SelectionChanged="NavView_SelectionChanged">
+            
+            <muxc:NavigationView.MenuItems>
+                <muxc:NavigationViewItem Tag="Wonziu" Content="Wonziu"/>
+                <muxc:NavigationViewItem Tag="Dzej" Content="Dzej"/>
+            </muxc:NavigationView.MenuItems>
 
-                    <AppBarSeparator/>
+            <muxc:NavigationView.PaneFooter>
+                <CommandBar Style="{StaticResource CommandBar}">
+                    <CommandBar.PrimaryCommands>
+                        <AppBarButton x:Name="DonateButton" ToolTipService.ToolTip="Wesprzyj Wonzia" Click="DonateButton_Click">
+                            <AppBarButton.Icon>
+                                <FontIcon Glyph="&#xEB51;"/>
+                            </AppBarButton.Icon>
+                        </AppBarButton>
 
-                    <AppBarButton x:Name="ChatPositionButton" ToolTipService.ToolTip="Przenieś chat" Click="ChatPositionButton_Click">
-                        <AppBarButton.Icon>
-                            <FontIcon x:Name="ChatPositionIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE90C;"/>
-                        </AppBarButton.Icon>
-                    </AppBarButton>
-                    <AppBarButton x:Name="ChatHideButton" ToolTipService.ToolTip="Schowaj chat" Click="ChatHideButton_Click">
-                        <AppBarButton.Icon>
-                            <FontIcon x:Name="ChatHideIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9A8;"/>
-                        </AppBarButton.Icon>
-                    </AppBarButton>
-                    <AppBarButton Icon="Refresh" ToolTipService.ToolTip="Odśwież wszystko" Click="RefreshButton_Click"/>
+                        <AppBarSeparator/>
 
-                    <AppBarSeparator/>
+                        <AppBarButton x:Name="ChatPositionButton" ToolTipService.ToolTip="Przenieś chat" Click="ChatPositionButton_Click">
+                            <AppBarButton.Icon>
+                                <FontIcon x:Name="ChatPositionIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE90C;"/>
+                            </AppBarButton.Icon>
+                        </AppBarButton>
+                        <AppBarButton x:Name="ChatHideButton" ToolTipService.ToolTip="Schowaj chat" Click="ChatHideButton_Click">
+                            <AppBarButton.Icon>
+                                <FontIcon x:Name="ChatHideIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9A8;"/>
+                            </AppBarButton.Icon>
+                        </AppBarButton>
+                        <AppBarButton Icon="Refresh" ToolTipService.ToolTip="Odśwież wszystko" Click="RefreshButton_Click"/>
 
-                    <AppBarButton Icon="Switch" ToolTipService.ToolTip="Zmień ojca" Click="ShowFlyout_Click">
-                        <FlyoutBase.AttachedFlyout>
-                            <Flyout LightDismissOverlayMode="Auto">
-                                <StackPanel>
-                                    <TextBlock Text="Zmień ojca" FontSize="14"/>
-                                    <RadioButton x:Name="IsWonziu" Content="Wonziu" GroupName="Strim" IsChecked="True"/>
-                                    <RadioButton x:Name="IsDzej" Content="Dzej" GroupName="Strim" Checked="DzejButton_Checked" Unchecked="DzejButton_Checked"/>
-                                </StackPanel>
-                            </Flyout>
-                        </FlyoutBase.AttachedFlyout>
-                    </AppBarButton>
-                    <AppBarButton Icon="Setting" ToolTipService.ToolTip="Ustawienia" Click="ShowFlyout_Click">
-                        <FlyoutBase.AttachedFlyout>
-                            <Flyout LightDismissOverlayMode="Auto">
-                                <StackPanel>
-                                    <TextBlock Text="Powiadomienia - wkrótce" FontSize="14"/>
-                                    <RadioButton Content="Włączone" GroupName="Notifi" IsEnabled="False"/>
-                                    <RadioButton Content="Wyłączone" GroupName="Notifi" IsChecked="True" IsEnabled="False"/>
+                        <AppBarSeparator/>
+                        
+                        <AppBarButton Icon="Setting" ToolTipService.ToolTip="Ustawienia" Click="ShowFlyout_Click">
+                            <FlyoutBase.AttachedFlyout>
+                                <Flyout LightDismissOverlayMode="Auto">
+                                    <StackPanel>
+                                        <TextBlock Text="Powiadomienia - wkrótce" FontSize="14"/>
+                                        <RadioButton Content="Włączone" GroupName="Notifi" IsEnabled="False"/>
+                                        <RadioButton Content="Wyłączone" GroupName="Notifi" IsChecked="True" IsEnabled="False"/>
 
-                                    <HyperlinkButton Content="Nasz profil na facebooku" Tapped="Facebook_Tapped"/>
-                                    <HyperlinkButton Content="Donacja dla twórcy aplikacji" Tapped="Donate_Tapped"/>
-                                    <HyperlinkButton Content="#jadiscouwp - tu pisz propozycje zmian" Tapped="Wykop_Tapped"/>
-                                    <TextBlock Text="Versatile Software - JaDisco.pl UWP v0.2.0.0"/>
-                                </StackPanel>
-                            </Flyout>
-                        </FlyoutBase.AttachedFlyout>
-                    </AppBarButton>
-                </CommandBar.PrimaryCommands>
-            </CommandBar>
-        </StackPanel>
+                                        <HyperlinkButton Content="Donacja dla twórcy aplikacji" Tapped="Donate_Tapped"/>
+                                        <HyperlinkButton Content="#jadiscouwp - księga zażaleń" Tapped="Wykop_Tapped"/>
+                                        <TextBlock Text="JaDisco.pl UWP v0.3.0.0"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </FlyoutBase.AttachedFlyout>
+                        </AppBarButton>
+                    </CommandBar.PrimaryCommands>
+                </CommandBar>
+            </muxc:NavigationView.PaneFooter>
 
-        <WebView x:Name="StreamWebView" Grid.Column="0" Grid.Row="1" DefaultBackgroundColor="Black" Source="https://player.twitch.tv/?channel=wonziu" ContainsFullScreenElementChanged="StreamWebView_ContainsFullScreenElementChanged"/>
-        <WebView x:Name="ChatWebView" Grid.Column="1" Grid.Row="1" DefaultBackgroundColor="#121212" Source="https://client.poorchat.net/jadisco"/>
+            <muxc:NavigationView.Content>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="LeftColumn" Width="80*"/>
+                        <ColumnDefinition x:Name="RightColumn" Width="20*" MinWidth="250"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!--<MediaPlayerElement x:Name="StreamMediaPlayer" 
+                                        Grid.Column="0" 
+                                        AreTransportControlsEnabled="True" 
+                                        Canvas.ZIndex="5"/>-->
+                    
+                    <WebView x:Name="StreamWebView" 
+                             Grid.Column="0" 
+                             DefaultBackgroundColor="Black" 
+                             Source="https://player.twitch.tv/?channel=wonziu" 
+                             ContainsFullScreenElementChanged="StreamWebView_ContainsFullScreenElementChanged"/>
+                    
+                    <WebView x:Name="ChatWebView" 
+                             Grid.Column="1" 
+                             DefaultBackgroundColor="#121212" 
+                             Source="https://client.poorchat.net/jadisco"/>
+                </Grid>
+            </muxc:NavigationView.Content>
+        </muxc:NavigationView>
     </Grid>
 </Page>

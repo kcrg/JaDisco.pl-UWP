@@ -35,6 +35,8 @@ namespace JaDisco_UWP
 
             statusWebView.NavigationCompleted += webView_NavigationCompleted;
             statusWebView.NavigationStarting += webView_NavigationStarting;
+
+            NavView.SelectedItem = NavView.MenuItems[0];
         }
 
         private void ChatHideButton_Click(object sender, RoutedEventArgs e)
@@ -126,45 +128,27 @@ namespace JaDisco_UWP
             }
         }
 
-        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (view.IsFullScreenMode == true)
-            {
-                TopCommandBar.Visibility = Visibility.Collapsed;
-                TopRow.Height = new GridLength(0);
-            }
-            else if (view.IsFullScreenMode == false)
-            {
-                TopRow.Height = new GridLength(74);
-                TopCommandBar.Visibility = Visibility.Visible;
-            }
-        }
-
         private void StreamWebView_ContainsFullScreenElementChanged(WebView sender, object args)
         {
             if (sender.ContainsFullScreenElement)
             {
                 view.TryEnterFullScreenMode();
-                TopCommandBar.Visibility = Visibility.Collapsed;
+                NavView.IsPaneVisible = false;
+                NavView.Margin = new Thickness(0);
+                DragArea.Visibility = Visibility.Collapsed;
             }
             else if (view.IsFullScreenMode)
             {
                 view.ExitFullScreenMode();
-                TopCommandBar.Visibility = Visibility.Visible;
+                NavView.Margin = new Thickness(0, 38, 0, 0);
+                NavView.IsPaneVisible = true;
+                DragArea.Visibility = Visibility.Visible;
+
             }
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            if (IsDzej.IsChecked == true)
-            {
-                StreamWebView.Source = DzejUri;
-            }
-            else if (IsDzej.IsChecked == false)
-            {
-                StreamWebView.Source = WonziuUri;
-            }
-
             StreamWebView.Refresh();
 
             ChatWebView.Source = ChatUri;
@@ -188,31 +172,34 @@ namespace JaDisco_UWP
             vm.LaunchUri("https://tinyurl.com/DonateMohairApps");
         }
 
-        private void Facebook_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            vm.LaunchUri("https://www.facebook.com/VersatileSoftware");
-        }
-
         private void Wykop_Tapped(object sender, TappedRoutedEventArgs e)
         {
             vm.LaunchUri("https://www.wykop.pl/tag/jadiscouwp/");
         }
 
-        private void DzejButton_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsDzej.IsChecked == true)
-            {
-                StreamWebView.Navigate(DzejUri);
-            }
-            else if (IsDzej.IsChecked == false)
-            {
-                StreamWebView.Navigate(WonziuUri);
-            }
-        }
-
         private void StartStatusParse()
         {
             statusWebView.Navigate(new Uri("https://jadisco.pl/"));
+        }
+
+        private void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
+        {
+            if (args.SelectedItemContainer != null)
+            {
+                if (args.SelectedItemContainer != null)
+                {
+                    switch (args.SelectedItemContainer.Tag)
+                    {
+                        case "Wonziu":
+                            StreamWebView.Navigate(WonziuUri);
+                            break;
+
+                        case "Dzej":
+                            StreamWebView.Navigate(DzejUri);
+                            break;
+                    }
+                }
+            }
         }
 
         private async void webView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)

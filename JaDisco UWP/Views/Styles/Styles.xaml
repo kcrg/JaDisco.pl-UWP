@@ -1,0 +1,46 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
+
+    <!--                     TITLEBAR                 -->
+    <Style x:Key="DragAreaGrid" TargetType="Grid">
+        <Setter Property="Background" Value="#171717"/>
+        <Setter Property="Height" Value="38"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    </Style>
+
+    <Style x:Key="AppLogoImage" TargetType="Image">
+        <Setter Property="Margin" Value="12,3,0,4"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Source" Value="ms-appx:///Assets/TitleBarAssets/JaDiscoLogo.gif"/>
+    </Style>
+
+    <Style x:Key="StatusText" TargetType="TextBlock">
+        <Setter Property="Margin" Value="95,0,140,0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Text" Value="Ładowanie tematu..."/>
+    </Style>
+
+    <!--                     PAGE                 -->
+    <Style x:Key="NavigationView" TargetType="muxc:NavigationView">
+        <Setter Property="Margin" Value="0,38,0,0"/>
+        <Setter Property="IsSettingsVisible" Value="False"/>
+        <Setter Property="IsBackButtonVisible" Value="Collapsed"/>
+        <Setter Property="PaneDisplayMode" Value="Top"/>
+    </Style>
+    
+    <Style x:Key="CommandBar" TargetType="CommandBar">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="OverflowButtonVisibility" Value="Collapsed"/>
+    </Style>
+
+    <Style x:Key="ProgressBar" TargetType="ProgressBar">
+        <Setter Property="Background" Value="#171717"/>
+        <Setter Property="IsIndeterminate" Value="True"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+    </Style>
+</ResourceDictionary>

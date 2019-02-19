@@ -1,40 +1,27 @@
 ﻿<Application x:Class="JaDisco_UWP.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:muxm="using:Microsoft.UI.Xaml.Media"
              RequestedTheme="Dark">
 
     <Application.Resources>
-        <!--                     TITLEBAR                 -->
-        <Style x:Key="DragAreaGrid" TargetType="Grid">
-            <Setter Property="Background" Value="#171717"/>
-            <Setter Property="Height" Value="34"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        </Style>
-
-        <Style x:Key="AppLogoImage" TargetType="Image">
-            <Setter Property="Margin" Value="12,3,0,3"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="Source" Value="ms-appx:///Assets/TitleBarAssets/JaDiscoLogo.gif"/>
-        </Style>
-
-        <Style x:Key="StatusText" TargetType="TextBlock">
-            <Setter Property="Margin" Value="90,0,270,0"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Text" Value="Ładowanie statusu..."/>
-        </Style>
-
-        <!--                     PAGE                 -->
-        <Style x:Key="CommandBar" TargetType="CommandBar">
-            <Setter Property="Background" Value="#171717"/>
-            <Setter Property="OverflowButtonVisibility" Value="Collapsed"/>
-        </Style>
-
-        <Style x:Key="ProgressBar" TargetType="ProgressBar">
-            <Setter Property="Background" Value="#171717"/>
-            <Setter Property="IsIndeterminate" Value="True"/>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
+                <ResourceDictionary>
+                    <ResourceDictionary.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Default">
+                            <LinearGradientBrush x:Key="NavigationViewTopPaneBackground"/>
+                        </ResourceDictionary>
+                        <ResourceDictionary x:Key="HighContrast">
+                            <!-- Always include a "HighContrast" dictionary when you override
+                                 theme resources. This empty dictionary ensures that the 
+                                 default high contrast resources are used when the user
+                                 turns on high contrast mode. -->
+                        </ResourceDictionary>
+                    </ResourceDictionary.ThemeDictionaries>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
