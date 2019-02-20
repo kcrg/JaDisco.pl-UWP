@@ -138,7 +138,17 @@ namespace Jadisco.Api
                                 }
                             }
 
-                            localStorage.Data.Stream = data.Data.Stream;
+                            localStorage.Data.Stream.Status = data.Data.Stream.Status;
+                            localStorage.Data.Stream.Services = data.Data.Stream.Services;
+
+                            if (localStorage.Data.Stream.Status == true)
+                            {
+                                localStorage.Data.Stream.OnlineAt = data.Data.Stream.OnlineAt;
+                            }
+                            else
+                            {
+                                localStorage.Data.Stream.OfflineAt = data.Data.Stream.OfflineAt;
+                            }
                         }
                     }
 
