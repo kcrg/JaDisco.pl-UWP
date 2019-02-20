@@ -98,6 +98,10 @@
                              DefaultBackgroundColor="Black" 
                              Source="https://player.twitch.tv/?channel=wonziu" 
                              ContainsFullScreenElementChanged="StreamWebView_ContainsFullScreenElementChanged"/>
+                    <MediaPlayerElement x:Name="StreamMediaPlayer" 
+                                        Grid.Column="0" 
+                                        AreTransportControlsEnabled="True" 
+                                        Canvas.ZIndex="5"/>
 
                     <WebView x:Name="ChatWebView" 
                              Grid.Column="1"
