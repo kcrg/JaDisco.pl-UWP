@@ -20,7 +20,7 @@
 
             <Image Style="{StaticResource AppLogoImage}"/>
             <TextBlock x:Name="StatusTextBlock" Style="{StaticResource StatusText}"/>
-            <ProgressBar x:Name="ProgressBar" Style="{StaticResource ProgressBar}"/>
+            <!--<ProgressBar x:Name="ProgressBar" Style="{StaticResource ProgressBar}"/>-->
         </Grid>
 
         <muxc:NavigationView x:Name="NavView" 
@@ -72,7 +72,7 @@
 
                                         <HyperlinkButton Content="Donacja dla twórcy aplikacji" Tapped="Donate_Tapped"/>
                                         <HyperlinkButton Content="#jadiscouwp - księga zażaleń" Tapped="Wykop_Tapped"/>
-                                        <TextBlock Text="JaDisco.pl UWP v0.3.0.0"/>
+                                        <TextBlock Text="anal sampling mechanism - JaDisco.pl UWP v0.3.0.0"/>
                                     </StackPanel>
                                 </Flyout>
                             </FlyoutBase.AttachedFlyout>
@@ -93,11 +93,11 @@
                              DefaultBackgroundColor="Black" 
                              Source="https://player.twitch.tv/?channel=wonziu" 
                              ContainsFullScreenElementChanged="StreamWebView_ContainsFullScreenElementChanged"/>-->
-                    
+
                     <MediaPlayerElement x:Name="StreamMediaPlayer"
                                         Source="ms-appx:///Assets/SplashScreenAssets/SplashVideo_Trim.mp4"
+                                        AutoPlay="True"
                                         Grid.Column="0" 
-                                        MinWidth="0"
                                         AreTransportControlsEnabled="True" 
                                         Canvas.ZIndex="5"/>
 

@@ -1,4 +1,6 @@
-﻿using JaDisco_UWP.ViewModels;
+﻿using Jadisco.Api;
+using Jadisco.Api.Data;
+using JaDisco_UWP.ViewModels;
 using JaDisco_UWP.Views;
 using System;
 using Windows.ApplicationModel.Core;
@@ -9,20 +11,15 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using Jadisco.Api;
-using Jadisco.Api.Data;
 
 namespace JaDisco_UWP
 {
     public sealed partial class MainPage : Page
     {
-        private bool LeftChat, HiddenChat, IsStatusParse = false;
+        private bool LeftChat, HiddenChat = false;
         private readonly Uri ChatUri = new Uri("https://client.poorchat.net/jadisco");
-        private readonly Uri WonziuUri = new Uri("https://player.twitch.tv/?channel=wonziu");
-        private readonly Uri DzejUri = new Uri("https://player.twitch.tv/?channel=dzejth");
         private readonly Uri BlankUri = new Uri("about:blank");
 
-        private readonly WebView statusWebView = new WebView();
         private readonly ToolTip chatHideToolTip = new ToolTip();
         private readonly MainPageViewModel vm = new MainPageViewModel();
 
@@ -34,7 +31,6 @@ namespace JaDisco_UWP
             jadiscoApi.Connect();
 
             InitializeComponent();
-            StartStatusParse();
 
             if (App.RunningOnXbox || App.RunningOnMobile)
             {
@@ -47,17 +43,15 @@ namespace JaDisco_UWP
             }
 
             NavigationCacheMode = NavigationCacheMode.Required;
+            NavView.SelectedItem = NavView.MenuItems[0];
         }
 
         private async void JadiscoApi_OnTopicChanged(Topic topic)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 StatusTextBlock.Text = topic.Text;
             });
-        
-
-            //NavView.SelectedItem = NavView.MenuItems[0];
 
             //var token = TwitchApi.GetAccessToken("lirik");
             //var url = UsherService.GetStreamLink("lirik", token.Sig, token.Token);
@@ -125,12 +119,8 @@ namespace JaDisco_UWP
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            //StreamWebView.Refresh();
-
             ChatWebView.Source = ChatUri;
             ChatWebView.Refresh();
-
-            IsStatusParse = false;
         }
 
         private void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
@@ -172,11 +162,6 @@ namespace JaDisco_UWP
             vm.LaunchUri("https://www.wykop.pl/tag/jadiscouwp/");
         }
 
-        private void StartStatusParse()
-        {
-            statusWebView.Navigate(new Uri("https://jadisco.pl/"));
-        }
-
         private async void ChatNewWindowButton_Click(object sender, RoutedEventArgs e)
         {
             CoreApplicationView newView = CoreApplication.CreateNewView();
@@ -203,7 +188,7 @@ namespace JaDisco_UWP
         {
             if (!HiddenChat)
             {
-                //ChatHideIcon.Glyph = "";
+                ;
                 chatHideToolTip.Content = "Pokaż czat";
                 ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
 
@@ -230,7 +215,6 @@ namespace JaDisco_UWP
             }
             else if (HiddenChat)
             {
-                //ChatHideIcon.Glyph = "";
                 chatHideToolTip.Content = "Schowaj czat";
                 ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
 
@@ -262,36 +246,5 @@ namespace JaDisco_UWP
                 HiddenChat = false;
             }
         }
-
-        //private async void webView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
-        //{
-        //    if (args.IsSuccess == true)
-        //    {
-        //        if (IsStatusParse == false)
-        //        {
-        //            string HTML = await statusWebView.InvokeScriptAsync("eval", new string[] { "document.documentElement.outerHTML;" });
-        //            HtmlDocument htmlDoc = new HtmlDocument();
-        //            htmlDoc.LoadHtml(HTML);
-
-        //            //flex-navbar-item jd-title
-        //            StatusTextBlock.Text = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='flex-navbar-item jd-title']").InnerText;
-        //            ProgressBar.IsIndeterminate = false;
-
-        //            IsStatusParse = true;
-        //            statusWebView.Navigate(BlankUri);
-
-        //            vm.MemoryCleanup();
-        //        }
-        //    }
-        //}
-
-        //private void webView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
-        //{
-        //    if (IsStatusParse == false)
-        //    {
-        //        StatusTextBlock.Text = "Ładowanie statusu...";
-        //        ProgressBar.IsIndeterminate = true;
-        //    }
-        //}
     }
 }
