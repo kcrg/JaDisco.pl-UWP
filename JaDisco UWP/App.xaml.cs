@@ -2,6 +2,10 @@
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
+using Windows.System.Profile;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -10,6 +14,9 @@ namespace JaDisco_UWP
 {
     public sealed partial class App : Application
     {
+        public static bool RunningOnXbox => AnalyticsInfo.VersionInfo.DeviceFamily.ToLower().Contains("Xbox");
+        public static bool RunningOnMobile => AnalyticsInfo.VersionInfo.DeviceFamily.ToLower().Contains("Mobile");
+
         public App()
         {
             InitializeComponent();

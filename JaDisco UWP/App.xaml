@@ -5,6 +5,27 @@
 
     <Application.Resources>
         <ResourceDictionary>
+            <!--                     TITLEBAR                 -->
+            <Style x:Key="DragAreaGrid" TargetType="Grid">
+                <Setter Property="Background" Value="#171717"/>
+                <Setter Property="Height" Value="38"/>
+                <Setter Property="VerticalAlignment" Value="Top"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            </Style>
+
+            <Style x:Key="AppLogoImage" TargetType="Image">
+                <Setter Property="Margin" Value="12,3,0,4"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Source" Value="ms-appx:///Assets/TitleBarAssets/JaDiscoLogo.gif"/>
+            </Style>
+
+            <Style x:Key="StatusText" TargetType="TextBlock">
+                <Setter Property="Margin" Value="95,0,140,4"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Text" Value="Ładowanie tematu..."/>
+            </Style>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
                 <ResourceDictionary>

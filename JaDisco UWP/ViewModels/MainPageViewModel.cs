@@ -29,6 +29,7 @@ namespace JaDisco_UWP.ViewModels
             titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
             titleBar.ButtonHoverForegroundColor = Colors.White;
             titleBar.ButtonHoverBackgroundColor = Colors.Black;
+            titleBar.BackgroundColor = Colors.Black;
         }
     }
 }

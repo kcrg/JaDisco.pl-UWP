@@ -21,8 +21,6 @@ namespace JaDisco_UWP
         private readonly Uri DzejUri = new Uri("https://player.twitch.tv/?channel=dzejth");
         private readonly Uri BlankUri = new Uri("about:blank");
 
-        private readonly ApplicationView view = ApplicationView.GetForCurrentView();
-
         private readonly WebView statusWebView = new WebView();
         private readonly ToolTip chatHideToolTip = new ToolTip();
         private readonly MainPageViewModel vm = new MainPageViewModel();
@@ -31,10 +29,18 @@ namespace JaDisco_UWP
         {
             InitializeComponent();
             StartStatusParse();
-            vm.TitleBarCustomization();
+
+            if (App.RunningOnXbox || App.RunningOnMobile)
+            {
+                ChatInNewWindow.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                vm.TitleBarCustomization();
+                Window.Current.SetTitleBar(DragArea);
+            }
 
             NavigationCacheMode = NavigationCacheMode.Required;
-            Window.Current.SetTitleBar(DragArea);
 
             statusWebView.NavigationCompleted += webView_NavigationCompleted;
             statusWebView.NavigationStarting += webView_NavigationStarting;
@@ -81,6 +87,8 @@ namespace JaDisco_UWP
 
         private void StreamWebView_ContainsFullScreenElementChanged(WebView sender, object args)
         {
+            ApplicationView view = ApplicationView.GetForCurrentView();
+
             if (sender.ContainsFullScreenElement)
             {
                 view.TryEnterFullScreenMode();
