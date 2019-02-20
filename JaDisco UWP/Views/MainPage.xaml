@@ -85,7 +85,7 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition x:Name="LeftColumn" Width="80*"/>
-                        <ColumnDefinition x:Name="RightColumn" Width="20*" MinWidth="250"/>
+                        <ColumnDefinition x:Name="RightColumn" Width="20*" MinWidth="200"/>
                     </Grid.ColumnDefinitions>
 
                     <!--<WebView x:Name="StreamWebView" 
@@ -94,8 +94,10 @@
                              Source="https://player.twitch.tv/?channel=wonziu" 
                              ContainsFullScreenElementChanged="StreamWebView_ContainsFullScreenElementChanged"/>-->
                     
-                    <MediaPlayerElement x:Name="StreamMediaPlayer" 
+                    <MediaPlayerElement x:Name="StreamMediaPlayer"
+                                        Source="ms-appx:///Assets/SplashScreenAssets/SplashVideo_Trim.mp4"
                                         Grid.Column="0" 
+                                        MinWidth="0"
                                         AreTransportControlsEnabled="True" 
                                         Canvas.ZIndex="5"/>
 

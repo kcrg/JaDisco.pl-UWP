@@ -1,20 +1,14 @@
-﻿using HtmlAgilityPack;
-using JaDisco_UWP.ViewModels;
+﻿using JaDisco_UWP.ViewModels;
 using JaDisco_UWP.Views;
 using System;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
-﻿using JaDisco_UWP.ViewModels;
-using System;
-using System.Diagnostics;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-
 using Jadisco.Api;
 using Jadisco.Api.Data;
 
@@ -53,13 +47,6 @@ namespace JaDisco_UWP
             }
 
             NavigationCacheMode = NavigationCacheMode.Required;
-
-            statusWebView.NavigationCompleted += webView_NavigationCompleted;
-            statusWebView.NavigationStarting += webView_NavigationStarting;
-            vm.TitleBarCustomization();
-
-            NavigationCacheMode = NavigationCacheMode.Required;
-            Window.Current.SetTitleBar(DragArea);
         }
 
         private async void JadiscoApi_OnTopicChanged(Topic topic)
@@ -68,9 +55,9 @@ namespace JaDisco_UWP
             {
                 StatusTextBlock.Text = topic.Text;
             });
-        }
+        
 
-            NavView.SelectedItem = NavView.MenuItems[0];
+            //NavView.SelectedItem = NavView.MenuItems[0];
 
             //var token = TwitchApi.GetAccessToken("lirik");
             //var url = UsherService.GetStreamLink("lirik", token.Sig, token.Token);
@@ -94,7 +81,7 @@ namespace JaDisco_UWP
                 ChatWebView.SetValue(Grid.ColumnProperty, 0);
 
                 LeftColumn.Width = new GridLength(20, GridUnitType.Star);
-                LeftColumn.MinWidth = 250;
+                LeftColumn.MinWidth = 200;
                 RightColumn.Width = new GridLength(80, GridUnitType.Star);
                 RightColumn.MinWidth = 0;
 
@@ -110,31 +97,31 @@ namespace JaDisco_UWP
                 LeftColumn.Width = new GridLength(80, GridUnitType.Star);
                 LeftColumn.MinWidth = 0;
                 RightColumn.Width = new GridLength(20, GridUnitType.Star);
-                RightColumn.MinWidth = 250;
+                RightColumn.MinWidth = 200;
 
                 LeftChat = false;
             }
         }
 
-        private void StreamWebView_ContainsFullScreenElementChanged(WebView sender, object args)
-        {
-            ApplicationView view = ApplicationView.GetForCurrentView();
+        //private void StreamWebView_ContainsFullScreenElementChanged(WebView sender, object args)
+        //{
+        //    ApplicationView view = ApplicationView.GetForCurrentView();
 
-            if (sender.ContainsFullScreenElement)
-            {
-                view.TryEnterFullScreenMode();
-                NavView.IsPaneVisible = false;
-                NavView.Margin = new Thickness(0);
-                DragArea.Visibility = Visibility.Collapsed;
-            }
-            else if (view.IsFullScreenMode)
-            {
-                view.ExitFullScreenMode();
-                NavView.Margin = new Thickness(0, 38, 0, 0);
-                NavView.IsPaneVisible = true;
-                DragArea.Visibility = Visibility.Visible;
-            }
-        }
+        //    if (sender.ContainsFullScreenElement)
+        //    {
+        //        view.TryEnterFullScreenMode();
+        //        NavView.IsPaneVisible = false;
+        //        NavView.Margin = new Thickness(0);
+        //        DragArea.Visibility = Visibility.Collapsed;
+        //    }
+        //    else if (view.IsFullScreenMode)
+        //    {
+        //        view.ExitFullScreenMode();
+        //        NavView.Margin = new Thickness(0, 38, 0, 0);
+        //        NavView.IsPaneVisible = true;
+        //        DragArea.Visibility = Visibility.Visible;
+        //    }
+        //}
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
@@ -276,35 +263,35 @@ namespace JaDisco_UWP
             }
         }
 
-        private async void webView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
-        {
-            if (args.IsSuccess == true)
-            {
-                if (IsStatusParse == false)
-                {
-                    string HTML = await statusWebView.InvokeScriptAsync("eval", new string[] { "document.documentElement.outerHTML;" });
-                    HtmlDocument htmlDoc = new HtmlDocument();
-                    htmlDoc.LoadHtml(HTML);
+        //private async void webView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        //{
+        //    if (args.IsSuccess == true)
+        //    {
+        //        if (IsStatusParse == false)
+        //        {
+        //            string HTML = await statusWebView.InvokeScriptAsync("eval", new string[] { "document.documentElement.outerHTML;" });
+        //            HtmlDocument htmlDoc = new HtmlDocument();
+        //            htmlDoc.LoadHtml(HTML);
 
-                    //flex-navbar-item jd-title
-                    StatusTextBlock.Text = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='flex-navbar-item jd-title']").InnerText;
-                    ProgressBar.IsIndeterminate = false;
+        //            //flex-navbar-item jd-title
+        //            StatusTextBlock.Text = htmlDoc.DocumentNode.SelectSingleNode("//div[@class='flex-navbar-item jd-title']").InnerText;
+        //            ProgressBar.IsIndeterminate = false;
 
-                    IsStatusParse = true;
-                    statusWebView.Navigate(BlankUri);
+        //            IsStatusParse = true;
+        //            statusWebView.Navigate(BlankUri);
 
-                    vm.MemoryCleanup();
-                }
-            }
-        }
+        //            vm.MemoryCleanup();
+        //        }
+        //    }
+        //}
 
-        private void webView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
-        {
-            if (IsStatusParse == false)
-            {
-                StatusTextBlock.Text = "Ładowanie statusu...";
-                ProgressBar.IsIndeterminate = true;
-            }
-        }
+        //private void webView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
+        //{
+        //    if (IsStatusParse == false)
+        //    {
+        //        StatusTextBlock.Text = "Ładowanie statusu...";
+        //        ProgressBar.IsIndeterminate = true;
+        //    }
+        //}
     }
 }
