@@ -222,7 +222,12 @@
       <Version>2.0.181018004</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Twitch.Api\Twitch.Api.csproj">
+      <Project>{23eb9b5b-4935-49f5-ac92-3f026a51d9d1}</Project>
+      <Name>Twitch.Api</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

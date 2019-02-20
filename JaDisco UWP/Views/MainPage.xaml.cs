@@ -37,6 +37,12 @@ namespace JaDisco_UWP
             statusWebView.NavigationStarting += webView_NavigationStarting;
 
             NavView.SelectedItem = NavView.MenuItems[0];
+
+            //var token = TwitchApi.GetAccessToken("lirik");
+            //var url = UsherService.GetStreamLink("lirik", token.Sig, token.Token);
+            //var playlist = UsherService.ParsePlaylists(url);
+
+            //StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(playlist.Playlist[0].Url));
         }
 
         private void ChatHideButton_Click(object sender, RoutedEventArgs e)

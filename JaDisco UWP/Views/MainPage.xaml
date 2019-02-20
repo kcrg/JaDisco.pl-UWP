@@ -82,18 +82,12 @@
                         <ColumnDefinition x:Name="LeftColumn" Width="80*"/>
                         <ColumnDefinition x:Name="RightColumn" Width="20*" MinWidth="250"/>
                     </Grid.ColumnDefinitions>
-                    
-                    <!--<MediaPlayerElement x:Name="StreamMediaPlayer" 
+
+                    <MediaPlayerElement x:Name="StreamMediaPlayer" 
                                         Grid.Column="0" 
                                         AreTransportControlsEnabled="True" 
-                                        Canvas.ZIndex="5"/>-->
-                    
-                    <WebView x:Name="StreamWebView" 
-                             Grid.Column="0" 
-                             DefaultBackgroundColor="Black" 
-                             Source="https://player.twitch.tv/?channel=wonziu" 
-                             ContainsFullScreenElementChanged="StreamWebView_ContainsFullScreenElementChanged"/>
-                    
+                                        Canvas.ZIndex="5"/>
+
                     <WebView x:Name="ChatWebView" 
                              Grid.Column="1" 
                              DefaultBackgroundColor="#121212" 
