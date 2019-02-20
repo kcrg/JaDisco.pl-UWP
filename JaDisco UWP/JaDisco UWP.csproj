@@ -219,9 +219,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack">
-      <Version>1.8.14</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.1.9</Version>
     </PackageReference>
@@ -233,6 +230,12 @@
     <ProjectReference Include="..\Twitch.Api\Twitch.Api.csproj">
       <Project>{23eb9b5b-4935-49f5-ac92-3f026a51d9d1}</Project>
       <Name>Twitch.Api</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Jadisco.Api\Jadisco.Api.csproj">
+      <Project>{09a387c1-37d2-49dc-a6b8-5534eb47b640}</Project>
+      <Name>Jadisco.Api</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

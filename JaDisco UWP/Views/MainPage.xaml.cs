@@ -4,12 +4,19 @@ using JaDisco_UWP.Views;
 using System;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+﻿using JaDisco_UWP.ViewModels;
+using System;
+using System.Diagnostics;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+
+using Jadisco.Api;
+using Jadisco.Api.Data;
 
 namespace JaDisco_UWP
 {
@@ -25,8 +32,13 @@ namespace JaDisco_UWP
         private readonly ToolTip chatHideToolTip = new ToolTip();
         private readonly MainPageViewModel vm = new MainPageViewModel();
 
+        private readonly JadiscoApi jadiscoApi = new JadiscoApi();
+
         public MainPage()
         {
+            jadiscoApi.OnTopicChanged += JadiscoApi_OnTopicChanged;
+            jadiscoApi.Connect();
+
             InitializeComponent();
             StartStatusParse();
 
@@ -44,6 +56,19 @@ namespace JaDisco_UWP
 
             statusWebView.NavigationCompleted += webView_NavigationCompleted;
             statusWebView.NavigationStarting += webView_NavigationStarting;
+            vm.TitleBarCustomization();
+
+            NavigationCacheMode = NavigationCacheMode.Required;
+            Window.Current.SetTitleBar(DragArea);
+        }
+
+        private async void JadiscoApi_OnTopicChanged(Topic topic)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                StatusTextBlock.Text = topic.Text;
+            });
+        }
 
             NavView.SelectedItem = NavView.MenuItems[0];
 
@@ -119,7 +144,6 @@ namespace JaDisco_UWP
             ChatWebView.Refresh();
 
             IsStatusParse = false;
-            StartStatusParse();
         }
 
         private void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
