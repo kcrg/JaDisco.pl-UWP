@@ -9,7 +9,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///Views/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Views/Styles/MainPageStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
@@ -26,10 +26,10 @@
         <muxc:NavigationView x:Name="NavView" 
                              Style="{StaticResource NavigationView}" 
                              SelectionChanged="NavView_SelectionChanged">
-            
+
             <muxc:NavigationView.MenuItems>
-                <muxc:NavigationViewItem Tag="Wonziu" Content="Wonziu"/>
-                <muxc:NavigationViewItem Tag="Dzej" Content="Dzej"/>
+                <muxc:NavigationViewItem Content="Wonziu"/>
+                <muxc:NavigationViewItem Content="Dzej"/>
             </muxc:NavigationView.MenuItems>
 
             <muxc:NavigationView.PaneFooter>
@@ -43,20 +43,25 @@
 
                         <AppBarSeparator/>
 
-                        <AppBarButton x:Name="ChatPositionButton" ToolTipService.ToolTip="Przenieś chat" Click="ChatPositionButton_Click">
+                        <AppBarButton x:Name="ChatPositionButton" ToolTipService.ToolTip="Przenieś czat" Click="ChatPositionButton_Click">
                             <AppBarButton.Icon>
-                                <FontIcon x:Name="ChatPositionIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE90C;"/>
+                                <FontIcon x:Name="ChatPositionIcon" Glyph="&#xE90C;"/>
                             </AppBarButton.Icon>
                         </AppBarButton>
-                        <AppBarButton x:Name="ChatHideButton" ToolTipService.ToolTip="Schowaj chat" Click="ChatHideButton_Click">
+                        <AppBarButton x:Name="ChatHideButton" ToolTipService.ToolTip="Schowaj czat" Click="ChatHideButton_Click">
                             <AppBarButton.Icon>
-                                <FontIcon x:Name="ChatHideIcon" FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9A8;"/>
+                                <FontIcon Glyph="&#xE8F2;"/>
                             </AppBarButton.Icon>
                         </AppBarButton>
-                        <AppBarButton Icon="Refresh" ToolTipService.ToolTip="Odśwież wszystko" Click="RefreshButton_Click"/>
+                        <AppBarButton ToolTipService.ToolTip="Otwórz czat w nowym oknie" Click="ChatNewWindowButton_Click">
+                            <AppBarButton.Icon>
+                                <FontIcon Glyph="&#xE8A7;"/>
+                            </AppBarButton.Icon>
+                        </AppBarButton>
 
                         <AppBarSeparator/>
-                        
+
+                        <AppBarButton Icon="Refresh" ToolTipService.ToolTip="Odśwież wszystko" Click="RefreshButton_Click"/>
                         <AppBarButton Icon="Setting" ToolTipService.ToolTip="Ustawienia" Click="ShowFlyout_Click">
                             <FlyoutBase.AttachedFlyout>
                                 <Flyout LightDismissOverlayMode="Auto">
@@ -82,20 +87,20 @@
                         <ColumnDefinition x:Name="LeftColumn" Width="80*"/>
                         <ColumnDefinition x:Name="RightColumn" Width="20*" MinWidth="250"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <!--<MediaPlayerElement x:Name="StreamMediaPlayer" 
                                         Grid.Column="0" 
                                         AreTransportControlsEnabled="True" 
                                         Canvas.ZIndex="5"/>-->
-                    
+
                     <WebView x:Name="StreamWebView" 
                              Grid.Column="0" 
                              DefaultBackgroundColor="Black" 
                              Source="https://player.twitch.tv/?channel=wonziu" 
                              ContainsFullScreenElementChanged="StreamWebView_ContainsFullScreenElementChanged"/>
-                    
+
                     <WebView x:Name="ChatWebView" 
-                             Grid.Column="1" 
+                             Grid.Column="1"
                              DefaultBackgroundColor="#121212" 
                              Source="https://client.poorchat.net/jadisco"/>
                 </Grid>

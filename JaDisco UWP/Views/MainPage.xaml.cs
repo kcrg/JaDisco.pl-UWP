@@ -1,6 +1,9 @@
 ﻿using HtmlAgilityPack;
 using JaDisco_UWP.ViewModels;
+using JaDisco_UWP.Views;
 using System;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -41,65 +44,12 @@ namespace JaDisco_UWP
 
         private void ChatHideButton_Click(object sender, RoutedEventArgs e)
         {
-            if (HiddenChat == false)
-            {
-                ChatHideIcon.Glyph = "";
-                chatHideToolTip.Content = "Pokaż chat";
-                ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
-
-                if (LeftChat == false)
-                {
-                    RightColumn.Width = new GridLength(0);
-                    RightColumn.MinWidth = 0;
-                    ChatWebView.Visibility = Visibility.Collapsed;
-                    ChatPositionButton.IsEnabled = false;
-
-                    ChatWebView.Navigate(BlankUri);
-                }
-                else if (LeftChat == true)
-                {
-                    LeftColumn.Width = new GridLength(0);
-                    LeftColumn.MinWidth = 0;
-                    ChatWebView.Visibility = Visibility.Collapsed;
-                    ChatPositionButton.IsEnabled = false;
-
-                    ChatWebView.Navigate(BlankUri);
-                }
-
-                HiddenChat = true;
-            }
-            else if (HiddenChat == true)
-            {
-                ChatHideIcon.Glyph = "";
-                chatHideToolTip.Content = "Schowaj chat";
-                ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
-
-                if (LeftChat == false)
-                {
-                    RightColumn.Width = new GridLength(20, GridUnitType.Star);
-                    RightColumn.MinWidth = 250;
-                    ChatWebView.Visibility = Visibility.Visible;
-                    ChatPositionButton.IsEnabled = true;
-
-                    ChatWebView.Navigate(ChatUri);
-                }
-                else if (LeftChat == true)
-                {
-                    LeftColumn.Width = new GridLength(20, GridUnitType.Star);
-                    LeftColumn.MinWidth = 250;
-                    ChatWebView.Visibility = Visibility.Visible;
-                    ChatPositionButton.IsEnabled = true;
-
-                    ChatWebView.Navigate(ChatUri);
-                }
-
-                HiddenChat = false;
-            }
+            HideChat(true);
         }
 
         private void ChatPositionButton_Click(object sender, RoutedEventArgs e)
         {
-            if (LeftChat == false)
+            if (!LeftChat)
             {
                 ChatPositionIcon.Glyph = "";
 
@@ -109,10 +59,11 @@ namespace JaDisco_UWP
                 LeftColumn.Width = new GridLength(20, GridUnitType.Star);
                 LeftColumn.MinWidth = 250;
                 RightColumn.Width = new GridLength(80, GridUnitType.Star);
+                RightColumn.MinWidth = 0;
 
                 LeftChat = true;
             }
-            else if (LeftChat == true)
+            else if (LeftChat)
             {
                 ChatPositionIcon.Glyph = "";
 
@@ -143,7 +94,6 @@ namespace JaDisco_UWP
                 NavView.Margin = new Thickness(0, 38, 0, 0);
                 NavView.IsPaneVisible = true;
                 DragArea.Visibility = Visibility.Visible;
-
             }
         }
 
@@ -156,6 +106,26 @@ namespace JaDisco_UWP
 
             IsStatusParse = false;
             StartStatusParse();
+        }
+
+        private void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
+        {
+            if (args.SelectedItemContainer != null)
+            {
+                if (args.SelectedItemContainer != null)
+                {
+                    switch (args.SelectedItemContainer.Content)
+                    {
+                        case "Wonziu":
+                            StreamWebView.Navigate(WonziuUri);
+                            break;
+
+                        case "Dzej":
+                            StreamWebView.Navigate(DzejUri);
+                            break;
+                    }
+                }
+            }
         }
 
         private void ShowFlyout_Click(object sender, RoutedEventArgs e)
@@ -182,23 +152,89 @@ namespace JaDisco_UWP
             statusWebView.Navigate(new Uri("https://jadisco.pl/"));
         }
 
-        private void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
+        private async void ChatNewWindowButton_Click(object sender, RoutedEventArgs e)
         {
-            if (args.SelectedItemContainer != null)
+            CoreApplicationView newView = CoreApplication.CreateNewView();
+            int newViewId = 0;
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (args.SelectedItemContainer != null)
-                {
-                    switch (args.SelectedItemContainer.Tag)
-                    {
-                        case "Wonziu":
-                            StreamWebView.Navigate(WonziuUri);
-                            break;
+                ApplicationView newAppView = ApplicationView.GetForCurrentView();
+                newAppView.Title = "Czat";
 
-                        case "Dzej":
-                            StreamWebView.Navigate(DzejUri);
-                            break;
+                Frame frame = new Frame();
+                frame.Navigate(typeof(ChatPage), null);
+                Window.Current.Content = frame;
+                // You have to activate the window in order to show it later.
+                Window.Current.Activate();
+
+                newViewId = ApplicationView.GetForCurrentView().Id;
+            });
+            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+
+            HideChat(false);
+        }
+
+        private void HideChat(bool fromHideButton)
+        {
+            if (!HiddenChat)
+            {
+                //ChatHideIcon.Glyph = "";
+                chatHideToolTip.Content = "Pokaż czat";
+                ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
+
+                if (!LeftChat)
+                {
+                    RightColumn.Width = new GridLength(0);
+                    RightColumn.MinWidth = 0;
+                    ChatWebView.Visibility = Visibility.Collapsed;
+                    ChatPositionButton.IsEnabled = false;
+
+                    ChatWebView.Navigate(BlankUri);
+                }
+                else if (LeftChat)
+                {
+                    LeftColumn.Width = new GridLength(0);
+                    LeftColumn.MinWidth = 0;
+                    ChatWebView.Visibility = Visibility.Collapsed;
+                    ChatPositionButton.IsEnabled = false;
+
+                    ChatWebView.Navigate(BlankUri);
+                }
+
+                HiddenChat = true;
+            }
+            else if (HiddenChat)
+            {
+                //ChatHideIcon.Glyph = "";
+                chatHideToolTip.Content = "Schowaj czat";
+                ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
+
+                if (!LeftChat)
+                {
+                    if (fromHideButton)
+                    {
+                        RightColumn.Width = new GridLength(20, GridUnitType.Star);
+                        RightColumn.MinWidth = 250;
+                        ChatWebView.Visibility = Visibility.Visible;
+                        ChatPositionButton.IsEnabled = true;
+
+                        ChatWebView.Navigate(ChatUri);
                     }
                 }
+                else if (LeftChat)
+                {
+                    if (fromHideButton)
+                    {
+                        LeftColumn.Width = new GridLength(20, GridUnitType.Star);
+                        LeftColumn.MinWidth = 250;
+                        ChatWebView.Visibility = Visibility.Visible;
+                        ChatPositionButton.IsEnabled = true;
+
+                        ChatWebView.Navigate(ChatUri);
+                    }
+                }
+
+                HiddenChat = false;
             }
         }
 

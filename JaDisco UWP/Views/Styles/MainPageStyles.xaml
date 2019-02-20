@@ -18,10 +18,10 @@
     </Style>
 
     <Style x:Key="StatusText" TargetType="TextBlock">
-        <Setter Property="Margin" Value="95,0,140,0"/>
+        <Setter Property="Margin" Value="95,0,140,4"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontSize" Value="14"/>
         <Setter Property="Text" Value="Ładowanie tematu..."/>
     </Style>
 
@@ -32,7 +32,7 @@
         <Setter Property="IsBackButtonVisible" Value="Collapsed"/>
         <Setter Property="PaneDisplayMode" Value="Top"/>
     </Style>
-    
+
     <Style x:Key="CommandBar" TargetType="CommandBar">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="OverflowButtonVisibility" Value="Collapsed"/>
