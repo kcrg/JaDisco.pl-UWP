@@ -53,16 +53,19 @@ namespace Twitch.Api
 
         static string GetName(string line)
         {
-            var params_ = line.Split(',');
+            string pattern = @"NAME=""(.*)""";
 
-            var name = params_.FirstOrDefault(m => m.StartsWith("NAME"));
+            var match = Regex.Match(line, pattern);
 
-            if (name.Length > 6)
+            if (match is null)
+                return "";
+
+            if (match.Groups.Count == 2)
             {
-                name = name.Substring("NAME=\"".Length, name.Length - 1 - "NAME=\"".Length);
+                return match.Groups[1].Value;
             }
 
-            return name;
+            return "";
         }
 
         static long GetBitrate(string line)
