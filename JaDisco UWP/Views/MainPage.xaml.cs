@@ -65,7 +65,7 @@ namespace JaDisco_UWP
             {
                 ChatPositionIcon.Glyph = "";
 
-                StreamWebView.SetValue(Grid.ColumnProperty, 1);
+                StreamMediaPlayer.SetValue(Grid.ColumnProperty, 1);
                 ChatWebView.SetValue(Grid.ColumnProperty, 0);
 
                 LeftColumn.Width = new GridLength(20, GridUnitType.Star);
@@ -79,7 +79,7 @@ namespace JaDisco_UWP
             {
                 ChatPositionIcon.Glyph = "";
 
-                StreamWebView.SetValue(Grid.ColumnProperty, 0);
+                StreamMediaPlayer.SetValue(Grid.ColumnProperty, 0);
                 ChatWebView.SetValue(Grid.ColumnProperty, 1);
 
                 LeftColumn.Width = new GridLength(80, GridUnitType.Star);
@@ -113,7 +113,7 @@ namespace JaDisco_UWP
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            StreamWebView.Refresh();
+            //StreamWebView.Refresh();
 
             ChatWebView.Source = ChatUri;
             ChatWebView.Refresh();
@@ -131,11 +131,11 @@ namespace JaDisco_UWP
                     switch (args.SelectedItemContainer.Content)
                     {
                         case "Wonziu":
-                            StreamWebView.Navigate(WonziuUri);
+                            //StreamWebView.Navigate(WonziuUri);
                             break;
 
                         case "Dzej":
-                            StreamWebView.Navigate(DzejUri);
+                            //StreamWebView.Navigate(DzejUri);
                             break;
                     }
                 }
