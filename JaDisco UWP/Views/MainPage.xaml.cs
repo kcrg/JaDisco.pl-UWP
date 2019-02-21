@@ -68,7 +68,7 @@ namespace JaDisco_UWP
 
         private async void JadiscoApi_OnStreamWentOnline(Service obj)
         {
-            // if stream is arleady online and new streamer isn't Wonziu (Wonziu has prority)
+            // if stream is already online and new streamer isn't Wonziu (Wonziu has priority)
             if (jadiscoApi.Stream.Status == true && obj.StreamerId != 1)
                 return;
 
