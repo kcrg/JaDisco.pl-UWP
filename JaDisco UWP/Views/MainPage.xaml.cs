@@ -1,5 +1,6 @@
 ﻿using JaDisco_UWP.ViewModels;
 using JaDisco_UWP.Views;
+using JaDisco_UWP.Views.CustomDialogs;
 
 using System;
 using System.Linq;
@@ -114,6 +115,7 @@ namespace JaDisco_UWP
         private async void JadiscoApi_OnStreamWentOffline(Service obj)
         {
             streamPlaylist = null;
+            currentStream = null;
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
             {
@@ -192,7 +194,10 @@ namespace JaDisco_UWP
             ChatWebView.Source = ChatUri;
             ChatWebView.Refresh();
 
-            ChangeStream(currentStream);
+            if (currentStream != null)
+            {
+                ChangeStream(currentStream);
+            }
         }
 
         private void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
