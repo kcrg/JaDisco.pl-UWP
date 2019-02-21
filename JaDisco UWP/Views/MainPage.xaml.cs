@@ -44,9 +44,21 @@ namespace JaDisco_UWP
 
             NavigationCacheMode = NavigationCacheMode.Required;
             NavView.SelectedItem = NavView.MenuItems[0];
+
+            StreamMediaPlayer.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
+            StreamMediaPlayer.MediaPlayer.Play();
         }
 
-        private async void JadiscoApi_OnTopicChanged(Topic topic)
+        private async void MediaPlayer_MediaEnded(Windows.Media.Playback.MediaPlayer sender, object args)
+        {
+            if (jadiscoApi.Stream.Status == false)
+            {
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    StreamMediaPlayer.MediaPlayer.Play();
+                });
+            }
+        }
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
