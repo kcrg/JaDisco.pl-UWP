@@ -1,9 +1,8 @@
-﻿using Jadisco.Api;
-using Jadisco.Api.Data;
-using JaDisco_UWP.ViewModels;
+﻿using JaDisco_UWP.ViewModels;
 using JaDisco_UWP.Views;
 using System;
 using Windows.ApplicationModel.Core;
+using Windows.Media.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -11,6 +10,11 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+
+using Twitch.Api;
+
+using Jadisco.Api;
+using Jadisco.Api.Data;
 
 namespace JaDisco_UWP
 {
@@ -28,6 +32,8 @@ namespace JaDisco_UWP
         public MainPage()
         {
             jadiscoApi.OnTopicChanged += JadiscoApi_OnTopicChanged;
+            jadiscoApi.OnStreamWentOnline += JadiscoApi_OnStreamWentOnline;
+            jadiscoApi.OnStreamWentOffline += JadiscoApi_OnStreamWentOffline;
             jadiscoApi.Connect();
 
             InitializeComponent();
@@ -59,17 +65,48 @@ namespace JaDisco_UWP
                 });
             }
         }
+
+        private async void JadiscoApi_OnStreamWentOnline(Service obj)
+        {
+            // if stream is arleady online and new streamer isn't Wonziu (Wonziu has prority)
+            if (jadiscoApi.Stream.Status == true && obj.StreamerId != 1)
+                return;
+
+            var token = TwitchApi.GetAccessToken(obj.Id);
+
+            if (token is null)
+                return;
+
+            var url = UsherService.GetStreamLink(obj.Id, token.Sig, token.Token);
+
+            var playlist = UsherService.ParsePlaylists(url);
+
+            if (playlist is null)
+                return;
+
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(playlist.Playlist[0].Url));
+                StreamMediaPlayer.MediaPlayer.Play();
+            });
+
+        }
+
+        private async void JadiscoApi_OnStreamWentOffline(Service obj)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
+            {
+                StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashScreenAssets/SplashVideo_Trim.mp4"));
+                StreamMediaPlayer.MediaPlayer.Play();
+            });
+        }
+
+        private async void JadiscoApi_OnTopicChanged(Topic topic)
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 StatusTextBlock.Text = topic.Text;
             });
-
-            //var token = TwitchApi.GetAccessToken("lirik");
-            //var url = UsherService.GetStreamLink("lirik", token.Sig, token.Token);
-            //var playlist = UsherService.ParsePlaylists(url);
-
-            //StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(playlist.Playlist[0].Url));
         }
 
         private void ChatHideButton_Click(object sender, RoutedEventArgs e)
