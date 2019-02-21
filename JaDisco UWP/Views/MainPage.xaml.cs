@@ -1,12 +1,12 @@
-﻿using Jadisco.Api;
-using Jadisco.Api.Models;
-using JaDisco_UWP.ViewModels;
+﻿using JaDisco_UWP.ViewModels;
 using JaDisco_UWP.Views;
 using JaDisco_UWP.Views.CustomDialogs;
+
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using Twitch.Api;
-using Twitch.Api.Models;
+
 using Windows.ApplicationModel.Core;
 using Windows.Media.Core;
 using Windows.UI.Core;
@@ -16,6 +16,13 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+
+using Twitch.Api;
+using Twitch.Api.Models;
+
+using Jadisco.Api;
+using Jadisco.Api.Models;
+
 
 namespace JaDisco_UWP
 {
@@ -31,6 +38,8 @@ namespace JaDisco_UWP
         private readonly JadiscoApi jadiscoApi = new JadiscoApi();
         private HLSPlaylist streamPlaylist = null;
         private HLSStream currentStream = null;
+
+        private StreamQualitiesViewModel streamQualitiesVM = new StreamQualitiesViewModel();
 
         public MainPage()
         {
@@ -56,6 +65,8 @@ namespace JaDisco_UWP
 
             StreamMediaPlayer.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
             StreamMediaPlayer.MediaPlayer.Play();
+
+            QualityStackPanel.DataContext = streamQualitiesVM;
         }
 
         private void ChangeStream(string channel)
@@ -78,14 +89,61 @@ namespace JaDisco_UWP
 
             streamPlaylist = playlist;
 
+            LoadQualityList(playlist);
             ChangeStream(playlist.Playlist[0]);
+        }
+
+        private void StopStream()
+        {
+            streamQualitiesVM.IsNotAvailable = true;
+            streamQualitiesVM.ClearQualityList();
+
+            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashAssets/SplashVideo.mp4"));
+            StreamMediaPlayer.AreTransportControlsEnabled = false;
+            StreamMediaPlayer.MediaPlayer.Play();
         }
 
         private void ChangeStream(HLSStream stream)
         {
+            if (stream is null)
+                return;
+
             StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(stream.Url));
             StreamMediaPlayer.MediaPlayer.Play();
             currentStream = stream;
+        }
+
+        private void LoadQualityList(HLSPlaylist playlist)
+        {
+            if (playlist?.Playlist != null && playlist.Playlist.Count() > 0)
+            {
+                streamQualitiesVM.ClearQualityList();
+
+                foreach (var stream in playlist.Playlist)
+                {
+                    if (stream.Name.StartsWith("audio"))
+                        continue;
+
+                    streamQualitiesVM.AddQuality(new StreamQualityViewModel
+                    {
+                        Name = stream.Name,
+                        Stream = stream
+                    });
+                }
+
+                streamQualitiesVM.IsNotAvailable = false;
+            }
+        }
+
+        private void StreamQualityButton_Checked(object sender, RoutedEventArgs e)
+        {
+            var radio = sender as RadioButton;
+            var data = radio.DataContext as StreamQualityViewModel;
+
+            if (data is null)
+                return;
+
+            ChangeStream(data.Stream);
         }
 
         private async void MediaPlayer_MediaEnded(Windows.Media.Playback.MediaPlayer sender, object args)
@@ -121,9 +179,7 @@ namespace JaDisco_UWP
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashAssets/SplashVideo.mp4"));
-                StreamMediaPlayer.AreTransportControlsEnabled = false;
-                StreamMediaPlayer.MediaPlayer.Play();
+                StopStream();
             });
         }
 
@@ -210,43 +266,43 @@ namespace JaDisco_UWP
                 switch (args.SelectedItemContainer.Content)
                 {
                     case "Wonziu":
+                    {
+                        Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Wonziu");
+
+                        if (streamer is null)
                         {
-                            Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Wonziu");
-
-                            if (streamer is null)
-                            {
-                                break;
-                            }
-
-                            Service stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
-
-                            if (stream is null)
-                            {
-                                break;
-                            }
-
-                            ChangeStream(stream.Id);
+                            break;
                         }
-                        break;
+
+                        Service stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
+
+                        if (stream is null)
+                        {
+                            break;
+                        }
+
+                        ChangeStream(stream.Id);
+                    }
+                    break;
                     case "Dzej":
+                    {
+                        Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Dzej");
+
+                        if (streamer is null)
                         {
-                            Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Dzej");
-
-                            if (streamer is null)
-                            {
-                                break;
-                            }
-
-                            Service stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
-
-                            if (stream is null)
-                            {
-                                break;
-                            }
-
-                            ChangeStream(stream.Id);
+                            break;
                         }
-                        break;
+
+                        Service stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
+
+                        if (stream is null)
+                        {
+                            break;
+                        }
+
+                        ChangeStream(stream.Id);
+                    }
+                    break;
                 }
             }
         }
