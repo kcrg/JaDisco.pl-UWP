@@ -1,6 +1,9 @@
 ﻿using JaDisco_UWP.ViewModels;
 using JaDisco_UWP.Views;
+
 using System;
+using System.Linq;
+
 using Windows.ApplicationModel.Core;
 using Windows.Media.Core;
 using Windows.UI.Core;
@@ -55,6 +58,25 @@ namespace JaDisco_UWP
             StreamMediaPlayer.MediaPlayer.Play();
         }
 
+        void ChangeStream(string channel)
+        {
+            var token = TwitchApi.GetAccessToken(channel);
+
+            if (token is null)
+                return;
+
+            var url = UsherService.GetStreamLink(channel, token.Sig, token.Token);
+
+            var playlist = UsherService.ParsePlaylists(url);
+
+            if (playlist is null)
+                return;
+
+            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(playlist.Playlist[0].Url));
+            StreamMediaPlayer.MediaPlayer.Play();
+
+        }
+
         private async void MediaPlayer_MediaEnded(Windows.Media.Playback.MediaPlayer sender, object args)
         {
             if (jadiscoApi.Stream.Status == false)
@@ -72,24 +94,10 @@ namespace JaDisco_UWP
             if (jadiscoApi.Stream.Status == true && obj.StreamerId != 1)
                 return;
 
-            var token = TwitchApi.GetAccessToken(obj.Id);
-
-            if (token is null)
-                return;
-
-            var url = UsherService.GetStreamLink(obj.Id, token.Sig, token.Token);
-
-            var playlist = UsherService.ParsePlaylists(url);
-
-            if (playlist is null)
-                return;
-
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(playlist.Playlist[0].Url));
-                StreamMediaPlayer.MediaPlayer.Play();
+                ChangeStream(obj.Id);
             });
-
         }
 
         private async void JadiscoApi_OnStreamWentOffline(Service obj)
@@ -176,18 +184,37 @@ namespace JaDisco_UWP
         {
             if (args.SelectedItemContainer != null)
             {
-                if (args.SelectedItemContainer != null)
+                switch (args.SelectedItemContainer.Content)
                 {
-                    switch (args.SelectedItemContainer.Content)
+                    case "Wonziu":
                     {
-                        case "Wonziu":
-                            //StreamWebView.Navigate(WonziuUri);
+                        var streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Wonziu");
+
+                        if (streamer is null)
                             break;
 
-                        case "Dzej":
-                            //StreamWebView.Navigate(DzejUri);
+                        var stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
+
+                        if (stream is null)
                             break;
+                        ChangeStream(stream.Id);
                     }
+                    break;
+                    case "Dzej":
+                    {
+                        var streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Dzej");
+
+                        if (streamer is null)
+                            break;
+
+                        var stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
+
+                        if (stream is null)
+                            break;
+
+                        ChangeStream(stream.Id);
+                    }
+                    break;
                 }
             }
         }
