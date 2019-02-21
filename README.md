@@ -1,7 +1,7 @@
 # JaDisco.pl-UWP
 
 Nieoficjalna aplikacja strony jadisco.pl
-![alt text](https://i.imgur.com/GdLUJc7.png)
+![alt text](https://i.imgur.com/sHAdIfy.jpg)
 
 # How to build
 1. Pobierz Visual Studio z Windows 10 v1809 SDK
