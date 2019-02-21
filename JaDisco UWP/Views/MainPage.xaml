@@ -62,6 +62,25 @@
                         <AppBarSeparator/>
 
                         <AppBarButton Icon="Refresh" ToolTipService.ToolTip="Odśwież wszystko" Click="RefreshButton_Click"/>
+
+                        <AppBarButton ToolTipService.ToolTip="Zmień jakość streamu" Click="ShowFlyout_Click">
+                            <AppBarButton.Icon>
+                                <FontIcon Glyph="&#xE9E9;"/>
+                            </AppBarButton.Icon>
+                            <FlyoutBase.AttachedFlyout>
+                                <Flyout LightDismissOverlayMode="Auto">
+                                    <StackPanel> <!--TODO: make it binable-->
+                                        <TextBlock Text="Jakość Streamu" FontSize="14"/>
+                                        <RadioButton Content="1080p60" GroupName="Quality" IsChecked="True"/>
+                                        <RadioButton Content="1080p" GroupName="Quality"/>
+                                        <RadioButton Content="720p60" GroupName="Quality"/>
+                                        <RadioButton Content="720p" GroupName="Quality"/>
+                                        <RadioButton Content="480p" GroupName="Quality"/>
+                                    </StackPanel>
+                                </Flyout>
+                            </FlyoutBase.AttachedFlyout>
+                        </AppBarButton>
+
                         <AppBarButton Icon="Setting" ToolTipService.ToolTip="Ustawienia" Click="ShowFlyout_Click">
                             <FlyoutBase.AttachedFlyout>
                                 <Flyout LightDismissOverlayMode="Auto">
@@ -87,12 +106,6 @@
                         <ColumnDefinition x:Name="LeftColumn" Width="80*"/>
                         <ColumnDefinition x:Name="RightColumn" Width="20*" MinWidth="200"/>
                     </Grid.ColumnDefinitions>
-
-                    <!--<WebView x:Name="StreamWebView" 
-                             Grid.Column="0" 
-                             DefaultBackgroundColor="Black" 
-                             Source="https://player.twitch.tv/?channel=wonziu" 
-                             ContainsFullScreenElementChanged="StreamWebView_ContainsFullScreenElementChanged"/>-->
 
                     <MediaPlayerElement x:Name="StreamMediaPlayer"
                                         Source="ms-appx:///Assets/SplashScreenAssets/SplashVideo_Trim.mp4"
