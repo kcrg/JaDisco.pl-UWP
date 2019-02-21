@@ -121,7 +121,7 @@ namespace JaDisco_UWP
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashScreenAssets/SplashVideo_Trim.mp4"));
+                StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashAssets/SplashVideo.mp4"));
                 StreamMediaPlayer.AreTransportControlsEnabled = false;
                 StreamMediaPlayer.MediaPlayer.Play();
             });

@@ -18,8 +18,11 @@
         <Grid Style="{StaticResource DragAreaGrid}"
               x:Name="DragArea">
 
-            <!--<Image Style="{StaticResource AppLogoImage}"/>-->
-            <TextBlock x:Name="StatusTextBlock" Margin="12,0,140,0" Style="{StaticResource StatusText}"/>
+            <Image Source="ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogo.png"
+                   Margin="12,10,0,10"
+                   Style="{StaticResource AppLogoImage}"/>
+            <TextBlock x:Name="StatusTextBlock"
+                       Style="{StaticResource StatusText}"/>
             <!--<ProgressBar x:Name="ProgressBar" Style="{StaticResource ProgressBar}"/>-->
         </Grid>
 
@@ -109,7 +112,7 @@
                     </Grid.ColumnDefinitions>
 
                     <MediaPlayerElement x:Name="StreamMediaPlayer"
-                                        Source="ms-appx:///Assets/SplashScreenAssets/SplashVideo_Trim.mp4"
+                                        Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4"
                                         Grid.Column="0"
                                         Canvas.ZIndex="5"/>
 
