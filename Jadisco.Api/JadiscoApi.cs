@@ -1,8 +1,11 @@
-﻿using Newtonsoft.Json;
-using PureWebSockets;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Net.WebSockets;
+
+using Jadisco.Api.Models;
+
+using Newtonsoft.Json;
+using PureWebSockets;
 
 namespace Jadisco.Api
 {
@@ -10,16 +13,16 @@ namespace Jadisco.Api
     {
         private readonly PureWebSocket webSocket;
         private static readonly string WebSocketUrl = "wss://api.pancernik.info/notifier";
-        private Data.ApiMessage localStorage = null;
+        private ApiMessage localStorage = null;
 
-        public event Action<Data.Topic> OnTopicChanged;
+        public event Action<Topic> OnTopicChanged;
         public event Action<long> OnStreamViewersChanged;
-        public event Action<Data.Service> OnStreamWentOnline;
-        public event Action<Data.Service> OnStreamWentOffline;
+        public event Action<Service> OnStreamWentOnline;
+        public event Action<Service> OnStreamWentOffline;
 
-        public Data.Streamer[] Streamers => localStorage?.Data.Streamers;
-        public Data.Topic Topic => localStorage?.Data.Topic;
-        public Data.Stream Stream => localStorage?.Data.Stream;
+        public Streamer[] Streamers => localStorage?.Data.Streamers;
+        public Topic Topic => localStorage?.Data.Topic;
+        public Stream Stream => localStorage?.Data.Stream;
 
         public JadiscoApi()
         {
@@ -66,103 +69,103 @@ namespace Jadisco.Api
 
         private void WebSocket_OnMessage(string message)
         {
-            Data.ApiMessage data = JsonConvert.DeserializeObject<Data.ApiMessage>(message);
+            ApiMessage data = JsonConvert.DeserializeObject<ApiMessage>(message);
 
             switch (data.Type)
             {
                 case "status":
+                {
+                    localStorage = data;
+
+                    OnTopicChanged?.Invoke(data.Data.Topic);
+                    OnStreamViewersChanged?.Invoke(data.Data.Stream.Viewers);
+
+                    foreach (Service stream in data.Data.Stream.Services)
                     {
-                        localStorage = data;
-
-                        OnTopicChanged?.Invoke(data.Data.Topic);
-                        OnStreamViewersChanged?.Invoke(data.Data.Stream.Viewers);
-
-                        foreach (Data.Service stream in data.Data.Stream.Services)
+                        if (stream.Status == true)
                         {
-                            if (stream.Status == true)
-                            {
-                                OnStreamWentOnline?.Invoke(stream);
-                            }
+                            OnStreamWentOnline?.Invoke(stream);
                         }
                     }
-                    break;
+                }
+                break;
                 case "update":
+                {
+                    // wait for status
+                    if (localStorage is null)
                     {
-                        // wait for status
-                        if (localStorage is null)
+                        break;
+                    }
+
+                    if (data.Data.Topic != null)
+                    {
+                        if (localStorage.Data.Topic.Id != data.Data.Topic.Id)
                         {
-                            break;
+                            OnTopicChanged?.Invoke(data.Data.Topic);
                         }
 
-                        if (data.Data.Topic != null)
-                        {
-                            if (localStorage.Data.Topic.Id != data.Data.Topic.Id)
-                            {
-                                OnTopicChanged?.Invoke(data.Data.Topic);
-                            }
+                        localStorage.Data.Topic = data.Data.Topic;
+                    }
 
-                            localStorage.Data.Topic = data.Data.Topic;
+                    if (data.Data.Stream != null)
+                    {
+                        // invoke viewers change event only when stream is online
+                        if (localStorage.Data.Stream.Status == true && localStorage.Data.Stream.Viewers != data.Data.Stream.Viewers)
+                        {
+                            OnStreamViewersChanged?.Invoke(data.Data.Stream.Viewers);
+
+                            localStorage.Data.Stream.Viewers = data.Data.Stream.Viewers;
+                        }
+                        else if (localStorage.Data.Stream.Status == false)
+                        {
+                            localStorage.Data.Stream.Viewers = 0;
                         }
 
-                        if (data.Data.Stream != null)
+                        if (data.Data.Stream.Services != null)
                         {
-                            // invoke viewers change event only when stream is online
-                            if (localStorage.Data.Stream.Status == true && localStorage.Data.Stream.Viewers != data.Data.Stream.Viewers)
+                            for (int i = 0; i < data.Data.Stream.Services.Length; i++)
                             {
-                                OnStreamViewersChanged?.Invoke(data.Data.Stream.Viewers);
+                                Service localService = localStorage.Data.Stream.Services[i];
+                                Service remoteService = data.Data.Stream.Services[i];
 
-                                localStorage.Data.Stream.Viewers = data.Data.Stream.Viewers;
-                            }
-                            else if (localStorage.Data.Stream.Status == false)
-                            {
-                                localStorage.Data.Stream.Viewers = 0;
-                            }
-
-                            if (data.Data.Stream.Services != null)
-                            {
-                                for (int i = 0; i < data.Data.Stream.Services.Length; i++)
+                                if (localService.Status != remoteService.Status)
                                 {
-                                    Data.Service localService = localStorage.Data.Stream.Services[i];
-                                    Data.Service remoteService = data.Data.Stream.Services[i];
-
-                                    if (localService.Status != remoteService.Status)
+                                    if (remoteService.Status == true)
                                     {
-                                        if (remoteService.Status == true)
-                                        {
-                                            OnStreamWentOnline?.Invoke(remoteService);
-                                        }
-                                        else
-                                        {
-                                            OnStreamWentOffline?.Invoke(remoteService);
-                                        }
+                                        OnStreamWentOnline?.Invoke(remoteService);
+                                    }
+                                    else
+                                    {
+                                        OnStreamWentOffline?.Invoke(remoteService);
                                     }
                                 }
+                            }
 
-                                localStorage.Data.Stream.Status = data.Data.Stream.Status;
-                                localStorage.Data.Stream.Services = data.Data.Stream.Services;
+                            localStorage.Data.Stream.Status = data.Data.Stream.Status;
+                            localStorage.Data.Stream.Services = data.Data.Stream.Services;
 
-                                if (localStorage.Data.Stream.Status == true)
-                                {
-                                    localStorage.Data.Stream.OnlineAt = data.Data.Stream.OnlineAt;
-                                }
-                                else
-                                {
-                                    localStorage.Data.Stream.OfflineAt = data.Data.Stream.OfflineAt;
-                                }
+                            if (localStorage.Data.Stream.Status == true)
+                            {
+                                localStorage.Data.Stream.OnlineAt = data.Data.Stream.OnlineAt;
+                            }
+                            else
+                            {
+                                localStorage.Data.Stream.OfflineAt = data.Data.Stream.OfflineAt;
                             }
                         }
+                    }
 
-                        if (data.Data.Streamers != null)
-                        {
-                            localStorage.Data.Streamers = data.Data.Streamers;
-                        }
-                    }
-                    break;
-                case "ping":
+                    if (data.Data.Streamers != null)
                     {
-                        webSocket.Send(JsonConvert.SerializeObject("{type:'pong'}"));
+                        localStorage.Data.Streamers = data.Data.Streamers;
                     }
-                    break;
+                }
+                break;
+                case "ping":
+                {
+                    webSocket.Send(JsonConvert.SerializeObject("{type:'pong'}"));
+                }
+                break;
             }
         }
     }

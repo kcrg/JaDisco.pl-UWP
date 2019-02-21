@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Jadisco.Api.Data
+namespace Jadisco.Api.Models
 {
     public class Streamer
     {
