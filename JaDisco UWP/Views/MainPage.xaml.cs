@@ -1,7 +1,5 @@
 ﻿using JaDisco_UWP.ViewModels;
 using JaDisco_UWP.Views;
-using JaDisco_UWP.Views.CustomDialogs;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -53,8 +51,9 @@ namespace JaDisco_UWP
             if (App.RunningOnXbox || App.RunningOnMobile)
             {
                 ChatInNewWindow.Visibility = Visibility.Collapsed;
+                StatusTextBlock.Margin = new Thickness(90, 0, 0, 0);
             }
-            else
+            else if (App.RunningOnDesktop)
             {
                 vm.TitleBarCustomization();
                 Window.Current.SetTitleBar(DragArea);
@@ -187,7 +186,10 @@ namespace JaDisco_UWP
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                StatusTextBlock.Text = topic.Text;
+                StatusTextBlock.Text = topic.Text.Trim();
+
+                StatusFlyoutTextBlock.Text = topic.Text.Trim();
+                StatusDateFlyoutTextBlock.Text = "Dodane: " + topic.UpdatedAt.ToString().Replace(" +00:00", "");
             });
         }
 
@@ -205,10 +207,8 @@ namespace JaDisco_UWP
                 StreamMediaPlayer.SetValue(Grid.ColumnProperty, 1);
                 ChatWebView.SetValue(Grid.ColumnProperty, 0);
 
-                LeftColumn.Width = new GridLength(20, GridUnitType.Star);
-                LeftColumn.MinWidth = 200;
-                RightColumn.Width = new GridLength(80, GridUnitType.Star);
-                RightColumn.MinWidth = 0;
+                LeftColumn.Width = new GridLength(230, GridUnitType.Star);
+                RightColumn.Width = new GridLength(770, GridUnitType.Star);
 
                 LeftChat = true;
             }
@@ -219,10 +219,8 @@ namespace JaDisco_UWP
                 StreamMediaPlayer.SetValue(Grid.ColumnProperty, 0);
                 ChatWebView.SetValue(Grid.ColumnProperty, 1);
 
-                LeftColumn.Width = new GridLength(80, GridUnitType.Star);
-                LeftColumn.MinWidth = 0;
-                RightColumn.Width = new GridLength(20, GridUnitType.Star);
-                RightColumn.MinWidth = 200;
+                LeftColumn.Width = new GridLength(770, GridUnitType.Star);
+                RightColumn.Width = new GridLength(230, GridUnitType.Star);
 
                 LeftChat = false;
             }
@@ -312,13 +310,18 @@ namespace JaDisco_UWP
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender);
         }
 
-        private void DonateButton_Click(object sender, RoutedEventArgs e)
+        private void DonateWonziu_Click(object sender, RoutedEventArgs e)
         {
             vm.LaunchUri("https://streamlabs.com/wonziu");
         }
         private void Donate_Tapped(object sender, TappedRoutedEventArgs e)
         {
             vm.LaunchUri("https://tinyurl.com/DonateMohairApps");
+        }
+
+        private void Github_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            vm.LaunchUri("https://github.com/kcrg/JaDisco.pl-UWP");
         }
 
         private void Wykop_Tapped(object sender, TappedRoutedEventArgs e)
@@ -359,7 +362,6 @@ namespace JaDisco_UWP
                 if (!LeftChat)
                 {
                     RightColumn.Width = new GridLength(0);
-                    RightColumn.MinWidth = 0;
                     ChatWebView.Visibility = Visibility.Collapsed;
                     ChatPositionButton.IsEnabled = false;
 
@@ -369,7 +371,6 @@ namespace JaDisco_UWP
                 else if (LeftChat)
                 {
                     LeftColumn.Width = new GridLength(0);
-                    LeftColumn.MinWidth = 0;
                     ChatWebView.Visibility = Visibility.Collapsed;
                     ChatPositionButton.IsEnabled = false;
 
@@ -388,8 +389,7 @@ namespace JaDisco_UWP
                 {
                     if (fromHideButton)
                     {
-                        RightColumn.Width = new GridLength(20, GridUnitType.Star);
-                        RightColumn.MinWidth = 250;
+                        RightColumn.Width = new GridLength(230, GridUnitType.Star);
                         ChatWebView.Visibility = Visibility.Visible;
                         ChatPositionButton.IsEnabled = true;
 
@@ -400,8 +400,7 @@ namespace JaDisco_UWP
                 {
                     if (fromHideButton)
                     {
-                        LeftColumn.Width = new GridLength(20, GridUnitType.Star);
-                        LeftColumn.MinWidth = 250;
+                        LeftColumn.Width = new GridLength(230, GridUnitType.Star);
                         ChatWebView.Visibility = Visibility.Visible;
                         ChatPositionButton.IsEnabled = true;
 

@@ -10,8 +10,9 @@ namespace JaDisco_UWP
 {
     public sealed partial class App : Application
     {
-        public static bool RunningOnXbox => AnalyticsInfo.VersionInfo.DeviceFamily.ToLower().Contains("Xbox");
-        public static bool RunningOnMobile => AnalyticsInfo.VersionInfo.DeviceFamily.ToLower().Contains("Mobile");
+        public static bool RunningOnDesktop => AnalyticsInfo.VersionInfo.DeviceFamily.ToLower().Contains("desktop");
+        public static bool RunningOnXbox => AnalyticsInfo.VersionInfo.DeviceFamily.ToLower().Contains("xbox");
+        public static bool RunningOnMobile => AnalyticsInfo.VersionInfo.DeviceFamily.ToLower().Contains("mobile");
 
         public App()
         {

@@ -8,6 +8,20 @@
     mc:Ignorable="d" Background="{ThemeResource SystemControlChromeLowAcrylicWindowBrush}">
     <Page.Resources>
         <ResourceDictionary>
+            <Flyout x:Key="StatusFlyout">
+                <Flyout.FlyoutPresenterStyle>
+                    <Style TargetType="FlyoutPresenter">
+                        <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
+                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+                        <Setter Property="IsTabStop" Value="True"/>
+                        <Setter Property="TabNavigation" Value="Cycle"/>
+                    </Style>
+                </Flyout.FlyoutPresenterStyle>
+                <StackPanel>
+                    <TextBlock x:Name="StatusFlyoutTextBlock" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="StatusDateFlyoutTextBlock" Foreground="LightGray" FontSize="11"/>
+                </StackPanel>
+            </Flyout>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///Views/Styles/MainPageStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -38,7 +52,16 @@
             <muxc:NavigationView.PaneFooter>
                 <CommandBar Style="{StaticResource CommandBar}">
                     <CommandBar.PrimaryCommands>
-                        <AppBarButton x:Name="DonateButton" ToolTipService.ToolTip="Wesprzyj Wonzia" Click="DonateButton_Click">
+                        <AppBarButton ToolTipService.ToolTip="Wyświetl cały temat" 
+                                      FlyoutBase.AttachedFlyout="{StaticResource StatusFlyout}" 
+                                      Click="ShowFlyout_Click">
+                            <AppBarButton.Icon>
+                                <FontIcon Glyph="&#xE946;"/>
+                            </AppBarButton.Icon>
+                        </AppBarButton>
+
+                        <AppBarButton ToolTipService.ToolTip="Wesprzyj Wonzia" 
+                                      Click="DonateWonziu_Click">
                             <AppBarButton.Icon>
                                 <FontIcon Glyph="&#xEB51;"/>
                             </AppBarButton.Icon>
@@ -46,17 +69,23 @@
 
                         <AppBarSeparator/>
 
-                        <AppBarButton x:Name="ChatPositionButton" ToolTipService.ToolTip="Przenieś czat" Click="ChatPositionButton_Click">
+                        <AppBarButton x:Name="ChatPositionButton" 
+                                      ToolTipService.ToolTip="Przenieś czat" 
+                                      Click="ChatPositionButton_Click">
                             <AppBarButton.Icon>
                                 <FontIcon x:Name="ChatPositionIcon" Glyph="&#xE90C;"/>
                             </AppBarButton.Icon>
                         </AppBarButton>
-                        <AppBarButton x:Name="ChatHideButton" ToolTipService.ToolTip="Schowaj czat" Click="ChatHideButton_Click">
+                        <AppBarButton x:Name="ChatHideButton" 
+                                      ToolTipService.ToolTip="Schowaj czat" 
+                                      Click="ChatHideButton_Click">
                             <AppBarButton.Icon>
                                 <FontIcon Glyph="&#xE8F2;"/>
                             </AppBarButton.Icon>
                         </AppBarButton>
-                        <AppBarButton x:Name="ChatInNewWindow" ToolTipService.ToolTip="Otwórz czat w nowym oknie" Click="ChatNewWindowButton_Click">
+                        <AppBarButton x:Name="ChatInNewWindow" 
+                                      ToolTipService.ToolTip="Otwórz czat w nowym oknie" 
+                                      Click="ChatNewWindowButton_Click">
                             <AppBarButton.Icon>
                                 <FontIcon Glyph="&#xE8A7;"/>
                             </AppBarButton.Icon>
@@ -64,9 +93,12 @@
 
                         <AppBarSeparator/>
 
-                        <AppBarButton Icon="Refresh" ToolTipService.ToolTip="Odśwież wszystko" Click="RefreshButton_Click"/>
+                        <AppBarButton Icon="Refresh" 
+                                      ToolTipService.ToolTip="Odśwież wszystko" 
+                                      Click="RefreshButton_Click"/>
 
-                        <AppBarButton ToolTipService.ToolTip="Zmień jakość streamu" Click="ShowFlyout_Click">
+                        <AppBarButton ToolTipService.ToolTip="Zmień jakość streamu" 
+                                      Click="ShowFlyout_Click">
                             <AppBarButton.Icon>
                                 <FontIcon Glyph="&#xE9E9;"/>
                             </AppBarButton.Icon>
@@ -89,7 +121,9 @@
                             </FlyoutBase.AttachedFlyout>
                         </AppBarButton>
 
-                        <AppBarButton Icon="Setting" ToolTipService.ToolTip="Ustawienia" Click="ShowFlyout_Click">
+                        <AppBarButton Icon="Setting" 
+                                      ToolTipService.ToolTip="Ustawienia" 
+                                      Click="ShowFlyout_Click">
                             <FlyoutBase.AttachedFlyout>
                                 <Flyout LightDismissOverlayMode="Auto">
                                     <StackPanel>
@@ -98,6 +132,7 @@
                                         <RadioButton Content="Wyłączone" GroupName="Notifi" IsChecked="True" IsEnabled="False"/>
 
                                         <HyperlinkButton Content="Donacja dla twórcy aplikacji" Tapped="Donate_Tapped"/>
+                                        <HyperlinkButton Content="Repozytorium na githubie" Tapped="Github_Tapped"/>
                                         <HyperlinkButton Content="#jadiscouwp - księga zażaleń" Tapped="Wykop_Tapped"/>
                                         <TextBlock Text="anal sampling mechanism - JaDisco.pl UWP v0.3.0.0"/>
                                     </StackPanel>
@@ -111,14 +146,16 @@
             <muxc:NavigationView.Content>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition x:Name="LeftColumn" Width="80*"/>
-                        <ColumnDefinition x:Name="RightColumn" Width="20*" MinWidth="200"/>
+                        <ColumnDefinition x:Name="LeftColumn" Width="770*"/>
+                        <ColumnDefinition x:Name="RightColumn" Width="230*"/>
                     </Grid.ColumnDefinitions>
 
                     <MediaPlayerElement x:Name="StreamMediaPlayer"
                                         Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4"
+                                        Background="Black"
                                         Grid.Column="0"
                                         Canvas.ZIndex="5"/>
+
 
                     <WebView x:Name="ChatWebView" 
                              Grid.Column="1"
