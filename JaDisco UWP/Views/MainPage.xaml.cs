@@ -18,6 +18,7 @@ using Twitch.Api;
 
 using Jadisco.Api;
 using Jadisco.Api.Data;
+using Twitch.Api.Models;
 
 namespace JaDisco_UWP
 {
@@ -31,6 +32,9 @@ namespace JaDisco_UWP
         private readonly MainPageViewModel vm = new MainPageViewModel();
 
         private readonly JadiscoApi jadiscoApi = new JadiscoApi();
+
+        HLSPlaylist streamPlaylist = null;
+        HLSStream currentStream = null;
 
         public MainPage()
         {
@@ -72,9 +76,16 @@ namespace JaDisco_UWP
             if (playlist is null)
                 return;
 
-            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(playlist.Playlist[0].Url));
-            StreamMediaPlayer.MediaPlayer.Play();
+            streamPlaylist = playlist;
 
+            ChangeStream(playlist.Playlist[0]);
+        }
+
+        void ChangeStream(HLSStream stream)
+        {
+            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(stream.Url));
+            StreamMediaPlayer.MediaPlayer.Play();
+            currentStream = stream;
         }
 
         private async void MediaPlayer_MediaEnded(Windows.Media.Playback.MediaPlayer sender, object args)
@@ -102,6 +113,8 @@ namespace JaDisco_UWP
 
         private async void JadiscoApi_OnStreamWentOffline(Service obj)
         {
+            streamPlaylist = null;
+
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
             {
                 StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashScreenAssets/SplashVideo_Trim.mp4"));
@@ -178,6 +191,8 @@ namespace JaDisco_UWP
         {
             ChatWebView.Source = ChatUri;
             ChatWebView.Refresh();
+
+            ChangeStream(currentStream);
         }
 
         private void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
