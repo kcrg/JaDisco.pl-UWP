@@ -101,6 +101,15 @@ namespace JaDisco_UWP
 
         private async void JadiscoApi_OnStreamWentOnline(Service obj)
         {
+            if (obj.StreamerId == 1)
+            {
+                WonziuNav.Content = "Wonziu - Online";
+            }
+            else if (obj.StreamerId == 2)
+            {
+                DzejNav.Content = "Dzej - Online";
+            }
+
             // if stream is already online and new streamer isn't Wonziu (Wonziu has priority)
             if (jadiscoApi.Stream.Status == true && obj.StreamerId != 1)
             {
@@ -116,6 +125,15 @@ namespace JaDisco_UWP
 
         private async void JadiscoApi_OnStreamWentOffline(Service obj)
         {
+            if (obj.StreamerId == 1)
+            {
+                WonziuNav.Content = "Wonziu - Offline";
+            }
+            else if (obj.StreamerId == 2)
+            {
+                DzejNav.Content = "Dzej - Offline";
+            }
+
             streamPlaylist = null;
             currentStream = null;
 
@@ -206,7 +224,7 @@ namespace JaDisco_UWP
         {
             if (args.SelectedItemContainer != null)
             {
-                switch (args.SelectedItemContainer.Content)
+                switch (args.SelectedItemContainer.Tag)
                 {
                     case "Wonziu":
                         {
@@ -300,7 +318,6 @@ namespace JaDisco_UWP
         {
             if (!HiddenChat)
             {
-                ;
                 chatHideToolTip.Content = "Pokaż czat";
                 ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
 
@@ -330,9 +347,9 @@ namespace JaDisco_UWP
                 chatHideToolTip.Content = "Schowaj czat";
                 ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
 
-                if (!LeftChat)
+                if (fromHideButton)
                 {
-                    if (fromHideButton)
+                    if (!LeftChat)
                     {
                         RightColumn.Width = new GridLength(230, GridUnitType.Star);
                         ChatWebView.Visibility = Visibility.Visible;
@@ -340,10 +357,7 @@ namespace JaDisco_UWP
 
                         ChatWebView.Navigate(ChatUri);
                     }
-                }
-                else if (LeftChat)
-                {
-                    if (fromHideButton)
+                    else if (LeftChat)
                     {
                         LeftColumn.Width = new GridLength(230, GridUnitType.Star);
                         ChatWebView.Visibility = Visibility.Visible;
@@ -351,9 +365,9 @@ namespace JaDisco_UWP
 
                         ChatWebView.Navigate(ChatUri);
                     }
-                }
 
-                HiddenChat = false;
+                    HiddenChat = false;
+                }
             }
         }
     }
