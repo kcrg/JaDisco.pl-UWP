@@ -15,7 +15,7 @@ namespace JaDisco_UWP.Views.CustomDialogs
         {
             InitializeComponent();
 
-            ErrorText.Text = message;
+            MessageText.Text = message;
 
             switch (type)
             {
