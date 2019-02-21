@@ -104,14 +104,18 @@
                             </AppBarButton.Icon>
                             <FlyoutBase.AttachedFlyout>
                                 <Flyout LightDismissOverlayMode="Auto">
-                                    <StackPanel>
-                                        <!--TODO: make it binable-->
+                                    <StackPanel x:Name="QualityStackPanel">
                                         <TextBlock Text="Jakość Streamu" FontSize="14"/>
-                                        <RadioButton Content="1080p60" GroupName="Quality" IsChecked="True"/>
-                                        <RadioButton Content="1080p" GroupName="Quality"/>
-                                        <RadioButton Content="720p60" GroupName="Quality"/>
-                                        <RadioButton Content="720p" GroupName="Quality"/>
-                                        <RadioButton Content="480p" GroupName="Quality"/>
+                                        
+                                        <TextBlock Text="Jakości streamu nie są dostępne" Visibility="{Binding IsNotAvailable}" />
+                                        
+                                        <ItemsControl ItemsSource="{Binding Qualities}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <RadioButton Content="{Binding Name}" GroupName="Quality" Checked="StreamQualityButton_Checked"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
                                     </StackPanel>
                                 </Flyout>
                             </FlyoutBase.AttachedFlyout>
