@@ -1,5 +1,5 @@
 ﻿using Jadisco.Api;
-using Jadisco.Api.Data;
+using Jadisco.Api.Models;
 using JaDisco_UWP.ViewModels;
 using JaDisco_UWP.Views;
 using JaDisco_UWP.Views.CustomDialogs;

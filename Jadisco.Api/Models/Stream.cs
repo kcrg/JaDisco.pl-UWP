@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace Jadisco.Api.Data
+namespace Jadisco.Api.Models
 {
     public class Stream
     {
