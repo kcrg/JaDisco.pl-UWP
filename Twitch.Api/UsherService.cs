@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Net.Sockets;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 
 using Twitch.Api.Models;
@@ -17,9 +12,9 @@ namespace Twitch.Api
     {
         public static string GetStreamLink(string channel, string sig, string token)
         {
-            var random = new Random();
+            Random random = new Random();
 
-            var parameters = new Dictionary<string, string>
+            Dictionary<string, string> parameters = new Dictionary<string, string>
             {
                 { "player", "twitchweb" },
                 { "p", random.Next(999999).ToString() },
@@ -39,7 +34,7 @@ namespace Twitch.Api
 
         public static HLSPlaylist ParsePlaylists(string url)
         {
-            var request = WebRequest.Create(url);
+            WebRequest request = WebRequest.Create(url);
 
             if (request != null)
             {

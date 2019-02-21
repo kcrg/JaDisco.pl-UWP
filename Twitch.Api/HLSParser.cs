@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 using Twitch.Api.Models;
 
@@ -14,25 +11,30 @@ namespace Twitch.Api
     {
         public static HLSPlaylist GetFromStream(Stream stream)
         {
-            var playlist = new List<HLSStream>();
+            List<HLSStream> playlist = new List<HLSStream>();
 
-            using (var reader = new StreamReader(stream))
+            using (StreamReader reader = new StreamReader(stream))
             {
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine();
 
                     if (!line.StartsWith("#EXT-X-MEDIA:TYPE=VIDEO"))
+                    {
                         continue;
+                    }
 
-                    var hls = new HLSStream();
-
-                    hls.Name = GetName(line);
+                    HLSStream hls = new HLSStream
+                    {
+                        Name = GetName(line)
+                    };
 
                     line = reader.ReadLine();
 
                     if (!line.StartsWith("#EXT-X-STREAM-INF"))
+                    {
                         continue;
+                    }
 
                     hls.Bitrate = GetBitrate(line);
                     (hls.Width, hls.Height) = GetResolution(line);
@@ -40,7 +42,9 @@ namespace Twitch.Api
                     line = reader.ReadLine();
 
                     if (!line.StartsWith("https"))
+                    {
                         continue;
+                    }
 
                     hls.Url = line;
 
@@ -51,14 +55,16 @@ namespace Twitch.Api
             return new HLSPlaylist { Playlist = playlist.ToArray() };
         }
 
-        static string GetName(string line)
+        private static string GetName(string line)
         {
             string pattern = @"NAME=""(.*)""";
 
-            var match = Regex.Match(line, pattern);
+            Match match = Regex.Match(line, pattern);
 
             if (match is null)
+            {
                 return "";
+            }
 
             if (match.Groups.Count == 2)
             {
@@ -68,14 +74,16 @@ namespace Twitch.Api
             return "";
         }
 
-        static long GetBitrate(string line)
+        private static long GetBitrate(string line)
         {
             string pattern = @"BANDWIDTH=(\d*),";
 
-            var match = Regex.Match(line, pattern);
+            Match match = Regex.Match(line, pattern);
 
             if (match is null)
+            {
                 return 0;
+            }
 
             if (match.Groups.Count == 2)
             {
@@ -85,14 +93,16 @@ namespace Twitch.Api
             return 0;
         }
 
-        static (int, int) GetResolution(string line)
+        private static (int, int) GetResolution(string line)
         {
             string pattern = @"RESOLUTION=(\d*)x(\d*)";
 
-            var match = Regex.Match(line, pattern);
+            Match match = Regex.Match(line, pattern);
 
             if (match is null)
-                return (0,0);
+            {
+                return (0, 0);
+            }
 
             if (match.Groups.Count == 3)
             {
@@ -102,7 +112,7 @@ namespace Twitch.Api
                 return (width, height);
             }
 
-            return (0,0);
+            return (0, 0);
         }
     }
 }

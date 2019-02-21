@@ -4,7 +4,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls">
 
     <Style x:Key="NavigationView" TargetType="muxc:NavigationView">
-        <Setter Property="Margin" Value="0,38,0,0"/>
+        <Setter Property="Margin" Value="0,34,0,0"/>
         <Setter Property="IsSettingsVisible" Value="False"/>
         <Setter Property="IsBackButtonVisible" Value="Collapsed"/>
         <Setter Property="PaneDisplayMode" Value="Top"/>

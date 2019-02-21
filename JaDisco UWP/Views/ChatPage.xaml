@@ -8,6 +8,7 @@
 
     <Grid>
         <Grid Style="{StaticResource DragAreaGrid}"
+              Background="#171717"
               x:Name="DragArea">
 
             <Image Style="{StaticResource AppLogoImage}"/>

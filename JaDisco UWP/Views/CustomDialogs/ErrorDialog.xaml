@@ -11,7 +11,5 @@
     PrimaryButtonStyle="{StaticResource ButtonRevealStyle}"
     PrimaryButtonClick="PrimaryButtonClick">
 
-    <Grid>
-        <TextBlock x:Name="ErrorText" Text="Anal Sample Mechanics"/>
-    </Grid>
+    <TextBlock x:Name="ErrorText" Text="Anal Sample Mechanics"/>
 </ContentDialog>

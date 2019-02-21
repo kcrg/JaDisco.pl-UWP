@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    mc:Ignorable="d" Background="#171717">
+    mc:Ignorable="d" Background="{ThemeResource SystemControlChromeLowAcrylicWindowBrush}">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -18,8 +18,8 @@
         <Grid Style="{StaticResource DragAreaGrid}"
               x:Name="DragArea">
 
-            <Image Style="{StaticResource AppLogoImage}"/>
-            <TextBlock x:Name="StatusTextBlock" Style="{StaticResource StatusText}"/>
+            <!--<Image Style="{StaticResource AppLogoImage}"/>-->
+            <TextBlock x:Name="StatusTextBlock" Margin="12,0,140,0" Style="{StaticResource StatusText}"/>
             <!--<ProgressBar x:Name="ProgressBar" Style="{StaticResource ProgressBar}"/>-->
         </Grid>
 
@@ -69,7 +69,8 @@
                             </AppBarButton.Icon>
                             <FlyoutBase.AttachedFlyout>
                                 <Flyout LightDismissOverlayMode="Auto">
-                                    <StackPanel> <!--TODO: make it binable-->
+                                    <StackPanel>
+                                        <!--TODO: make it binable-->
                                         <TextBlock Text="Jakość Streamu" FontSize="14"/>
                                         <RadioButton Content="1080p60" GroupName="Quality" IsChecked="True"/>
                                         <RadioButton Content="1080p" GroupName="Quality"/>
@@ -109,9 +110,7 @@
 
                     <MediaPlayerElement x:Name="StreamMediaPlayer"
                                         Source="ms-appx:///Assets/SplashScreenAssets/SplashVideo_Trim.mp4"
-                                        AutoPlay="True"
-                                        Grid.Column="0" 
-                                        AreTransportControlsEnabled="True" 
+                                        Grid.Column="0"
                                         Canvas.ZIndex="5"/>
 
                     <WebView x:Name="ChatWebView" 

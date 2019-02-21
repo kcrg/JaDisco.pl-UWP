@@ -9,7 +9,7 @@ namespace JaDisco_UWP.Views.CustomDialogs
             InitializeComponent();
         }
 
-        private void PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private new void PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             Hide();
         }

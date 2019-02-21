@@ -1,9 +1,11 @@
-﻿using JaDisco_UWP.ViewModels;
+﻿using Jadisco.Api;
+using Jadisco.Api.Data;
+using JaDisco_UWP.ViewModels;
 using JaDisco_UWP.Views;
-
 using System;
 using System.Linq;
-
+using Twitch.Api;
+using Twitch.Api.Models;
 using Windows.ApplicationModel.Core;
 using Windows.Media.Core;
 using Windows.UI.Core;
@@ -13,12 +15,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-
-using Twitch.Api;
-
-using Jadisco.Api;
-using Jadisco.Api.Data;
-using Twitch.Api.Models;
 
 namespace JaDisco_UWP
 {
@@ -32,9 +28,8 @@ namespace JaDisco_UWP
         private readonly MainPageViewModel vm = new MainPageViewModel();
 
         private readonly JadiscoApi jadiscoApi = new JadiscoApi();
-
-        HLSPlaylist streamPlaylist = null;
-        HLSStream currentStream = null;
+        private HLSPlaylist streamPlaylist = null;
+        private HLSStream currentStream = null;
 
         public MainPage()
         {
@@ -62,26 +57,30 @@ namespace JaDisco_UWP
             StreamMediaPlayer.MediaPlayer.Play();
         }
 
-        void ChangeStream(string channel)
+        private void ChangeStream(string channel)
         {
-            var token = TwitchApi.GetAccessToken(channel);
+            AccessToken token = TwitchApi.GetAccessToken(channel);
 
             if (token is null)
+            {
                 return;
+            }
 
-            var url = UsherService.GetStreamLink(channel, token.Sig, token.Token);
+            string url = UsherService.GetStreamLink(channel, token.Sig, token.Token);
 
-            var playlist = UsherService.ParsePlaylists(url);
+            HLSPlaylist playlist = UsherService.ParsePlaylists(url);
 
             if (playlist is null)
+            {
                 return;
+            }
 
             streamPlaylist = playlist;
 
             ChangeStream(playlist.Playlist[0]);
         }
 
-        void ChangeStream(HLSStream stream)
+        private void ChangeStream(HLSStream stream)
         {
             StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(stream.Url));
             StreamMediaPlayer.MediaPlayer.Play();
@@ -103,11 +102,14 @@ namespace JaDisco_UWP
         {
             // if stream is already online and new streamer isn't Wonziu (Wonziu has priority)
             if (jadiscoApi.Stream.Status == true && obj.StreamerId != 1)
+            {
                 return;
+            }
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 ChangeStream(obj.Id);
+                StreamMediaPlayer.AreTransportControlsEnabled = true;
             });
         }
 
@@ -115,9 +117,10 @@ namespace JaDisco_UWP
         {
             streamPlaylist = null;
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => 
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashScreenAssets/SplashVideo_Trim.mp4"));
+                StreamMediaPlayer.AreTransportControlsEnabled = false;
                 StreamMediaPlayer.MediaPlayer.Play();
             });
         }
@@ -202,34 +205,43 @@ namespace JaDisco_UWP
                 switch (args.SelectedItemContainer.Content)
                 {
                     case "Wonziu":
-                    {
-                        var streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Wonziu");
+                        {
+                            Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Wonziu");
 
-                        if (streamer is null)
-                            break;
+                            if (streamer is null)
+                            {
+                                break;
+                            }
 
-                        var stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
+                            Service stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
 
-                        if (stream is null)
-                            break;
-                        ChangeStream(stream.Id);
-                    }
-                    break;
+                            if (stream is null)
+                            {
+                                break;
+                            }
+
+                            ChangeStream(stream.Id);
+                        }
+                        break;
                     case "Dzej":
-                    {
-                        var streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Dzej");
+                        {
+                            Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Dzej");
 
-                        if (streamer is null)
-                            break;
+                            if (streamer is null)
+                            {
+                                break;
+                            }
 
-                        var stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
+                            Service stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
 
-                        if (stream is null)
-                            break;
+                            if (stream is null)
+                            {
+                                break;
+                            }
 
-                        ChangeStream(stream.Id);
-                    }
-                    break;
+                            ChangeStream(stream.Id);
+                        }
+                        break;
                 }
             }
         }
@@ -291,6 +303,7 @@ namespace JaDisco_UWP
                     ChatPositionButton.IsEnabled = false;
 
                     ChatWebView.Navigate(BlankUri);
+                    GC.Collect();
                 }
                 else if (LeftChat)
                 {
@@ -300,6 +313,7 @@ namespace JaDisco_UWP
                     ChatPositionButton.IsEnabled = false;
 
                     ChatWebView.Navigate(BlankUri);
+                    GC.Collect();
                 }
 
                 HiddenChat = true;
