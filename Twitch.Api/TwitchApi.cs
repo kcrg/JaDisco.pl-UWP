@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using Twitch.Api.Models;
-
-using Newtonsoft.Json;
 
 namespace Twitch.Api
 {

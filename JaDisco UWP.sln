@@ -1,12 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.421
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28606.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JaDisco UWP", "JaDisco UWP\JaDisco UWP.csproj", "{9A57033B-AC51-4B2A-BD92-52B595B1A633}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Api", "Twitch.Api\Twitch.Api.csproj", "{23EB9B5B-4935-49F5-AC92-3F026A51D9D1}"
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jadisco.Api", "Jadisco.Api\Jadisco.Api.csproj", "{09A387C1-37D2-49DC-A6B8-5534EB47B640}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Twitch.Api", "Twitch.Api\Twitch.Api.csproj", "{23EB9B5B-4935-49F5-AC92-3F026A51D9D1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jadisco.Api", "Jadisco.Api\Jadisco.Api.csproj", "{09A387C1-37D2-49DC-A6B8-5534EB47B640}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

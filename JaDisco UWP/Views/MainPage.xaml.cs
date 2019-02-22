@@ -1,10 +1,11 @@
-﻿using JaDisco_UWP.ViewModels;
+﻿using Jadisco.Api;
+using Jadisco.Api.Models;
+using JaDisco_UWP.ViewModels;
 using JaDisco_UWP.Views;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-
+using Twitch.Api;
+using Twitch.Api.Models;
 using Windows.ApplicationModel.Core;
 using Windows.Media.Core;
 using Windows.UI.Core;
@@ -14,12 +15,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-
-using Twitch.Api;
-using Twitch.Api.Models;
-
-using Jadisco.Api;
-using Jadisco.Api.Models;
 
 
 namespace JaDisco_UWP
@@ -37,7 +32,7 @@ namespace JaDisco_UWP
         private HLSPlaylist streamPlaylist = null;
         private HLSStream currentStream = null;
 
-        private StreamQualitiesViewModel streamQualitiesVM = new StreamQualitiesViewModel();
+        private readonly StreamQualitiesViewModel streamQualitiesVM = new StreamQualitiesViewModel();
 
         public MainPage()
         {
@@ -105,7 +100,9 @@ namespace JaDisco_UWP
         private void ChangeStream(HLSStream stream)
         {
             if (stream is null)
+            {
                 return;
+            }
 
             StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(stream.Url));
             StreamMediaPlayer.MediaPlayer.Play();
@@ -120,10 +117,12 @@ namespace JaDisco_UWP
             {
                 streamQualitiesVM.ClearQualityList();
 
-                foreach (var stream in playlist.Playlist)
+                foreach (HLSStream stream in playlist.Playlist)
                 {
                     if (stream.Name.StartsWith("audio"))
+                    {
                         continue;
+                    }
 
                     streamQualitiesVM.AddQuality(new StreamQualityViewModel
                     {
@@ -138,11 +137,13 @@ namespace JaDisco_UWP
 
         private void StreamQualityButton_Checked(object sender, RoutedEventArgs e)
         {
-            var radio = sender as RadioButton;
-            var data = radio.DataContext as StreamQualityViewModel;
+            RadioButton radio = sender as RadioButton;
+            StreamQualityViewModel data = radio.DataContext as StreamQualityViewModel;
 
             if (data is null)
+            {
                 return;
+            }
 
             ChangeStream(data.Stream);
         }
@@ -160,45 +161,53 @@ namespace JaDisco_UWP
 
         private async void JadiscoApi_OnStreamWentOnline(Service obj)
         {
-            if (obj.StreamerId == 1)
-            {
-                WonziuNav.Content = "Wonziu - Online";
-            }
-            else if (obj.StreamerId == 2)
-            {
-                DzejNav.Content = "Dzej - Online";
-            }
-
-            // if stream is already online and new streamer isn't Wonziu (Wonziu has priority)
-            if (jadiscoApi.Stream.Status == true && obj.StreamerId != 1)
-            {
-                return;
-            }
-
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
+                if (obj.StreamerId == 1)
+                {
+                    WonziuNav.Content = "Wonziu - Online";
+                    WonziuNav.IsEnabled = true;
+                    NavView.SelectedItem = NavView.MenuItems[0];
+                }
+                else if (obj.StreamerId == 2)
+                {
+                    DzejNav.Content = "Dzej - Online";
+                    DzejNav.IsEnabled = true;
+                    NavView.SelectedItem = NavView.MenuItems[1];
+                }
+
                 ChangeStream(obj.Id);
             });
+
+            // if stream is already online and new streamer isn't Wonziu (Wonziu has priority)
+            //if (jadiscoApi.Stream.Status == true && obj.StreamerId != 1)
+            //{
+            //    return;
+            //}
         }
 
         private async void JadiscoApi_OnStreamWentOffline(Service obj)
         {
-            if (obj.StreamerId == 1)
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                WonziuNav.Content = "Wonziu - Offline";
-            }
-            else if (obj.StreamerId == 2)
-            {
-                DzejNav.Content = "Dzej - Offline";
-            }
+                if (obj.StreamerId == 1)
+                {
+                    WonziuNav.Content = "Wonziu - Offline";
+                    WonziuNav.IsEnabled = false;
+                    NavView.SelectedItem = NavView.MenuItems;
+                }
+                else if (obj.StreamerId == 2)
+                {
+                    DzejNav.Content = "Dzej - Offline";
+                    DzejNav.IsEnabled = false;
+                    NavView.SelectedItem = NavView.MenuItems;
+                }
+
+                StopStream();
+            });
 
             streamPlaylist = null;
             currentStream = null;
-
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                StopStream();
-            });
         }
 
         private async void JadiscoApi_OnTopicChanged(Topic topic)
@@ -224,7 +233,7 @@ namespace JaDisco_UWP
                 ChatPositionIcon.Glyph = "";
 
                 StreamGrid.SetValue(Grid.ColumnProperty, 1);
-                ChatWebView.SetValue(Grid.ColumnProperty, 0);
+                ChatGrid.SetValue(Grid.ColumnProperty, 0);
 
                 LeftColumn.Width = new GridLength(230, GridUnitType.Star);
                 RightColumn.Width = new GridLength(770, GridUnitType.Star);
@@ -236,7 +245,7 @@ namespace JaDisco_UWP
                 ChatPositionIcon.Glyph = "";
 
                 StreamGrid.SetValue(Grid.ColumnProperty, 0);
-                ChatWebView.SetValue(Grid.ColumnProperty, 1);
+                ChatGrid.SetValue(Grid.ColumnProperty, 1);
 
                 LeftColumn.Width = new GridLength(770, GridUnitType.Star);
                 RightColumn.Width = new GridLength(230, GridUnitType.Star);
@@ -283,43 +292,43 @@ namespace JaDisco_UWP
                 switch (args.SelectedItemContainer.Tag)
                 {
                     case "Wonziu":
-                    {
-                        Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Wonziu");
-
-                        if (streamer is null)
                         {
-                            break;
+                            Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Wonziu");
+
+                            if (streamer is null)
+                            {
+                                break;
+                            }
+
+                            Service stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
+
+                            if (stream is null)
+                            {
+                                break;
+                            }
+
+                            ChangeStream(stream.Id);
                         }
-
-                        Service stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
-
-                        if (stream is null)
-                        {
-                            break;
-                        }
-
-                        ChangeStream(stream.Id);
-                    }
-                    break;
+                        break;
                     case "Dzej":
-                    {
-                        Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Dzej");
-
-                        if (streamer is null)
                         {
-                            break;
+                            Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Dzej");
+
+                            if (streamer is null)
+                            {
+                                break;
+                            }
+
+                            Service stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
+
+                            if (stream is null)
+                            {
+                                break;
+                            }
+
+                            ChangeStream(stream.Id);
                         }
-
-                        Service stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
-
-                        if (stream is null)
-                        {
-                            break;
-                        }
-
-                        ChangeStream(stream.Id);
-                    }
-                    break;
+                        break;
                 }
             }
         }
@@ -380,7 +389,7 @@ namespace JaDisco_UWP
                 if (!LeftChat)
                 {
                     RightColumn.Width = new GridLength(0);
-                    ChatWebView.Visibility = Visibility.Collapsed;
+                    ChatGrid.Visibility = Visibility.Collapsed;
                     ChatPositionButton.IsEnabled = false;
 
                     ChatWebView.Navigate(BlankUri);
@@ -389,7 +398,7 @@ namespace JaDisco_UWP
                 else if (LeftChat)
                 {
                     LeftColumn.Width = new GridLength(0);
-                    ChatWebView.Visibility = Visibility.Collapsed;
+                    ChatGrid.Visibility = Visibility.Collapsed;
                     ChatPositionButton.IsEnabled = false;
 
                     ChatWebView.Navigate(BlankUri);
@@ -408,7 +417,7 @@ namespace JaDisco_UWP
                     if (!LeftChat)
                     {
                         RightColumn.Width = new GridLength(230, GridUnitType.Star);
-                        ChatWebView.Visibility = Visibility.Visible;
+                        ChatGrid.Visibility = Visibility.Visible;
                         ChatPositionButton.IsEnabled = true;
 
                         ChatWebView.Navigate(ChatUri);
@@ -416,7 +425,7 @@ namespace JaDisco_UWP
                     else if (LeftChat)
                     {
                         LeftColumn.Width = new GridLength(230, GridUnitType.Star);
-                        ChatWebView.Visibility = Visibility.Visible;
+                        ChatGrid.Visibility = Visibility.Visible;
                         ChatPositionButton.IsEnabled = true;
 
                         ChatWebView.Navigate(ChatUri);
