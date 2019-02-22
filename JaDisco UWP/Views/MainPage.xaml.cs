@@ -1,5 +1,7 @@
 ﻿using JaDisco_UWP.ViewModels;
 using JaDisco_UWP.Views;
+using JaDisco_UWP.ViewModels.PoorChat;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +23,6 @@ using Twitch.Api.Models;
 using Jadisco.Api;
 using Jadisco.Api.Models;
 
-
 namespace JaDisco_UWP
 {
     public sealed partial class MainPage : Page
@@ -38,6 +39,7 @@ namespace JaDisco_UWP
         private HLSStream currentStream = null;
 
         private StreamQualitiesViewModel streamQualitiesVM = new StreamQualitiesViewModel();
+        private ChatViewModel chatVM = new ChatViewModel();
 
         public MainPage()
         {
@@ -66,6 +68,21 @@ namespace JaDisco_UWP
             StreamMediaPlayer.MediaPlayer.Play();
 
             QualityStackPanel.DataContext = streamQualitiesVM;
+            PoorChat.DataContext = chatVM;
+
+            CreateChat();
+        }
+
+        void CreateChat()
+        {
+            chatVM.Messages = new List<ChatMessageViewModel>
+            {
+                new ChatMessageViewModel { Author = "Wonziu", Message = "Wypierdolcie go" },
+                new ChatMessageViewModel { Author = "Wonziu", Message = "wchodzę" },
+                new ChatMessageViewModel { Author = "dzej", Message = "KEK" },
+                new ChatMessageViewModel { Author = "sb", Message = "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatibus, quaerat!" }
+            };
+
         }
 
         private void ChangeStream(string channel)
@@ -224,7 +241,7 @@ namespace JaDisco_UWP
                 ChatPositionIcon.Glyph = "";
 
                 StreamGrid.SetValue(Grid.ColumnProperty, 1);
-                ChatWebView.SetValue(Grid.ColumnProperty, 0);
+                //ChatWebView.SetValue(Grid.ColumnProperty, 0);
 
                 LeftColumn.Width = new GridLength(230, GridUnitType.Star);
                 RightColumn.Width = new GridLength(770, GridUnitType.Star);
@@ -236,7 +253,7 @@ namespace JaDisco_UWP
                 ChatPositionIcon.Glyph = "";
 
                 StreamGrid.SetValue(Grid.ColumnProperty, 0);
-                ChatWebView.SetValue(Grid.ColumnProperty, 1);
+                //ChatWebView.SetValue(Grid.ColumnProperty, 1);
 
                 LeftColumn.Width = new GridLength(770, GridUnitType.Star);
                 RightColumn.Width = new GridLength(230, GridUnitType.Star);
@@ -267,8 +284,8 @@ namespace JaDisco_UWP
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            ChatWebView.Source = ChatUri;
-            ChatWebView.Refresh();
+            //ChatWebView.Source = ChatUri;
+            //ChatWebView.Refresh();
 
             if (currentStream != null)
             {
@@ -372,7 +389,7 @@ namespace JaDisco_UWP
 
         private void HideChat(bool fromHideButton)
         {
-            if (!HiddenChat)
+            /*if (!HiddenChat)
             {
                 chatHideToolTip.Content = "Pokaż czat";
                 ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
@@ -424,7 +441,7 @@ namespace JaDisco_UWP
 
                     HiddenChat = false;
                 }
-            }
+            }*/
         }
     }
 }
