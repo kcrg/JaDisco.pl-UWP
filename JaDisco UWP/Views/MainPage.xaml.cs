@@ -110,6 +110,8 @@ namespace JaDisco_UWP
             StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(stream.Url));
             StreamMediaPlayer.MediaPlayer.Play();
             currentStream = stream;
+
+            StreamMediaPlayer.AreTransportControlsEnabled = true;
         }
 
         private void LoadQualityList(HLSPlaylist playlist)
@@ -167,7 +169,6 @@ namespace JaDisco_UWP
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 ChangeStream(obj.Id);
-                StreamMediaPlayer.AreTransportControlsEnabled = true;
             });
         }
 
