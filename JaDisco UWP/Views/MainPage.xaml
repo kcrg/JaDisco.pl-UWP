@@ -106,8 +106,7 @@
                                 <Flyout LightDismissOverlayMode="Auto">
                                     <StackPanel x:Name="QualityStackPanel">
                                         <TextBlock Text="Jakość Streamu" FontSize="14"/>
-                                        
-                                        <TextBlock Text="Jakości streamu nie są dostępne" Visibility="{Binding IsNotAvailable}" />
+                                        <TextBlock Text="Jakości streamu nie są dostępne" Foreground="LightGray" Visibility="{Binding IsNotAvailable}" />
                                         
                                         <ItemsControl ItemsSource="{Binding Qualities}">
                                             <ItemsControl.ItemTemplate>
@@ -150,7 +149,7 @@
                         <ColumnDefinition x:Name="RightColumn" Width="230*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Grid Grid.Column="0" Background="Black">
+                    <Grid x:Name="StreamGrid" Grid.Column="0" Background="Black">
                         <MediaPlayerElement x:Name="StreamMediaPlayer"
                                             Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4"/>
                     </Grid>

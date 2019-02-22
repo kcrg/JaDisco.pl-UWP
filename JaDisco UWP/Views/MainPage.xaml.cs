@@ -222,7 +222,7 @@ namespace JaDisco_UWP
             {
                 ChatPositionIcon.Glyph = "";
 
-                StreamMediaPlayer.SetValue(Grid.ColumnProperty, 1);
+                StreamGrid.SetValue(Grid.ColumnProperty, 1);
                 ChatWebView.SetValue(Grid.ColumnProperty, 0);
 
                 LeftColumn.Width = new GridLength(230, GridUnitType.Star);
@@ -234,7 +234,7 @@ namespace JaDisco_UWP
             {
                 ChatPositionIcon.Glyph = "";
 
-                StreamMediaPlayer.SetValue(Grid.ColumnProperty, 0);
+                StreamGrid.SetValue(Grid.ColumnProperty, 0);
                 ChatWebView.SetValue(Grid.ColumnProperty, 1);
 
                 LeftColumn.Width = new GridLength(770, GridUnitType.Star);
