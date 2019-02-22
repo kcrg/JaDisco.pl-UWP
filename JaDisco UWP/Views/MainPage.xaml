@@ -45,8 +45,8 @@
                              SelectionChanged="NavView_SelectionChanged">
 
             <muxc:NavigationView.MenuItems>
-                <muxc:NavigationViewItem Content="Wonziu"/>
-                <muxc:NavigationViewItem Content="Dzej"/>
+                <muxc:NavigationViewItem x:Name="WonziuNav" Tag="Wonziu" Content="Wonziu - Offline"/>
+                <muxc:NavigationViewItem x:Name="DzejNav" Tag="Dzej" Content="Dzej - Offline"/>
             </muxc:NavigationView.MenuItems>
 
             <muxc:NavigationView.PaneFooter>
@@ -106,8 +106,7 @@
                                 <Flyout LightDismissOverlayMode="Auto">
                                     <StackPanel x:Name="QualityStackPanel">
                                         <TextBlock Text="Jakość Streamu" FontSize="14"/>
-                                        
-                                        <TextBlock Text="Jakości streamu nie są dostępne" Visibility="{Binding IsNotAvailable}" />
+                                        <TextBlock Text="Jakości streamu nie są dostępne" Foreground="LightGray" Visibility="{Binding IsNotAvailable}" />
                                         
                                         <ItemsControl ItemsSource="{Binding Qualities}">
                                             <ItemsControl.ItemTemplate>
@@ -150,13 +149,11 @@
                         <ColumnDefinition x:Name="RightColumn" Width="230*"/>
                     </Grid.ColumnDefinitions>
 
-                    <MediaPlayerElement x:Name="StreamMediaPlayer"
-                                        Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4"
-                                        Background="Black"
-                                        Grid.Column="0"
-                                        Canvas.ZIndex="5"/>
-
-
+                    <Grid x:Name="StreamGrid" Grid.Column="0" Background="Black">
+                        <MediaPlayerElement x:Name="StreamMediaPlayer"
+                                            Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4"/>
+                    </Grid>
+                    
                     <WebView x:Name="ChatWebView" 
                              Grid.Column="1"
                              DefaultBackgroundColor="#121212" 
