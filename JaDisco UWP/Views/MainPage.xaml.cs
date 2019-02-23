@@ -82,7 +82,6 @@ namespace JaDisco_UWP
                 new ChatMessageViewModel { Author = "dzej", Message = "KEK" },
                 new ChatMessageViewModel { Author = "sb", Message = "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatibus, quaerat!" }
             };
-
         }
 
         private void ChangeStream(string channel)
@@ -177,20 +176,17 @@ namespace JaDisco_UWP
 
         private async void JadiscoApi_OnStreamWentOnline(Service obj)
         {
-            if (obj.StreamerId == 1)
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                WonziuNav.Content = "Wonziu - Online";
-            }
-            else if (obj.StreamerId == 2)
-            {
-                DzejNav.Content = "Dzej - Online";
-            }
-
-            // if stream is already online and new streamer isn't Wonziu (Wonziu has priority)
-            if (jadiscoApi.Stream.Status == true && obj.StreamerId != 1)
-            {
-                return;
-            }
+                if (obj.StreamerId == 1)
+                {
+                    WonziuNav.Content = "Wonziu - Online";
+                }
+                else if (obj.StreamerId == 2)
+                {
+                    DzejNav.Content = "Dzej - Online";
+                }
+            });
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
