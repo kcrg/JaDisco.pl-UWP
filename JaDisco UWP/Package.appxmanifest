@@ -10,7 +10,7 @@
   <Identity
     Name="4792MohairApp.JaDisco.plUWP"
     Publisher="CN=91FC2611-0BE1-4BF6-BF67-9AC292856A90"
-    Version="0.3.0.0" />
+    Version="0.5.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="4a9bccd5-99e8-4b26-90ed-8c772c7aa07d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
