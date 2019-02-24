@@ -150,8 +150,11 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid x:Name="StreamGrid" Grid.Column="0" Background="Black">
-                        <MediaPlayerElement x:Name="StreamMediaPlayer"
-                                            Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4"/>
+                        <MediaPlayerElement x:Name="StreamMediaPlayer" Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4">
+                            <MediaPlayerElement.TransportControls>
+                                <MediaTransportControls IsSeekBarVisible="False" />
+                            </MediaPlayerElement.TransportControls>
+                        </MediaPlayerElement>
                     </Grid>
 
                     <Grid x:Name="ChatGrid" Grid.Column="1" Background="#121212">
