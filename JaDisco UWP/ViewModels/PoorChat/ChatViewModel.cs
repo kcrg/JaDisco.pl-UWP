@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -35,7 +36,7 @@ namespace JaDisco_UWP.ViewModels.PoorChat
         #endregion
 
         public ChatViewModel(DependencyObject window)
-        { 
+        {
             _window = window;
 
             _poorChatClient.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
@@ -49,13 +50,10 @@ namespace JaDisco_UWP.ViewModels.PoorChat
 
         private async void PoorChatClient_PoorCharMessage(object sender, PoorChatMessage e)
         {
-            var chatMessageVM = new ChatMessageViewModel
+            await _window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                Author = e.Author,
-                Message = e.Message
-            };
-
-            await AddMessage(chatMessageVM);
+                await AddMessage(new ChatMessageViewModel(e.Author, e.Message));
+            });
         }
 
         private void IrcClient_Connected(object sender, EventArgs e)

@@ -155,7 +155,7 @@
                                             Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4"/>
                     </Grid>
 
-                    <poorchat:Chat x:Name="PoorChat" Grid.Column="1"/>
+                    <poorchat:Chat x:Name="PoorChat" Grid.Column="1" />
                 </Grid>
             </muxc:NavigationView.Content>
         </muxc:NavigationView>
