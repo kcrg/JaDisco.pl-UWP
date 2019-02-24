@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,15 +10,18 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using IrcDotNet;
+using Windows.UI.Xaml;
 
 namespace JaDisco_UWP.ViewModels.PoorChat
 {
     public class ChatViewModel : BaseViewModel
     {
         #region Properties
-        private List<ChatMessageViewModel> _messages;
+        DependencyObject _window = null;
 
-        public List<ChatMessageViewModel> Messages
+        private ObservableCollection<ChatMessageViewModel> _messages = new ObservableCollection<ChatMessageViewModel>();
+
+        public ObservableCollection<ChatMessageViewModel> Messages
         {
             get => _messages;
             set { _messages = value; NotifyPropertyChanged(); }
@@ -25,105 +29,57 @@ namespace JaDisco_UWP.ViewModels.PoorChat
         #endregion
 
         #region Private variables
-        StandardIrcClient ircClient = new StandardIrcClient();
+        PoorChatIrcClient poorChatClient = new PoorChatIrcClient();
         #endregion
 
-        public ChatViewModel()
+        public ChatViewModel(DependencyObject window)
         {
+            _window = window;
 
-            IrcRegistrationInfo irc = new IrcUserRegistrationInfo
-            {
-                NickName = "Guest",
-                UserName = "Guest",
-                RealName = "Guest"
-            };
+            poorChatClient.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
+            poorChatClient.Connected += IrcClient_Connected;
+            poorChatClient.Disconnected += IrcClient_Disconnected;
+            poorChatClient.Registered += IrcClient_Registered;
+            poorChatClient.PoorCharMessage += PoorChatClient_PoorCharMessage;
 
-            ircClient.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
-            ircClient.Connected += IrcClient_Connected;
-            ircClient.Disconnected += IrcClient_Disconnected;
-            ircClient.Registered += IrcClient_Registered;
-
-            ircClient.RawMessageReceived += IrcClient_RawMessageReceived;
-
-            using (var registeredEvent = new ManualResetEventSlim(false))
-            {
-                using (var connectedEvent = new ManualResetEventSlim(false))
-                {
-                    ircClient.Connected += (sender2, e2) => connectedEvent.Set();
-                    ircClient.Registered += (sender2, e2) => registeredEvent.Set();
-                    ircClient.Connect("irc.poorchat.net", false, irc);
-
-                    if (!connectedEvent.Wait(10000))
-                    {
-                        ircClient.Dispose();
-                        Debug.WriteLine("Timeout!");
-                        return;
-                    }
-                }
-
-                if (!registeredEvent.Wait(10000))
-                {
-                    Debug.WriteLine("Could not register");
-                    return;
-                }
-            }
-
-            ircClient.Channels.Join("#jadisco");
+            poorChatClient.Connect();
         }
 
-        private void IrcClient_RawMessageReceived(object sender, IrcRawMessageEventArgs e)
+        private async void PoorChatClient_PoorCharMessage(object sender, PoorChatMessage e)
         {
-            Debug.WriteLine($"Raw: {e.Message} {e.RawContent}");
+            var chatMessageVM = new ChatMessageViewModel
+            {
+                Author = e.Author,
+                Message = e.Message
+            };
+
+            await AddMessage(chatMessageVM);
         }
 
         private void IrcClient_Connected(object sender, EventArgs e)
         {
-            Debug.WriteLine("Connected!");
+            Debug.WriteLine("[PoorChat] Connected!");
         }
 
         private void IrcClient_Registered(object sender, EventArgs e)
         {
-            var client = (IrcClient)sender;
-
-            client.LocalUser.LeftChannel += LocalUser_LeftChannel;
-            client.LocalUser.NoticeReceived += LocalUser_NoticeReceived;
-            client.LocalUser.MessageReceived += LocalUser_MessageReceived;
-            client.LocalUser.JoinedChannel += LocalUser_JoinedChannel;
-
-            Debug.WriteLine("Registered!");
-        }
-
-        private void LocalUser_LeftChannel(object sender, IrcChannelEventArgs e)
-        {
-            Debug.WriteLine($"Left");
-        }
-
-        private void LocalUser_NoticeReceived(object sender, IrcMessageEventArgs e)
-        {
-            Debug.WriteLine($"Notice: {e.Text}");
-        }
-
-        private void LocalUser_MessageReceived(object sender, IrcMessageEventArgs e)
-        {
-            Debug.WriteLine($"Message: {e.Text}");
-        }
-
-        private void LocalUser_JoinedChannel(object sender, IrcChannelEventArgs e)
-        {
-            Debug.WriteLine($"Joined!");
+            Debug.WriteLine("[PoorChat] Registered!");
+            poorChatClient.Channels.Join("#jadisco");
         }
 
         private void IrcClient_Disconnected(object sender, EventArgs e)
         {
-            Debug.WriteLine("Disconnected!");
-
+            Debug.WriteLine("[PoorChat] Disconnected!");
         }
 
         #region Public methods
-        public void AddMessage(ChatMessageViewModel message)
+        public async Task AddMessage(ChatMessageViewModel message)
         {
-            _messages.Add(message);
-            NotifyPropertyChanged("Messages");
+            await _window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                _messages.Add(message);
+                NotifyPropertyChanged("Messages");
+            });
         }
         #endregion
     }

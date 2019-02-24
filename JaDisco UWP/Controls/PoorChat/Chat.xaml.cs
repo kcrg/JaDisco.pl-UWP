@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -19,9 +20,40 @@ namespace JaDisco_UWP.Controls.PoorChat
 {
     public sealed partial class Chat : UserControl
     {
+        bool autoScroll = true;
+
         public Chat()
         {
             this.InitializeComponent();
+
+            ScrollViewer.LayoutUpdated += ScrollViewer_LayoutUpdated;
+            ScrollViewer.PointerWheelChanged += ScrollViewer_PointerWheelChanged;
+        }
+
+        private void ScrollViewer_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        {
+            var delta = e.GetCurrentPoint(this).Properties.MouseWheelDelta;
+
+            ScrollViewer.ChangeView(0, ScrollViewer.VerticalOffset - delta, 1);
+
+            if (ScrollViewer.VerticalOffset - delta >= ScrollViewer.ScrollableHeight)
+            {
+                //Debug.WriteLine("AutoScroll: true");
+                autoScroll = true;
+            }
+            else if (delta > 0)
+            {
+                //Debug.WriteLine("AutoScroll: false");
+                autoScroll = false;
+            }
+        }
+
+        private void ScrollViewer_LayoutUpdated(object sender, object e)
+        {
+            if (autoScroll)
+            {
+                ScrollViewer.ChangeView(0, ScrollViewer.ScrollableHeight, 1);
+            }
         }
     }
 }

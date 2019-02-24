@@ -132,6 +132,7 @@
     <Compile Include="Controls\PoorChat\ChatMessage.xaml.cs">
       <DependentUpon>ChatMessage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PoorChatIrcClient.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\PoorChat\ChatMessageViewModel.cs" />

@@ -39,10 +39,12 @@ namespace JaDisco_UWP
         private HLSStream currentStream = null;
 
         private StreamQualitiesViewModel streamQualitiesVM = new StreamQualitiesViewModel();
-        private ChatViewModel chatVM = new ChatViewModel();
+        private ChatViewModel chatVM;
 
         public MainPage()
         {
+            chatVM = new ChatViewModel(this);
+
             jadiscoApi.OnTopicChanged += JadiscoApi_OnTopicChanged;
             jadiscoApi.OnStreamWentOnline += JadiscoApi_OnStreamWentOnline;
             jadiscoApi.OnStreamWentOffline += JadiscoApi_OnStreamWentOffline;
@@ -70,10 +72,10 @@ namespace JaDisco_UWP
             QualityStackPanel.DataContext = streamQualitiesVM;
             PoorChat.DataContext = chatVM;
 
-            CreateChat();
+           // MockPoorChat();
         }
 
-        void CreateChat()
+        /*void MockPoorChat()
         {
             chatVM.Messages = new List<ChatMessageViewModel>
             {
@@ -82,7 +84,7 @@ namespace JaDisco_UWP
                 new ChatMessageViewModel { Author = "dzej", Message = "KEK" },
                 new ChatMessageViewModel { Author = "sb", Message = "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatibus, quaerat!" }
             };
-        }
+        }*/
 
         private void ChangeStream(string channel)
         {
