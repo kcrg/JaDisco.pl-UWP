@@ -29,20 +29,22 @@ namespace JaDisco_UWP.ViewModels.PoorChat
         #endregion
 
         #region Private variables
-        PoorChatIrcClient poorChatClient = new PoorChatIrcClient();
+        PoorChatIrcClient _poorChatClient = new PoorChatIrcClient();
+
+        int _chatMaxSize = 100;
         #endregion
 
         public ChatViewModel(DependencyObject window)
-        {
+        { 
             _window = window;
 
-            poorChatClient.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
-            poorChatClient.Connected += IrcClient_Connected;
-            poorChatClient.Disconnected += IrcClient_Disconnected;
-            poorChatClient.Registered += IrcClient_Registered;
-            poorChatClient.PoorCharMessage += PoorChatClient_PoorCharMessage;
+            _poorChatClient.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
+            _poorChatClient.Connected += IrcClient_Connected;
+            _poorChatClient.Disconnected += IrcClient_Disconnected;
+            _poorChatClient.Registered += IrcClient_Registered;
+            _poorChatClient.PoorCharMessage += PoorChatClient_PoorCharMessage;
 
-            poorChatClient.Connect();
+            _poorChatClient.Connect();
         }
 
         private async void PoorChatClient_PoorCharMessage(object sender, PoorChatMessage e)
@@ -64,7 +66,7 @@ namespace JaDisco_UWP.ViewModels.PoorChat
         private void IrcClient_Registered(object sender, EventArgs e)
         {
             Debug.WriteLine("[PoorChat] Registered!");
-            poorChatClient.Channels.Join("#jadisco");
+            _poorChatClient.Channels.Join("#jadisco");
         }
 
         private void IrcClient_Disconnected(object sender, EventArgs e)
@@ -78,6 +80,12 @@ namespace JaDisco_UWP.ViewModels.PoorChat
             await _window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 _messages.Add(message);
+
+                if (_messages.Count > _chatMaxSize)
+                {
+                    _messages.RemoveAt(0);
+                }
+
                 NotifyPropertyChanged("Messages");
             });
         }

@@ -14,7 +14,7 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Column="1" TextWrapping="Wrap">
-            <Run Text="{Binding Author}" Foreground="White" FontWeight="Bold" /><Run Text=":" Foreground="White" />
+            <Run Text="{Binding Author}" Foreground="White" FontWeight="Bold" />:
             <Run Text="{Binding Message}" Foreground="White" />
         </TextBlock>
     </Grid>
