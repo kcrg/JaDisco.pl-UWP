@@ -145,14 +145,14 @@
             <muxc:NavigationView.Content>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition x:Name="LeftColumn" Width="770*"/>
-                        <ColumnDefinition x:Name="RightColumn" Width="230*"/>
+                        <ColumnDefinition x:Name="LeftColumn" Width="7700*"/>
+                        <ColumnDefinition x:Name="RightColumn" Width="2300*"/>
                     </Grid.ColumnDefinitions>
 
                     <Grid x:Name="StreamGrid" Grid.Column="0" Background="Black">
                         <MediaPlayerElement x:Name="StreamMediaPlayer" Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4">
                             <MediaPlayerElement.TransportControls>
-                                <MediaTransportControls IsSeekBarVisible="False" />
+                                <MediaTransportControls Style="{StaticResource MediaTransportControls}"/>
                             </MediaPlayerElement.TransportControls>
                         </MediaPlayerElement>
                     </Grid>

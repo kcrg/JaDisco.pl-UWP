@@ -20,4 +20,10 @@
         <Setter Property="IsIndeterminate" Value="True"/>
         <Setter Property="VerticalAlignment" Value="Bottom"/>
     </Style>
+
+    <Style x:Key="MediaTransportControls" TargetType="MediaTransportControls">
+        <Setter Property="IsSeekBarVisible" Value="False"/>
+        <Setter Property="IsCompact" Value="True"/>
+        <Setter Property="IsSeekEnabled" Value="False"/>
+    </Style>
 </ResourceDictionary>

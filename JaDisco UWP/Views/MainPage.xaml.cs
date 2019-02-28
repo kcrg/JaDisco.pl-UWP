@@ -163,13 +163,13 @@ namespace JaDisco_UWP
                 {
                     WonziuNav.Content = "Wonziu - Online";
                     WonziuNav.IsEnabled = true;
-                    WonziuNav.IsSelected = true;
+                    NavView.SelectedItem = NavView.MenuItems[0];
                 }
                 else if (obj.StreamerId == 2)
                 {
                     DzejNav.Content = "Dzej - Online";
                     DzejNav.IsEnabled = true;
-                    DzejNav.IsSelected = true;
+                    NavView.SelectedItem = NavView.MenuItems[1];
                 }
 
                 ChangeStream(obj.Id);
@@ -231,8 +231,8 @@ namespace JaDisco_UWP
                 StreamGrid.SetValue(Grid.ColumnProperty, 1);
                 ChatGrid.SetValue(Grid.ColumnProperty, 0);
 
-                LeftColumn.Width = new GridLength(230, GridUnitType.Star);
-                RightColumn.Width = new GridLength(770, GridUnitType.Star);
+                LeftColumn.Width = new GridLength(2300, GridUnitType.Star);
+                RightColumn.Width = new GridLength(7700, GridUnitType.Star);
 
                 LeftChat = true;
             }
@@ -243,8 +243,8 @@ namespace JaDisco_UWP
                 StreamGrid.SetValue(Grid.ColumnProperty, 0);
                 ChatGrid.SetValue(Grid.ColumnProperty, 1);
 
-                LeftColumn.Width = new GridLength(770, GridUnitType.Star);
-                RightColumn.Width = new GridLength(230, GridUnitType.Star);
+                LeftColumn.Width = new GridLength(7700, GridUnitType.Star);
+                RightColumn.Width = new GridLength(2300, GridUnitType.Star);
 
                 LeftChat = false;
             }
@@ -359,9 +359,6 @@ namespace JaDisco_UWP
             int newViewId = 0;
             await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                ApplicationView newAppView = ApplicationView.GetForCurrentView();
-                newAppView.Title = "Czat";
-
                 Frame frame = new Frame();
                 frame.Navigate(typeof(ChatPage), null);
                 Window.Current.Content = frame;
@@ -412,7 +409,7 @@ namespace JaDisco_UWP
                 {
                     if (!LeftChat)
                     {
-                        RightColumn.Width = new GridLength(230, GridUnitType.Star);
+                        RightColumn.Width = new GridLength(2300, GridUnitType.Star);
                         ChatGrid.Visibility = Visibility.Visible;
                         ChatPositionButton.IsEnabled = true;
 
@@ -420,7 +417,7 @@ namespace JaDisco_UWP
                     }
                     else if (LeftChat)
                     {
-                        LeftColumn.Width = new GridLength(230, GridUnitType.Star);
+                        LeftColumn.Width = new GridLength(2300, GridUnitType.Star);
                         ChatGrid.Visibility = Visibility.Visible;
                         ChatPositionButton.IsEnabled = true;
 
