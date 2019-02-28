@@ -22,7 +22,7 @@ namespace JaDisco_UWP
     {
         private readonly string IrcUrl = "irc.poorchat.net";
 
-        public event EventHandler<PoorChatMessage> PoorCharMessage;
+        public event EventHandler<PoorChatMessage> PoorChatMessage;
 
         public PoorChatIrcClient()
         {
@@ -61,7 +61,7 @@ namespace JaDisco_UWP
                             Channel = channel.Name
                         };
 
-                        PoorCharMessage?.Invoke(this, poorChatMsg);
+                        PoorChatMessage?.Invoke(this, poorChatMsg);
                     }
                 } break;
             }

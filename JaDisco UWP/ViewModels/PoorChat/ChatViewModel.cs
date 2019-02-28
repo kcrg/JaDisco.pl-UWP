@@ -43,12 +43,12 @@ namespace JaDisco_UWP.ViewModels.PoorChat
             _poorChatClient.Connected += IrcClient_Connected;
             _poorChatClient.Disconnected += IrcClient_Disconnected;
             _poorChatClient.Registered += IrcClient_Registered;
-            _poorChatClient.PoorCharMessage += PoorChatClient_PoorCharMessage;
+            _poorChatClient.PoorChatMessage += PoorChatClient_PoorChatMessage;
 
             _poorChatClient.Connect();
         }
 
-        private async void PoorChatClient_PoorCharMessage(object sender, PoorChatMessage e)
+        private async void PoorChatClient_PoorChatMessage(object sender, PoorChatMessage e)
         {
             await _window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
