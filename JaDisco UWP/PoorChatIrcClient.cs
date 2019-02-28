@@ -9,13 +9,25 @@ using IrcDotNet;
 
 namespace JaDisco_UWP
 {
+    public enum UserMode
+    {
+        None,
+        Owner,
+        Admin,
+        Moderator,
+        Subscriber,
+        VIP
+    }
+
     public class PoorChatMessage
     {
-        public string Author { get; set; }
+        public IrcUser User { get; set; }
 
         public string Message { get; set; }
 
-        public string Channel { get; set; }
+        public IrcChannel Channel { get; set; }
+
+        public UserMode[] UserModes { get; set; }
     }
 
     public class PoorChatIrcClient : StandardIrcClient
@@ -41,6 +53,33 @@ namespace JaDisco_UWP
             Connect(IrcUrl, false, irc);
         }
 
+        private UserMode GetMode(char mode)
+        {
+            switch (mode)
+            {
+                case 'q':
+                    return UserMode.Owner;
+                case 'a':
+                    return UserMode.Admin;
+                case 'o':
+                    return UserMode.Moderator;
+                case 'v':
+                    return UserMode.Subscriber;
+                case 'h':
+                    return UserMode.VIP;
+                default:
+                    return UserMode.None;
+            }
+        }
+
+        public IEnumerable<UserMode> GetUserModes(IrcChannelUser user)
+        {
+            foreach (var mode in user.Modes)
+            {
+                yield return GetMode(mode);
+            }
+        }
+
         private void PoorChatIrcClient_RawMessageReceived(object sender, IrcRawMessageEventArgs e)
         {
             switch (e.Message.Command)
@@ -48,21 +87,32 @@ namespace JaDisco_UWP
                 case "PRIVMSG":
                 {
                     var channelName = e.Message.Parameters[0];
-                    var text = e.Message.Parameters[1];
+                    var message = e.Message.Parameters[1];
 
                     var channel = Channels.SingleOrDefault(m => m.Name == channelName);
 
-                    if (channel != null)
-                    {
-                        var poorChatMsg = new PoorChatMessage
-                        {
-                            Author = e.Message.Source.Name,
-                            Message = text,
-                            Channel = channel.Name
-                        };
+                    if (channel is null)
+                        break;
 
-                        PoorChatMessage?.Invoke(this, poorChatMsg);
-                    }
+                    var user = GetUserFromNickName(e.Message.Source.Name);
+
+                    if (user is null)
+                        break;
+
+                    var userChannel = channel.GetChannelUser(user);
+
+                    if (userChannel is null)
+                        break;
+
+                    var poorChatMsg = new PoorChatMessage
+                    {
+                        User = user,
+                        Message = message,
+                        Channel = channel,
+                        UserModes = GetUserModes(userChannel).ToArray()
+                    };
+
+                    PoorChatMessage?.Invoke(this, poorChatMsg);
                 } break;
             }
         }

@@ -52,7 +52,7 @@ namespace JaDisco_UWP.ViewModels.PoorChat
         {
             await _window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
-                await AddMessage(new ChatMessageViewModel(e.Author, e.Message));
+                await AddMessage(new ChatMessageViewModel(e.User.UserName, e.Message));
             });
         }
 
