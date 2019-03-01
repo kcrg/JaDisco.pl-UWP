@@ -13,17 +13,10 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-
-            <TextBlock Grid.Column="1" TextWrapping="Wrap">
-                <Run Text="{Binding Author}" Foreground="White" FontWeight="Bold" />:
-                <Run Text="{Binding Message}" Foreground="White" />
-            </TextBlock>
-        </Grid>
+        <TextBlock Grid.Row="0" TextWrapping="Wrap">
+            <Run Text="{Binding Author}" Foreground="White" FontWeight="Bold" />:
+            <Run Text="{Binding Message}" Foreground="White" />
+        </TextBlock>
 
         <Image Source="{Binding Image}" Grid.Row="1" />
     </Grid>
