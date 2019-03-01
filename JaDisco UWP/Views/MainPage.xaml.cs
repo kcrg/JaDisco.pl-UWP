@@ -308,7 +308,7 @@ namespace JaDisco_UWP
                         break;
                     case "Dzej":
                         {
-                            Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Dzej");
+                            Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "dzej");
 
                             if (streamer is null)
                             {
