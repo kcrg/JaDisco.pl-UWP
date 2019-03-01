@@ -33,20 +33,23 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            
+
             <TextBox Grid.Column="0" />
             <Button Grid.Column="1" Content=":)">
                 <Button.Flyout>
                     <Flyout>
-                        <GridView Width="288" ItemsSource="{Binding Emoticons}">
-                            <GridView.ItemTemplate>
-                                <DataTemplate>
-                                    <Button Width="40" Height="40">
-                                        <Image Source="{Binding ImageSource}" />
-                                    </Button>
-                                </DataTemplate>
-                            </GridView.ItemTemplate>
-                        </GridView>
+                        <StackPanel>
+                            <TextBlock>Emotikony</TextBlock>
+                            <GridView Width="288" ItemsSource="{Binding Emoticons}">
+                                <GridView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Width="40" Height="40" Padding="4">
+                                            <Image Source="{Binding ImageSource}" />
+                                        </Button>
+                                    </DataTemplate>
+                                </GridView.ItemTemplate>
+                            </GridView>
+                        </StackPanel>
                     </Flyout>
                 </Button.Flyout>
             </Button>
