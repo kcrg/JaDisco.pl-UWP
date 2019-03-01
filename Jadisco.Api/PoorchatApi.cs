@@ -38,31 +38,41 @@ namespace Jadisco.Api
             }
         }
 
+        static public async Task<List<Emoticon>> GetEmoticonsAsync()
+        {
+            if (emoticons is null)
+            {
+                await LoadEmoticons();
+            }
+
+            return emoticons;
+        }
+
         static public async Task<Emoticon> GetEmoticonAsync(string name)
         {
             if (emoticons is null)
             {
-                emoticons = (await DownloadDataAsync<Emoticon[]>("https://api.poorchat.net/v1/channels/jadisco/emoticons")).ToList();
-
-                foreach (var emoticon in emoticons)
-                {
-                    emoticon.Url = $"https://static.poorchat.net/emoticons/{emoticon.File}/1x";
-                }
+                await LoadEmoticons();
             }
 
             return emoticons?.SingleOrDefault(m => m.Name == name);
+        }
+
+        static public async Task<List<Badge>> GetBadgesAsync()
+        {
+            if (badges is null)
+            {
+                await LoadBadges();
+            }
+
+            return badges;
         }
 
         static public async Task<Badge> GetBadgeAsync(string mode)
         {
             if (badges is null)
             {
-                badges = (await DownloadDataAsync<Badge[]>("https://api.poorchat.net/v1/badges")).ToList();
-
-                foreach (var badge in badges)
-                {
-                    badge.Url = $"https://static.poorchat.net/badges/{badge.File}/1x";
-                }
+                await LoadBadges();
             }
 
             return badges?.SingleOrDefault(m => m.Mode == mode);
@@ -73,19 +83,56 @@ namespace Jadisco.Api
             return await GetBadgeAsync(((char)mode).ToString());
         }
 
+        static public async Task<List<SubscriberBadge>> GetSubscriberBadgeAsync(string channelName = "jadisco")
+        {
+            if (channelBadge is null)
+            {
+                await LoadSubcriberBadges(channelName);
+            }
+
+            return channelBadge.Subscriber.ToList();
+        }
+
         static public async Task<SubscriberBadge> GetSubscriberBadgeAsync(int month, string channelName = "jadisco")
         {
             if (channelBadge is null)
             {
-                channelBadge = await DownloadDataAsync<ChannelBadge>($"https://api.poorchat.net/v1/channels/{channelName}/badges");
-
-                foreach (var subscriber in channelBadge.Subscriber)
-                {
-                    subscriber.Url = $"https://static.poorchat.net/badges/{subscriber.File}/1x";
-                }
+                await LoadSubcriberBadges(channelName);
             }
 
             return channelBadge.Subscriber.SingleOrDefault(m => m.Months == month);
+        }
+        #endregion
+
+        #region Private methods
+        static private async Task LoadEmoticons()
+        {
+            emoticons = (await DownloadDataAsync<Emoticon[]>("https://api.poorchat.net/v1/channels/jadisco/emoticons")).ToList();
+
+            foreach (var emoticon in emoticons)
+            {
+                emoticon.Url = $"https://static.poorchat.net/emoticons/{emoticon.File}/1x";
+            }
+        }
+
+        static private async Task LoadBadges()
+        {
+            badges = (await DownloadDataAsync<Badge[]>("https://api.poorchat.net/v1/badges")).ToList();
+
+            foreach (var badge in badges)
+            {
+                badge.Url = $"https://static.poorchat.net/badges/{badge.File}/1x";
+            }
+        }
+
+        static private async Task LoadSubcriberBadges(string channelName)
+        {
+            channelBadge = await DownloadDataAsync<ChannelBadge>($"https://api.poorchat.net/v1/channels/{channelName}/badges");
+
+            foreach (var subscriber in channelBadge.Subscriber)
+            {
+                subscriber.Url = $"https://static.poorchat.net/badges/{subscriber.File}/1x";
+            }
         }
         #endregion
 
@@ -99,6 +146,5 @@ namespace Jadisco.Api
             return data;
         }
         #endregion
-
     }
 }

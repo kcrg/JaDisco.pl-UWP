@@ -10,35 +10,89 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using IrcDotNet;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media.Imaging;
+
+using IrcDotNet;
+using Jadisco.Api;
+
 
 namespace JaDisco_UWP.ViewModels.Poorchat
 {
     public class ChatViewModel : BaseViewModel
     {
-        #region Properties
+        #region Private variables
         DependencyObject _window = null;
+
+        PoorchatIrcClient _poorChatClient = new PoorchatIrcClient();
+
+        int _chatMaxSize = 100;
 
         private ObservableCollection<ChatMessageViewModel> _messages = new ObservableCollection<ChatMessageViewModel>();
 
+        private ObservableCollection<EmoticonViewModel> _emoticons = new ObservableCollection<EmoticonViewModel>();
+        #endregion
+
+        #region Properties
         public ObservableCollection<ChatMessageViewModel> Messages
         {
             get => _messages;
             set { _messages = value; NotifyPropertyChanged(); }
         }
+
+        public ObservableCollection<EmoticonViewModel> Emoticons
+        {
+            get => _emoticons;
+            set { _emoticons = value; NotifyPropertyChanged(); }
+        }
         #endregion
 
-        #region Private variables
-        PoorchatIrcClient _poorChatClient = new PoorchatIrcClient();
-
-        int _chatMaxSize = 100;
-        #endregion
-
+        #region Public methods
         public ChatViewModel(DependencyObject window)
         {
             _window = window;
 
+            SetupIrcClient();
+            SetupEmoticonsMenu().Wait();
+        }
+
+        public async Task AddMessage(ChatMessageViewModel message)
+        {
+            await _window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                _messages.Add(message);
+
+                if (_messages.Count > _chatMaxSize)
+                {
+                    _messages.RemoveAt(0);
+                }
+
+                NotifyPropertyChanged("Messages");
+            });
+        }
+        #endregion
+
+        #region Private methods
+        #region Emoticons
+        private async Task SetupEmoticonsMenu()
+        {
+            var emoticons = await PoorchatApi.GetEmoticonsAsync();
+
+            foreach (var emoticon in emoticons)
+            {
+                var emoticonVM = new EmoticonViewModel
+                {
+                    ImageSource = new BitmapImage(new Uri(emoticon.Url))
+                };
+
+                Emoticons.Add(emoticonVM);
+            }
+        }
+        #endregion
+
+        #region IRC Client
+        private void SetupIrcClient()
+        {
             _poorChatClient.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
             _poorChatClient.Connected += IrcClient_Connected;
             _poorChatClient.Disconnected += IrcClient_Disconnected;
@@ -71,22 +125,7 @@ namespace JaDisco_UWP.ViewModels.Poorchat
         {
             Debug.WriteLine("[Poorchat] Disconnected!");
         }
-
-        #region Public methods
-        public async Task AddMessage(ChatMessageViewModel message)
-        {
-            await _window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                _messages.Add(message);
-
-                if (_messages.Count > _chatMaxSize)
-                {
-                    _messages.RemoveAt(0);
-                }
-
-                NotifyPropertyChanged("Messages");
-            });
-        }
+        #endregion
         #endregion
     }
 }

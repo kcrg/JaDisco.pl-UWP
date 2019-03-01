@@ -168,7 +168,7 @@ namespace JaDisco_UWP.ViewModels.Poorchat
                 ImageSourceCache[url] = imageSource;
             }
 
-            int offset = 0, padding = 0;
+            int offset = 0, paddingLeft = 0, paddingRight = 0;
             float scale = 0f;
 
             switch (imageType)
@@ -176,13 +176,14 @@ namespace JaDisco_UWP.ViewModels.Poorchat
                 case ImageType.Emoticon:
                 {
                     offset = 6;
-                    padding = 8;
+                    paddingLeft = 8;
+                    paddingRight = 4;
                     scale = 20f;
                 } break;
                 case ImageType.Badge:
                 {
                     offset = 4;
-                    padding = 4;
+                    paddingLeft = paddingRight = 4;
                     scale = 16f;
                 } break;
             }
@@ -200,7 +201,7 @@ namespace JaDisco_UWP.ViewModels.Poorchat
             {
                 Width = 16,
                 Height = 16,
-                Margin = new Thickness(padding, 0, padding, 0),
+                Margin = new Thickness(paddingLeft, 0, paddingRight, 0),
                 Source = imageSource,
                 RenderTransform = transform,
                 VerticalAlignment = VerticalAlignment.Center

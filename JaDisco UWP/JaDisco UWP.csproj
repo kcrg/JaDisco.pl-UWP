@@ -138,6 +138,7 @@
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\Poorchat\ChatMessageViewModel.cs" />
     <Compile Include="ViewModels\Poorchat\ChatViewModel.cs" />
+    <Compile Include="ViewModels\Poorchat\EmoticonViewModel.cs" />
     <Compile Include="ViewModels\StreamQualitiesViewModel.cs" />
     <Compile Include="ViewModels\StreamQualityViewModel.cs" />
     <Compile Include="Views\ChatPage.xaml.cs">
