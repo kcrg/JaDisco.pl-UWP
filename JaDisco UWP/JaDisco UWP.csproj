@@ -126,6 +126,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AttachedProperties\RichTextBlockProperty.cs" />
     <Compile Include="Controls\Poorchat\Chat.xaml.cs">
       <DependentUpon>Chat.xaml</DependentUpon>
     </Compile>

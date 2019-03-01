@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Jadisco.Api.Models
+namespace Jadisco.Api.Models.Notifier
 {
     public class Service
     {

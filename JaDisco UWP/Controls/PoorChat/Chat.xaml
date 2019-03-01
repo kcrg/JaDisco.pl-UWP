@@ -15,7 +15,7 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         
-        <ScrollViewer x:Name="ScrollViewer" Padding="10 0 10 0" VerticalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" Grid.Row="0" Background="#121212">
+        <ScrollViewer x:Name="ScrollViewer" Padding="10 0 10 5" VerticalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" Grid.Row="0" Background="#121212">
             <StackPanel>
                 <ItemsControl ItemsSource="{Binding Messages}">
                     <ItemsControl.ItemTemplate>

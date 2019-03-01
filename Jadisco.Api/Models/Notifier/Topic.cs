@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace Jadisco.Api.Models
+namespace Jadisco.Api.Models.Notifier
 {
     public class Topic
     {

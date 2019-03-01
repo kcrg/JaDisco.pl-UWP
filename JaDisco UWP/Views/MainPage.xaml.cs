@@ -21,7 +21,8 @@ using Twitch.Api;
 using Twitch.Api.Models;
 
 using Jadisco.Api;
-using Jadisco.Api.Models;
+using Jadisco.Api.Models.Notifier;
+using System.Threading.Tasks;
 
 namespace JaDisco_UWP
 {
@@ -73,9 +74,9 @@ namespace JaDisco_UWP
             Poorchat.DataContext = chatVM;
         }
 
-        private void ChangeStream(string channel)
+        private async Task ChangeStreamAsync(string channel)
         {
-            AccessToken token = TwitchApi.GetAccessToken(channel);
+            AccessToken token = await TwitchApi.GetAccessTokenAsync(channel);
 
             if (token is null)
             {
@@ -177,9 +178,9 @@ namespace JaDisco_UWP
                 }
             });
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                ChangeStream(obj.Id);
+                await ChangeStreamAsync(obj.Id);
             });
         }
 
@@ -278,7 +279,7 @@ namespace JaDisco_UWP
             }
         }
 
-        private void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
+        private async void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
         {
             if (args.SelectedItemContainer != null)
             {
@@ -300,7 +301,7 @@ namespace JaDisco_UWP
                             break;
                         }
 
-                        ChangeStream(stream.Id);
+                        await ChangeStreamAsync(stream.Id);
                     }
                     break;
                     case "Dzej":
@@ -319,7 +320,7 @@ namespace JaDisco_UWP
                             break;
                         }
 
-                        ChangeStream(stream.Id);
+                        await ChangeStreamAsync(stream.Id);
                     }
                     break;
                 }
