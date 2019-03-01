@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Twitch.Api.Models;
 
 using Newtonsoft.Json;
+
+using Shared;
 
 namespace Twitch.Api
 {
@@ -10,7 +13,7 @@ namespace Twitch.Api
     {
         private static readonly string TwitchClientId = "ot11j3ucjrcx1tid3f6yfyhoi2za4g";
 
-        public static AccessToken GetAccessToken(string channel)
+        public static async Task<AccessToken> GetAccessTokenAsync(string channel)
         {
             Dictionary<string, string> header = new Dictionary<string, string>
             {
@@ -18,7 +21,7 @@ namespace Twitch.Api
                 { "Client-ID", TwitchClientId }
             };
 
-            string result = ApiRequestHelper.ExecuteWebRequest($"https://api.twitch.tv/api/channels/{channel}/access_token.json", header);
+            string result = await ApiRequestHelper.ExecuteWebRequestAsync($"https://api.twitch.tv/api/channels/{channel}/access_token.json", header);
 
             if (result != null)
             {
