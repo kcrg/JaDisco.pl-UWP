@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Net.WebSockets;
 
-using Jadisco.Api.Models;
+using Jadisco.Api.Models.Notifier;
 
 using Newtonsoft.Json;
 using PureWebSockets;

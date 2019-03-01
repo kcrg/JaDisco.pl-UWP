@@ -5,8 +5,11 @@ VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JaDisco UWP", "JaDisco UWP\JaDisco UWP.csproj", "{9A57033B-AC51-4B2A-BD92-52B595B1A633}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twitch.Api", "Twitch.Api\Twitch.Api.csproj", "{23EB9B5B-4935-49F5-AC92-3F026A51D9D1}"
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jadisco.Api", "Jadisco.Api\Jadisco.Api.csproj", "{09A387C1-37D2-49DC-A6B8-5534EB47B640}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Twitch.Api", "Twitch.Api\Twitch.Api.csproj", "{23EB9B5B-4935-49F5-AC92-3F026A51D9D1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jadisco.Api", "Jadisco.Api\Jadisco.Api.csproj", "{09A387C1-37D2-49DC-A6B8-5534EB47B640}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,6 +91,26 @@ Global
 		{09A387C1-37D2-49DC-A6B8-5534EB47B640}.Release|x64.Build.0 = Release|Any CPU
 		{09A387C1-37D2-49DC-A6B8-5534EB47B640}.Release|x86.ActiveCfg = Release|Any CPU
 		{09A387C1-37D2-49DC-A6B8-5534EB47B640}.Release|x86.Build.0 = Release|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Debug|ARM.Build.0 = Debug|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Debug|x64.Build.0 = Debug|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Debug|x86.Build.0 = Debug|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Release|ARM.ActiveCfg = Release|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Release|ARM.Build.0 = Release|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Release|ARM64.Build.0 = Release|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Release|x64.ActiveCfg = Release|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Release|x64.Build.0 = Release|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Release|x86.ActiveCfg = Release|Any CPU
+		{9A2019B9-84D8-4B7F-8B23-BCE990C2C219}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

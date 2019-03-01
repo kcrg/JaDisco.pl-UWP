@@ -7,18 +7,10 @@ using System.Threading.Tasks;
 
 using IrcDotNet;
 
+using Jadisco.Api;
+
 namespace JaDisco_UWP
 {
-    public enum UserMode
-    {
-        None,
-        Owner,
-        Admin,
-        Moderator,
-        Subscriber,
-        VIP
-    }
-
     public class PoorchatMessage
     {
         public IrcUser User { get; set; }
@@ -27,7 +19,7 @@ namespace JaDisco_UWP
 
         public IrcChannel Channel { get; set; }
 
-        public UserMode[] UserModes { get; set; }
+        public PoorchatUserMode[] UserModes { get; set; }
     }
 
     public class PoorchatIrcClient : StandardIrcClient
@@ -53,30 +45,11 @@ namespace JaDisco_UWP
             Connect(IrcUrl, false, irc);
         }
 
-        private UserMode GetMode(char mode)
-        {
-            switch (mode)
-            {
-                case 'q':
-                    return UserMode.Owner;
-                case 'a':
-                    return UserMode.Admin;
-                case 'o':
-                    return UserMode.Moderator;
-                case 'v':
-                    return UserMode.Subscriber;
-                case 'h':
-                    return UserMode.VIP;
-                default:
-                    return UserMode.None;
-            }
-        }
-
-        public IEnumerable<UserMode> GetUserModes(IrcChannelUser user)
+        public IEnumerable<PoorchatUserMode> GetUserModes(IrcChannelUser user)
         {
             foreach (var mode in user.Modes)
             {
-                yield return GetMode(mode);
+                yield return PoorchatApi.GetMode(mode);
             }
         }
 
