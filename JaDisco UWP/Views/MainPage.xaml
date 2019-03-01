@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:poorchat="using:JaDisco_UWP.Controls.PoorChat"
+    xmlns:poorchat="using:JaDisco_UWP.Controls.Poorchat"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d" Background="{ThemeResource SystemControlChromeLowAcrylicWindowBrush}">
     <Page.Resources>
@@ -155,7 +155,7 @@
                                             Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4"/>
                     </Grid>
 
-                    <poorchat:Chat x:Name="PoorChat" Grid.Column="1" />
+                    <poorchat:Chat x:Name="Poorchat" Grid.Column="1" />
                 </Grid>
             </muxc:NavigationView.Content>
         </muxc:NavigationView>

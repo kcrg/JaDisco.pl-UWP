@@ -126,17 +126,17 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\PoorChat\Chat.xaml.cs">
+    <Compile Include="Controls\Poorchat\Chat.xaml.cs">
       <DependentUpon>Chat.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\PoorChat\ChatMessage.xaml.cs">
+    <Compile Include="Controls\Poorchat\ChatMessage.xaml.cs">
       <DependentUpon>ChatMessage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PoorChatIrcClient.cs" />
+    <Compile Include="PoorchatIrcClient.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
-    <Compile Include="ViewModels\PoorChat\ChatMessageViewModel.cs" />
-    <Compile Include="ViewModels\PoorChat\ChatViewModel.cs" />
+    <Compile Include="ViewModels\Poorchat\ChatMessageViewModel.cs" />
+    <Compile Include="ViewModels\Poorchat\ChatViewModel.cs" />
     <Compile Include="ViewModels\StreamQualitiesViewModel.cs" />
     <Compile Include="ViewModels\StreamQualityViewModel.cs" />
     <Compile Include="Views\ChatPage.xaml.cs">
@@ -213,11 +213,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Controls\PoorChat\Chat.xaml">
+    <Page Include="Controls\Poorchat\Chat.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\PoorChat\ChatMessage.xaml">
+    <Page Include="Controls\Poorchat\ChatMessage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

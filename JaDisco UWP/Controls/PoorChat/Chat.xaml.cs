@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace JaDisco_UWP.Controls.PoorChat
+namespace JaDisco_UWP.Controls.Poorchat
 {
     public sealed partial class Chat : UserControl
     {

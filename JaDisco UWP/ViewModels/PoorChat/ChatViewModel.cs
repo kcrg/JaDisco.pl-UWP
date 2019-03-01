@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using IrcDotNet;
 using Windows.UI.Xaml;
 
-namespace JaDisco_UWP.ViewModels.PoorChat
+namespace JaDisco_UWP.ViewModels.Poorchat
 {
     public class ChatViewModel : BaseViewModel
     {
@@ -30,7 +30,7 @@ namespace JaDisco_UWP.ViewModels.PoorChat
         #endregion
 
         #region Private variables
-        PoorChatIrcClient _poorChatClient = new PoorChatIrcClient();
+        PoorchatIrcClient _poorChatClient = new PoorchatIrcClient();
 
         int _chatMaxSize = 100;
         #endregion
@@ -43,12 +43,12 @@ namespace JaDisco_UWP.ViewModels.PoorChat
             _poorChatClient.Connected += IrcClient_Connected;
             _poorChatClient.Disconnected += IrcClient_Disconnected;
             _poorChatClient.Registered += IrcClient_Registered;
-            _poorChatClient.PoorChatMessage += PoorChatClient_PoorChatMessage;
+            _poorChatClient.PoorchatMessage += PoorchatClient_PoorchatMessage;
 
             _poorChatClient.Connect();
         }
 
-        private async void PoorChatClient_PoorChatMessage(object sender, PoorChatMessage e)
+        private async void PoorchatClient_PoorchatMessage(object sender, PoorchatMessage e)
         {
             await _window.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
@@ -58,18 +58,18 @@ namespace JaDisco_UWP.ViewModels.PoorChat
 
         private void IrcClient_Connected(object sender, EventArgs e)
         {
-            Debug.WriteLine("[PoorChat] Connected!");
+            Debug.WriteLine("[Poorchat] Connected!");
         }
 
         private void IrcClient_Registered(object sender, EventArgs e)
         {
-            Debug.WriteLine("[PoorChat] Registered!");
+            Debug.WriteLine("[Poorchat] Registered!");
             _poorChatClient.Channels.Join("#jadisco");
         }
 
         private void IrcClient_Disconnected(object sender, EventArgs e)
         {
-            Debug.WriteLine("[PoorChat] Disconnected!");
+            Debug.WriteLine("[Poorchat] Disconnected!");
         }
 
         #region Public methods

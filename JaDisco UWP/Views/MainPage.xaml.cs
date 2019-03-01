@@ -1,6 +1,6 @@
 ﻿using JaDisco_UWP.ViewModels;
 using JaDisco_UWP.Views;
-using JaDisco_UWP.ViewModels.PoorChat;
+using JaDisco_UWP.ViewModels.Poorchat;
 
 using System;
 using System.Collections.Generic;
@@ -70,21 +70,8 @@ namespace JaDisco_UWP
             StreamMediaPlayer.MediaPlayer.Play();
 
             QualityStackPanel.DataContext = streamQualitiesVM;
-            PoorChat.DataContext = chatVM;
-
-           // MockPoorChat();
+            Poorchat.DataContext = chatVM;
         }
-
-        /*void MockPoorChat()
-        {
-            chatVM.Messages = new List<ChatMessageViewModel>
-            {
-                new ChatMessageViewModel { Author = "Wonziu", Message = "Wypierdolcie go" },
-                new ChatMessageViewModel { Author = "Wonziu", Message = "wchodzę" },
-                new ChatMessageViewModel { Author = "dzej", Message = "KEK" },
-                new ChatMessageViewModel { Author = "sb", Message = "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatibus, quaerat!" }
-            };
-        }*/
 
         private void ChangeStream(string channel)
         {

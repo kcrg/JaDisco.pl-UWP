@@ -11,7 +11,7 @@ using Windows.Storage;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace JaDisco_UWP.ViewModels.PoorChat
+namespace JaDisco_UWP.ViewModels.Poorchat
 {
     public class ChatMessageViewModel : BaseViewModel
     {

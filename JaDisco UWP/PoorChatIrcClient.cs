@@ -19,7 +19,7 @@ namespace JaDisco_UWP
         VIP
     }
 
-    public class PoorChatMessage
+    public class PoorchatMessage
     {
         public IrcUser User { get; set; }
 
@@ -30,15 +30,15 @@ namespace JaDisco_UWP
         public UserMode[] UserModes { get; set; }
     }
 
-    public class PoorChatIrcClient : StandardIrcClient
+    public class PoorchatIrcClient : StandardIrcClient
     {
         private readonly string IrcUrl = "irc.poorchat.net";
 
-        public event EventHandler<PoorChatMessage> PoorChatMessage;
+        public event EventHandler<PoorchatMessage> PoorchatMessage;
 
-        public PoorChatIrcClient()
+        public PoorchatIrcClient()
         {
-            RawMessageReceived += PoorChatIrcClient_RawMessageReceived;
+            RawMessageReceived += PoorchatIrcClient_RawMessageReceived;
         }
 
         public void Connect()
@@ -80,7 +80,7 @@ namespace JaDisco_UWP
             }
         }
 
-        private void PoorChatIrcClient_RawMessageReceived(object sender, IrcRawMessageEventArgs e)
+        private void PoorchatIrcClient_RawMessageReceived(object sender, IrcRawMessageEventArgs e)
         {
             switch (e.Message.Command)
             {
@@ -104,7 +104,7 @@ namespace JaDisco_UWP
                     if (userChannel is null)
                         break;
 
-                    var poorChatMsg = new PoorChatMessage
+                    var poorChatMsg = new PoorchatMessage
                     {
                         User = user,
                         Message = message,
@@ -112,7 +112,7 @@ namespace JaDisco_UWP
                         UserModes = GetUserModes(userChannel).ToArray()
                     };
 
-                    PoorChatMessage?.Invoke(this, poorChatMsg);
+                    PoorchatMessage?.Invoke(this, poorChatMsg);
                 } break;
             }
         }
