@@ -136,13 +136,17 @@ namespace JaDisco_UWP.ViewModels.Poorchat
                     var hyperlink = new Hyperlink();
                     hyperlink.NavigateUri = new Uri(url);
 
+                    var text = new Run();
+                    text.Text = url;
+                    hyperlink.Inlines.Add(text);
+
                     data.Inlines.Add(hyperlink);
                 }
                 else if (GetEmoticon(word, out var imageSource))
                 {
                     var container = new InlineUIContainer();
                     container.FontSize = 1;
-                    container.Child = CreateImage(imageSource, 7, 8, 20f);
+                    container.Child = CreateImage(imageSource, 6, 8, 20f);
 
                     data.Inlines.Add(container);
                 }
