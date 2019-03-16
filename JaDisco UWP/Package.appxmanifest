@@ -5,12 +5,13 @@
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
-  IgnorableNamespaces="uap uap5 mp">
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  IgnorableNamespaces="uap uap5 mp uap3">
 
   <Identity
     Name="4792MohairApp.JaDisco.plUWP"
     Publisher="CN=91FC2611-0BE1-4BF6-BF67-9AC292856A90"
-    Version="0.5.0.0" />
+    Version="0.5.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="4a9bccd5-99e8-4b26-90ed-8c772c7aa07d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -50,5 +51,6 @@
 
   <Capabilities>
     <Capability Name="internetClient" />
+    <uap3:Capability Name="backgroundMediaPlayback"/>
   </Capabilities>
 </Package>

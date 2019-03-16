@@ -10,5 +10,7 @@
     PrimaryButtonStyle="{StaticResource ButtonRevealStyle}"
     PrimaryButtonClick="PrimaryButtonClick">
 
-    <TextBlock x:Name="MessageText"/>
+    <ContentDialog.Content>
+        <TextBlock x:Name="MessageText" TextWrapping="Wrap"/>
+    </ContentDialog.Content>
 </ContentDialog>

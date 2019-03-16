@@ -12,7 +12,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
 
 using Twitch.Api;
 using Twitch.Api.Models;
@@ -249,26 +248,6 @@ namespace JaDisco_UWP
                 LeftChat = false;
             }
         }
-
-        //private void StreamWebView_ContainsFullScreenElementChanged(WebView sender, object args)
-        //{
-        //    ApplicationView view = ApplicationView.GetForCurrentView();
-
-        //    if (sender.ContainsFullScreenElement)
-        //    {
-        //        view.TryEnterFullScreenMode();
-        //        NavView.IsPaneVisible = false;
-        //        NavView.Margin = new Thickness(0);
-        //        DragArea.Visibility = Visibility.Collapsed;
-        //    }
-        //    else if (view.IsFullScreenMode)
-        //    {
-        //        view.ExitFullScreenMode();
-        //        NavView.Margin = new Thickness(0, 38, 0, 0);
-        //        NavView.IsPaneVisible = true;
-        //        DragArea.Visibility = Visibility.Visible;
-        //    }
-        //}
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
