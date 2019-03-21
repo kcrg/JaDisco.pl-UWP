@@ -317,20 +317,6 @@ namespace JaDisco_UWP
         {
             vm.LaunchUri("https://streamlabs.com/wonziu");
         }
-        private void Donate_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            vm.LaunchUri("https://tinyurl.com/DonateMohairApps");
-        }
-
-        private void Github_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            vm.LaunchUri("https://github.com/kcrg/JaDisco.pl-UWP");
-        }
-
-        private void Wykop_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            vm.LaunchUri("https://www.wykop.pl/tag/jadiscouwp/");
-        }
 
         private async void ChatNewWindowButton_Click(object sender, RoutedEventArgs e)
         {

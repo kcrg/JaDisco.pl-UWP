@@ -5,22 +5,25 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    mc:Ignorable="d" NavigationCacheMode="Required" 
-    Background="{ThemeResource SystemControlChromeLowAcrylicWindowBrush}">
+    Background="{ThemeResource SystemControlChromeLowAcrylicWindowBrush}"
+    NavigationCacheMode="Required"
+    mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
             <Flyout x:Key="StatusFlyout">
                 <Flyout.FlyoutPresenterStyle>
                     <Style TargetType="FlyoutPresenter">
-                        <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
-                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
                         <Setter Property="IsTabStop" Value="True"/>
+                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+                        <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
                         <Setter Property="TabNavigation" Value="Cycle"/>
                     </Style>
                 </Flyout.FlyoutPresenterStyle>
                 <StackPanel>
                     <TextBlock x:Name="StatusFlyoutTextBlock" TextWrapping="Wrap"/>
-                    <TextBlock x:Name="StatusDateFlyoutTextBlock" Foreground="LightGray" FontSize="11"/>
+                    <TextBlock x:Name="StatusDateFlyoutTextBlock"
+                        FontSize="11"
+                        Foreground="LightGray"/>
                 </StackPanel>
             </Flyout>
             <ResourceDictionary.MergedDictionaries>
@@ -31,38 +34,43 @@
 
     <Page.Content>
         <Grid>
-            <Grid Style="{StaticResource DragAreaGrid}"
-                  x:Name="DragArea">
+            <Grid x:Name="DragArea" Style="{StaticResource DragAreaGrid}">
 
-                <Image Source="ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogo.png"
-                       Margin="12,10,0,10"
-                       Style="{StaticResource AppLogoImage}"/>
-                <TextBlock x:Name="StatusTextBlock"
-                           Style="{StaticResource StatusText}"/>
+                <Image
+                    Margin="12,10,0,10"
+                    Source="ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogo.png"
+                    Style="{StaticResource AppLogoImage}"/>
+                <TextBlock x:Name="StatusTextBlock" Style="{StaticResource StatusText}"/>
             </Grid>
 
-            <muxc:NavigationView x:Name="NavView" 
-                                 Style="{StaticResource NavigationView}" 
-                                 SelectionChanged="NavView_SelectionChanged">
+            <muxc:NavigationView x:Name="NavView"
+                SelectionChanged="NavView_SelectionChanged"
+                Style="{StaticResource NavigationView}">
 
                 <muxc:NavigationView.MenuItems>
-                    <muxc:NavigationViewItem x:Name="WonziuNav" Tag="Wonziu" Content="Wonziu - Offline" IsEnabled="False"/>
-                    <muxc:NavigationViewItem x:Name="DzejNav" Tag="Dzej" Content="Dzej - Offline" IsEnabled="False"/>
+                    <muxc:NavigationViewItem x:Name="WonziuNav"
+                        Content="Wonziu - Offline"
+                        IsEnabled="False"
+                        Tag="Wonziu"/>
+                    <muxc:NavigationViewItem x:Name="DzejNav"
+                        Content="Dzej - Offline"
+                        IsEnabled="False"
+                        Tag="Dzej"/>
                 </muxc:NavigationView.MenuItems>
 
                 <muxc:NavigationView.PaneFooter>
                     <CommandBar Style="{StaticResource CommandBar}">
                         <CommandBar.PrimaryCommands>
-                            <AppBarButton ToolTipService.ToolTip="Wyświetl cały temat" 
-                                          FlyoutBase.AttachedFlyout="{StaticResource StatusFlyout}" 
-                                          Click="ShowFlyout_Click">
+                            <AppBarButton
+                                Click="ShowFlyout_Click"
+                                FlyoutBase.AttachedFlyout="{StaticResource StatusFlyout}"
+                                ToolTipService.ToolTip="Wyświetl cały temat">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xE946;"/>
                                 </AppBarButton.Icon>
                             </AppBarButton>
 
-                            <AppBarButton ToolTipService.ToolTip="Wesprzyj Wonzia" 
-                                          Click="DonateWonziu_Click">
+                            <AppBarButton Click="DonateWonziu_Click" ToolTipService.ToolTip="Wesprzyj Wonzia">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xEB51;"/>
                                 </AppBarButton.Icon>
@@ -70,23 +78,23 @@
 
                             <AppBarSeparator/>
 
-                            <AppBarButton x:Name="ChatPositionButton" 
-                                          ToolTipService.ToolTip="Przenieś czat" 
-                                          Click="ChatPositionButton_Click">
+                            <AppBarButton x:Name="ChatPositionButton"
+                                Click="ChatPositionButton_Click"
+                                ToolTipService.ToolTip="Przenieś czat">
                                 <AppBarButton.Icon>
                                     <FontIcon x:Name="ChatPositionIcon" Glyph="&#xE90C;"/>
                                 </AppBarButton.Icon>
                             </AppBarButton>
-                            <AppBarButton x:Name="ChatHideButton" 
-                                          ToolTipService.ToolTip="Schowaj czat" 
-                                          Click="ChatHideButton_Click">
+                            <AppBarButton x:Name="ChatHideButton"
+                                Click="ChatHideButton_Click"
+                                ToolTipService.ToolTip="Schowaj czat">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xE8F2;"/>
                                 </AppBarButton.Icon>
                             </AppBarButton>
-                            <AppBarButton x:Name="ChatInNewWindow" 
-                                          ToolTipService.ToolTip="Otwórz czat w nowym oknie" 
-                                          Click="ChatNewWindowButton_Click">
+                            <AppBarButton x:Name="ChatInNewWindow"
+                                Click="ChatNewWindowButton_Click"
+                                ToolTipService.ToolTip="Otwórz czat w nowym oknie">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xE8A7;"/>
                                 </AppBarButton.Icon>
@@ -94,25 +102,31 @@
 
                             <AppBarSeparator/>
 
-                            <AppBarButton Icon="Refresh" 
-                                          ToolTipService.ToolTip="Odśwież wszystko" 
-                                          Click="RefreshButton_Click"/>
+                            <AppBarButton
+                                Click="RefreshButton_Click"
+                                Icon="Refresh"
+                                ToolTipService.ToolTip="Odśwież wszystko"/>
 
-                            <AppBarButton ToolTipService.ToolTip="Zmień jakość streamu" 
-                                          Click="ShowFlyout_Click">
+                            <AppBarButton Click="ShowFlyout_Click" ToolTipService.ToolTip="Zmień jakość streamu">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xE9E9;"/>
                                 </AppBarButton.Icon>
                                 <FlyoutBase.AttachedFlyout>
                                     <Flyout LightDismissOverlayMode="Auto">
                                         <StackPanel x:Name="QualityStackPanel">
-                                            <TextBlock Text="Jakość Streamu" FontSize="14"/>
-                                            <TextBlock Text="Jakości streamu nie są dostępne" Foreground="LightGray" Visibility="{Binding IsNotAvailable}" />
+                                            <TextBlock FontSize="14" Text="Jakość Streamu"/>
+                                            <TextBlock
+                                                Foreground="LightGray"
+                                                Text="Jakości streamu nie są dostępne"
+                                                Visibility="{Binding IsNotAvailable}"/>
 
                                             <ItemsControl ItemsSource="{Binding Qualities}">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <RadioButton Content="{Binding Name}" GroupName="Quality" Checked="StreamQualityButton_Checked"/>
+                                                        <RadioButton
+                                                            Checked="StreamQualityButton_Checked"
+                                                            Content="{Binding Name}"
+                                                            GroupName="Quality"/>
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
@@ -121,19 +135,27 @@
                                 </FlyoutBase.AttachedFlyout>
                             </AppBarButton>
 
-                            <AppBarButton Icon="Setting" 
-                                          ToolTipService.ToolTip="Ustawienia" 
-                                          Click="ShowFlyout_Click">
+                            <AppBarButton
+                                Click="ShowFlyout_Click"
+                                Icon="Setting"
+                                ToolTipService.ToolTip="Ustawienia">
                                 <FlyoutBase.AttachedFlyout>
                                     <Flyout LightDismissOverlayMode="Auto">
                                         <StackPanel>
-                                            <TextBlock Text="Powiadomienia - wkrótce" FontSize="14"/>
-                                            <RadioButton Content="Włączone" GroupName="Notifi" IsEnabled="False"/>
-                                            <RadioButton Content="Wyłączone" GroupName="Notifi" IsChecked="True" IsEnabled="False"/>
+                                            <TextBlock FontSize="14" Text="Powiadomienia - wkrótce"/>
+                                            <RadioButton
+                                                Content="Włączone"
+                                                GroupName="Notifi"
+                                                IsEnabled="False"/>
+                                            <RadioButton
+                                                Content="Wyłączone"
+                                                GroupName="Notifi"
+                                                IsChecked="True"
+                                                IsEnabled="False"/>
 
-                                            <HyperlinkButton Content="Donacja dla twórcy aplikacji" Tapped="Donate_Tapped"/>
-                                            <HyperlinkButton Content="Repozytorium na githubie" Tapped="Github_Tapped"/>
-                                            <HyperlinkButton Content="#jadiscouwp - księga zażaleń" Tapped="Wykop_Tapped"/>
+                                            <HyperlinkButton Content="Donacja dla twórcy aplikacji" NavigateUri="https://tinyurl.com/DonateMohairApps"/>
+                                            <HyperlinkButton Content="Repozytorium na githubie" NavigateUri="https://github.com/kcrg/JaDisco.pl-UWP"/>
+                                            <HyperlinkButton Content="#jadiscouwp - księga zażaleń" NavigateUri="https://www.wykop.pl/tag/jadiscouwp/"/>
                                             <TextBlock Text="JaDisco.pl UWP v0.5.1.0"/>
                                         </StackPanel>
                                     </Flyout>
@@ -150,7 +172,9 @@
                             <ColumnDefinition x:Name="RightColumn" Width="2300*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Grid x:Name="StreamGrid" Grid.Column="0" Background="Black">
+                        <Grid x:Name="StreamGrid"
+                            Grid.Column="0"
+                            Background="Black">
                             <MediaPlayerElement x:Name="StreamMediaPlayer" Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4">
                                 <MediaPlayerElement.TransportControls>
                                     <MediaTransportControls Style="{StaticResource MediaTransportControls}"/>
@@ -158,10 +182,12 @@
                             </MediaPlayerElement>
                         </Grid>
 
-                        <Grid x:Name="ChatGrid" Grid.Column="1" Background="#121212">
-                            <WebView x:Name="ChatWebView" 
-                                     DefaultBackgroundColor="#121212" 
-                                     Source="https://client.poorchat.net/jadisco"/>
+                        <Grid x:Name="ChatGrid"
+                            Grid.Column="1"
+                            Background="#121212">
+                            <WebView x:Name="ChatWebView"
+                                DefaultBackgroundColor="#121212"
+                                Source="https://client.poorchat.net/jadisco"/>
                         </Grid>
                     </Grid>
                 </muxc:NavigationView.Content>
