@@ -11,7 +11,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
 
 using Twitch.Api;
 using Twitch.Api.Models;
@@ -34,7 +33,7 @@ namespace JaDisco_UWP
         private HLSPlaylist streamPlaylist = null;
         private HLSStream currentStream = null;
 
-        private StreamQualitiesViewModel streamQualitiesVM = new StreamQualitiesViewModel();
+        private readonly StreamQualitiesViewModel streamQualitiesVM = new StreamQualitiesViewModel();
 
         public MainPage()
         {
@@ -50,13 +49,6 @@ namespace JaDisco_UWP
                 ChatInNewWindow.Visibility = Visibility.Collapsed;
                 StatusTextBlock.Margin = new Thickness(90, 0, 0, 0);
             }
-            else if (App.RunningOnDesktop)
-            {
-                vm.TitleBarCustomization();
-                Window.Current.SetTitleBar(DragArea);
-            }
-
-            //NavView.SelectedItem = NavView.MenuItems[0];
 
             StreamMediaPlayer.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
             StreamMediaPlayer.MediaPlayer.Play();

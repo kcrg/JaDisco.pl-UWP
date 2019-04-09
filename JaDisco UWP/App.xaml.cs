@@ -1,7 +1,10 @@
 ﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
 using Windows.System.Profile;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -10,9 +13,9 @@ namespace JaDisco_UWP
 {
     public sealed partial class App : Application
     {
-        public static bool RunningOnDesktop => AnalyticsInfo.VersionInfo.DeviceFamily.ToLower().Contains("desktop");
-        public static bool RunningOnXbox => AnalyticsInfo.VersionInfo.DeviceFamily.ToLower().Contains("xbox");
-        public static bool RunningOnMobile => AnalyticsInfo.VersionInfo.DeviceFamily.ToLower().Contains("mobile");
+        public static bool RunningOnDesktop => AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop";
+        public static bool RunningOnXbox => AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Xbox";
+        public static bool RunningOnMobile => AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile";
 
         public App()
         {
@@ -30,6 +33,21 @@ namespace JaDisco_UWP
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
+
+                // Titlebar customization
+                if (RunningOnDesktop)
+                {
+                    CoreApplicationViewTitleBar CoreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+                    CoreTitleBar.ExtendViewIntoTitleBar = true;
+
+                    ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                    titleBar.ButtonBackgroundColor = Colors.Transparent;
+                    titleBar.ButtonForegroundColor = Colors.White;
+                    titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+                    titleBar.ButtonHoverForegroundColor = Colors.White;
+                    titleBar.ButtonHoverBackgroundColor = Colors.Black;
+                    titleBar.BackgroundColor = Colors.Black;
+                }
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
