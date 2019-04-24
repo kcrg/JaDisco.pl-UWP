@@ -1,4 +1,4 @@
-﻿using JaDisco_UWP.ViewModels;
+using JaDisco_UWP.ViewModels;
 using JaDisco_UWP.Views;
 using System;
 using System.Linq;
@@ -27,16 +27,17 @@ namespace JaDisco_UWP
         private readonly Uri BlankUri = new Uri("about:blank");
 
         private readonly ToolTip chatHideToolTip = new ToolTip();
-        private readonly MainPageViewModel vm = new MainPageViewModel();
 
         private readonly JadiscoApi jadiscoApi = new JadiscoApi();
         private HLSPlaylist streamPlaylist = null;
         private HLSStream currentStream = null;
 
-        private readonly StreamQualitiesViewModel streamQualitiesVM = new StreamQualitiesViewModel();
+        private readonly MainPageViewModel mainPageVM = new MainPageViewModel();
 
         public MainPage()
         {
+            DataContext = mainPageVM;
+
             jadiscoApi.OnTopicChanged += JadiscoApi_OnTopicChanged;
             jadiscoApi.OnStreamWentOnline += JadiscoApi_OnStreamWentOnline;
             jadiscoApi.OnStreamWentOffline += JadiscoApi_OnStreamWentOffline;
@@ -106,14 +107,14 @@ namespace JaDisco_UWP
         {
             if (playlist?.Playlist != null && playlist.Playlist.Count() > 0)
             {
-                streamQualitiesVM.ClearQualityList();
+                mainPageVM.StreamQualities.ClearQualityList();
 
                 foreach (var stream in playlist.Playlist)
                 {
                     if (stream.Name.StartsWith("audio"))
                         continue;
 
-                    streamQualitiesVM.AddQuality(new StreamQualityViewModel
+                    mainPageVM.StreamQualities.AddQuality(new StreamQualityViewModel
                     {
                         Name = stream.Name,
                         Stream = stream
@@ -150,19 +151,6 @@ namespace JaDisco_UWP
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (obj.StreamerId == 1)
-                {
-                    WonziuNav.Content = "Wonziu - Online";
-                    WonziuNav.IsEnabled = true;
-                    NavView.SelectedItem = NavView.MenuItems[0];
-                }
-                else if (obj.StreamerId == 2)
-                {
-                    DzejNav.Content = "Dzej - Online";
-                    DzejNav.IsEnabled = true;
-                    NavView.SelectedItem = NavView.MenuItems[1];
-                }
-
                 ChangeStream(obj.Id);
             });
 
@@ -177,19 +165,6 @@ namespace JaDisco_UWP
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (obj.StreamerId == 1)
-                {
-                    WonziuNav.Content = "Wonziu - Offline";
-                    WonziuNav.IsEnabled = false;
-                    WonziuNav.IsSelected = false;
-                }
-                else if (obj.StreamerId == 2)
-                {
-                    DzejNav.Content = "Dzej - Offline";
-                    DzejNav.IsEnabled = false;
-                    DzejNav.IsSelected = false;
-                }
-
                 StopStream();
             });
 
@@ -254,50 +229,7 @@ namespace JaDisco_UWP
 
         private void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
         {
-            if (args.SelectedItemContainer != null)
-            {
-                switch (args.SelectedItemContainer.Tag)
-                {
-                    case "Wonziu":
-                        {
-                            Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "Wonziu");
 
-                            if (streamer is null)
-                            {
-                                break;
-                            }
-
-                            Service stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
-
-                            if (stream is null)
-                            {
-                                break;
-                            }
-
-                            ChangeStream(stream.Id);
-                        }
-                        break;
-                    case "Dzej":
-                        {
-                            Streamer streamer = jadiscoApi.Streamers?.SingleOrDefault(m => m.Name == "dzej");
-
-                            if (streamer is null)
-                            {
-                                break;
-                            }
-
-                            Service stream = jadiscoApi.Stream?.Services?.FirstOrDefault(m => m.StreamerId == streamer.Id && m.Status == true);
-
-                            if (stream is null)
-                            {
-                                break;
-                            }
-
-                            ChangeStream(stream.Id);
-                        }
-                        break;
-                }
-            }
         }
 
         private void ShowFlyout_Click(object sender, RoutedEventArgs e)

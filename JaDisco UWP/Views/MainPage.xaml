@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="JaDisco_UWP.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -45,19 +45,21 @@
 
             <muxc:NavigationView x:Name="NavView"
                 SelectionChanged="NavView_SelectionChanged"
-                Style="{StaticResource NavigationView}">
+                Style="{StaticResource NavigationView}"
+                MenuItemsSource="{Binding NavigationViewItems}">
 
-                <muxc:NavigationView.MenuItems>
-                    <muxc:NavigationViewItem x:Name="WonziuNav"
-                        Content="Wonziu - Offline"
-                        IsEnabled="False"
-                        Tag="Wonziu"/>
-                    <muxc:NavigationViewItem x:Name="DzejNav"
-                        Content="Dzej - Offline"
-                        IsEnabled="False"
-                        Tag="Dzej"/>
-                </muxc:NavigationView.MenuItems>
 
+                <muxc:NavigationView.MenuItemTemplate>
+                    <DataTemplate>
+                        <muxc:NavigationViewItem 
+                            Content="{Binding Content}"
+                            IsEnabled="{Binding IsEnabled}"
+                            Tag="{Binding Tag}"
+                            />
+
+                    </DataTemplate>
+                </muxc:NavigationView.MenuItemTemplate>
+                
                 <muxc:NavigationView.PaneFooter>
                     <CommandBar Style="{StaticResource CommandBar}">
                         <CommandBar.PrimaryCommands>
