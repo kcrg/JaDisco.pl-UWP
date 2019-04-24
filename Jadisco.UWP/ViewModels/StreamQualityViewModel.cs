@@ -1,6 +1,6 @@
 ﻿using Twitch.Api.Models;
 
-namespace JaDisco_UWP.ViewModels
+namespace Jadisco.UWP.ViewModels
 {
     public class StreamQualityViewModel : BaseViewModel
     {

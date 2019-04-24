@@ -3,7 +3,7 @@ using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml.Controls;
 
-namespace JaDisco_UWP.Views
+namespace Jadisco.UWP.Views
 {
     public sealed partial class ChatPage : Page
     {

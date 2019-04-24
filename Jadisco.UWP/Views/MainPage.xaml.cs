@@ -1,5 +1,5 @@
-using JaDisco_UWP.ViewModels;
-using JaDisco_UWP.Views;
+using Jadisco.UWP.ViewModels;
+using Jadisco.UWP.Views;
 using System;
 using System.Linq;
 
@@ -19,7 +19,7 @@ using Jadisco.Api;
 using Jadisco.Api.Models;
 using Windows.System;
 
-namespace JaDisco_UWP
+namespace Jadisco.UWP
 {
     public sealed partial class MainPage : Page
     {

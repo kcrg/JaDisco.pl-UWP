@@ -32,7 +32,7 @@
   <Applications>
     <Application Id="App"
       Executable="$targetnametoken$.exe"
-      EntryPoint="JaDisco_UWP.App">
+      EntryPoint="Jadisco.UWP.App">
       <uap:VisualElements
         DisplayName="JaDisco.pl UWP"
         Square150x150Logo="Assets\Square150x150Logo.png"

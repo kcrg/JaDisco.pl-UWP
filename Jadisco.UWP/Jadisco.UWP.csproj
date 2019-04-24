@@ -7,8 +7,8 @@
     <ProjectGuid>{9A57033B-AC51-4B2A-BD92-52B595B1A633}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JaDisco_UWP</RootNamespace>
-    <AssemblyName>JaDisco UWP</AssemblyName>
+    <RootNamespace>Jadisco.UWP</RootNamespace>
+    <AssemblyName>Jadisco</AssemblyName>
     <DefaultLanguage>pl-PL</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>

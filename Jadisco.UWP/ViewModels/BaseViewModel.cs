@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace JaDisco_UWP.ViewModels
+namespace Jadisco.UWP.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {

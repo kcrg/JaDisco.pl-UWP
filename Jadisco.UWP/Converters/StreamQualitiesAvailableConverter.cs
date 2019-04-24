@@ -1,4 +1,4 @@
-﻿using JaDisco_UWP.ViewModels;
+﻿using Jadisco.UWP.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 
-namespace JaDisco_UWP.Converters
+namespace Jadisco.UWP.Converters
 {
     public class StreamQualitiesAvailableConverter : IValueConverter
     {

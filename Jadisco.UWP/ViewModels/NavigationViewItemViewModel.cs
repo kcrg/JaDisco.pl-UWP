@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JaDisco_UWP.ViewModels
+namespace Jadisco.UWP.ViewModels
 {
     public class NavigationViewItemViewModel : BaseViewModel
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace JaDisco_UWP.ViewModels
+namespace Jadisco.UWP.ViewModels
 {
     public class StreamQualitiesViewModel : BaseViewModel
     {
