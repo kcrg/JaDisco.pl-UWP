@@ -23,10 +23,5 @@ namespace JaDisco_UWP.ViewModels
             navigationViewItems.Add(new NavigationViewItemViewModel { Content = "Wonziu - Youtube", Tag = "wow" });
             navigationViewItems.Add(new NavigationViewItemViewModel { Content = "Wonziu - Twitch", Tag = "wow" });
         }
-
-        public async void LaunchUri(string uri)
-        {
-            _ = await Launcher.LaunchUriAsync(new Uri(uri));
-        }
     }
 }

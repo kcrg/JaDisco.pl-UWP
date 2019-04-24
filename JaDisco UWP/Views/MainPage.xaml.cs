@@ -17,6 +17,7 @@ using Twitch.Api.Models;
 
 using Jadisco.Api;
 using Jadisco.Api.Models;
+using Windows.System;
 
 namespace JaDisco_UWP
 {
@@ -249,7 +250,7 @@ namespace JaDisco_UWP
 
         private void DonateWonziu_Click(object sender, RoutedEventArgs e)
         {
-            vm.LaunchUri("https://streamlabs.com/wonziu");
+            _ = Launcher.LaunchUriAsync(new Uri("https://streamlabs.com/wonziu"));
         }
 
         private async void ChatNewWindowButton_Click(object sender, RoutedEventArgs e)
