@@ -55,6 +55,10 @@ namespace JaDisco_UWP
             StreamMediaPlayer.MediaPlayer.Play();
         }
 
+        /// <summary>
+        /// Change playing stream
+        /// </summary>
+        /// <param name="channel">Twitch channel name</param>
         private void ChangeStream(string channel)
         {
             AccessToken token = TwitchApi.GetAccessToken(channel);
@@ -79,16 +83,10 @@ namespace JaDisco_UWP
             ChangeStream(playlist.Playlist[0]);
         }
 
-        private void StopStream()
-        {
-            streamQualitiesVM.IsNotAvailable = true;
-            streamQualitiesVM.ClearQualityList();
-
-            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashAssets/SplashVideo.mp4"));
-            StreamMediaPlayer.AreTransportControlsEnabled = false;
-            StreamMediaPlayer.MediaPlayer.Play();
-        }
-
+        /// <summary>
+        /// Change current playing stream
+        /// </summary>
+        /// <param name="stream">Stream source</param>
         private void ChangeStream(HLSStream stream)
         {
             if (stream is null)
@@ -101,6 +99,22 @@ namespace JaDisco_UWP
             StreamMediaPlayer.AreTransportControlsEnabled = true;
         }
 
+        /// <summary>
+        /// Stop current playing stream
+        /// </summary>
+        private void StopStream()
+        {
+            mainPageVM.StreamQualities.ClearQualityList();
+
+            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashAssets/SplashVideo.mp4"));
+            StreamMediaPlayer.AreTransportControlsEnabled = false;
+            StreamMediaPlayer.MediaPlayer.Play();
+        }
+
+        /// <summary>
+        /// Load list of avaliable qualities for stream
+        /// </summary>
+        /// <param name="playlist">Stream playlist source</param>
         private void LoadQualityList(HLSPlaylist playlist)
         {
             if (playlist?.Playlist != null && playlist.Playlist.Count() > 0)
