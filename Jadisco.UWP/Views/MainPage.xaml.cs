@@ -284,22 +284,15 @@ namespace Jadisco.UWP
                 if (!LeftChat)
                 {
                     RightColumn.Width = new GridLength(0);
-                    ChatGrid.Visibility = Visibility.Collapsed;
-                    ChatPositionButton.IsEnabled = false;
-
-                    ChatWebView.Navigate(BlankUri);
-                    GC.Collect();
                 }
                 else if (LeftChat)
                 {
                     LeftColumn.Width = new GridLength(0);
-                    ChatGrid.Visibility = Visibility.Collapsed;
-                    ChatPositionButton.IsEnabled = false;
-
-                    ChatWebView.Navigate(BlankUri);
-                    GC.Collect();
                 }
 
+                ChatGrid.Visibility = Visibility.Collapsed;
+                ChatPositionButton.IsEnabled = false;
+                ChatWebView.Navigate(BlankUri);
                 HiddenChat = true;
             }
             else if (HiddenChat)
@@ -312,19 +305,15 @@ namespace Jadisco.UWP
                     if (!LeftChat)
                     {
                         RightColumn.Width = new GridLength(2300, GridUnitType.Star);
-                        ChatGrid.Visibility = Visibility.Visible;
-                        ChatPositionButton.IsEnabled = true;
-
-                        ChatWebView.Navigate(ChatUri);
                     }
                     else if (LeftChat)
                     {
                         LeftColumn.Width = new GridLength(2300, GridUnitType.Star);
-                        ChatGrid.Visibility = Visibility.Visible;
-                        ChatPositionButton.IsEnabled = true;
-
-                        ChatWebView.Navigate(ChatUri);
                     }
+
+                    ChatGrid.Visibility = Visibility.Visible;
+                    ChatPositionButton.IsEnabled = true;
+                    ChatWebView.Navigate(ChatUri);
 
                     HiddenChat = false;
                 }
