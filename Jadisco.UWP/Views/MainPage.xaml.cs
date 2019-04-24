@@ -32,19 +32,21 @@ namespace Jadisco.UWP
         private readonly JadiscoApi jadiscoApi = new JadiscoApi();
         private HLSPlaylist streamPlaylist = null;
         private HLSStream currentStream = null;
+        private Service currentService = null;
 
-        private readonly MainPageViewModel mainPageVM = new MainPageViewModel();
+        private readonly MainPageViewModel mainPageVM;
 
         public MainPage()
         {
+            InitializeComponent();
+
+            mainPageVM = new MainPageViewModel(this);
             DataContext = mainPageVM;
 
             jadiscoApi.OnTopicChanged += JadiscoApi_OnTopicChanged;
             jadiscoApi.OnStreamWentOnline += JadiscoApi_OnStreamWentOnline;
             jadiscoApi.OnStreamWentOffline += JadiscoApi_OnStreamWentOffline;
             jadiscoApi.Connect();
-
-            InitializeComponent();
 
             if (App.RunningOnXbox || App.RunningOnMobile)
             {
@@ -80,7 +82,7 @@ namespace Jadisco.UWP
 
             streamPlaylist = playlist;
 
-            LoadQualityList(playlist);
+            mainPageVM.LoadQualityList(playlist);
             ChangeStream(playlist.Playlist[0]);
         }
 
@@ -112,30 +114,6 @@ namespace Jadisco.UWP
             StreamMediaPlayer.MediaPlayer.Play();
         }
 
-        /// <summary>
-        /// Load list of avaliable qualities for stream
-        /// </summary>
-        /// <param name="playlist">Stream playlist source</param>
-        private void LoadQualityList(HLSPlaylist playlist)
-        {
-            if (playlist?.Playlist != null && playlist.Playlist.Count() > 0)
-            {
-                mainPageVM.StreamQualities.ClearQualityList();
-
-                foreach (var stream in playlist.Playlist)
-                {
-                    if (stream.Name.StartsWith("audio"))
-                        continue;
-
-                    mainPageVM.StreamQualities.AddQuality(new StreamQualityViewModel
-                    {
-                        Name = stream.Name,
-                        Stream = stream
-                    });
-                }
-            }
-        }
-
         private void StreamQualityButton_Checked(object sender, RoutedEventArgs e)
         {
             var radio = sender as RadioButton;
@@ -160,24 +138,44 @@ namespace Jadisco.UWP
 
         private async void JadiscoApi_OnStreamWentOnline(Service obj)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            if (currentStream is null)
             {
-                ChangeStream(obj.Id);
-            });
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    ChangeStream(obj.ChannelId);
+                });
+            }
 
-            // if stream is already online and new streamer isn't Wonziu (Wonziu has priority)
-            //if (jadiscoApi.Stream.Status == true && obj.StreamerId != 1)
-            //{
-            //    return;
-            //}
+            var streamer = jadiscoApi.Streamers.SingleOrDefault(x => x.Id == obj.StreamerId);
+
+            var streamerName = (streamer != null) ? streamer.Name : "Unknown";
+
+            var navigationView = new NavigationViewItemViewModel
+            {
+                Text = $"{streamerName} - {obj.ServiceName}",
+                IsEnabled = obj.ServiceName == "twitch",
+                Service = obj
+            };
+
+            mainPageVM.NavigationViewItems.Add(navigationView);
         }
 
         private async void JadiscoApi_OnStreamWentOffline(Service obj)
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                StopStream();
+                if (obj.Equals(currentService))
+                {
+                    StopStream();
+                }
             });
+
+            var navigationView = mainPageVM.NavigationViewItems.SingleOrDefault(x => x.Service.Equals(obj));
+
+            if (navigationView != null)
+            {
+                mainPageVM.NavigationViewItems.Remove(navigationView);
+            }
 
             streamPlaylist = null;
             currentStream = null;
@@ -240,7 +238,11 @@ namespace Jadisco.UWP
 
         private void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
         {
+            var vm = sender.SelectedItem as NavigationViewItemViewModel;
 
+            currentService = vm.Service;
+
+            ChangeStream(vm.Service.ChannelId);
         }
 
         private void ShowFlyout_Click(object sender, RoutedEventArgs e)

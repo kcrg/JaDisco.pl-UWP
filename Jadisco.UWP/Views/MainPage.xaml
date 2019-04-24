@@ -51,15 +51,13 @@
                 Style="{StaticResource NavigationView}"
                 MenuItemsSource="{Binding NavigationViewItems}">
 
-
                 <muxc:NavigationView.MenuItemTemplate>
                     <DataTemplate>
                         <muxc:NavigationViewItem 
-                            Content="{Binding Content}"
+                            Content="{Binding Text}"
                             IsEnabled="{Binding IsEnabled}"
                             Tag="{Binding Tag}"
                             />
-
                     </DataTemplate>
                 </muxc:NavigationView.MenuItemTemplate>
                 

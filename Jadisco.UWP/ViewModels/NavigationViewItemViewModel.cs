@@ -8,14 +8,14 @@ namespace Jadisco.UWP.ViewModels
 {
     public class NavigationViewItemViewModel : BaseViewModel
     {
-        private string content;
+        private string text;
         private bool isEnabled = true;
         private string tag;
 
-        public string Content
+        public string Text
         {
-            get => content;
-            set { content = value; NotifyPropertyChanged(); }
+            get => text;
+            set { text = value; NotifyPropertyChanged(); }
         }
 
         public bool IsEnabled
@@ -29,5 +29,7 @@ namespace Jadisco.UWP.ViewModels
             get => tag;
             set { tag = value; NotifyPropertyChanged(); }
         }
+
+        public Jadisco.Api.Models.Service Service { get; set; }
     }
 }
