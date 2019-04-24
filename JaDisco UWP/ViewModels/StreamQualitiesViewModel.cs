@@ -1,17 +1,11 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace JaDisco_UWP.ViewModels
 {
     public class StreamQualitiesViewModel : BaseViewModel
     {
         public ObservableCollection<StreamQualityViewModel> Qualities { get; } = new ObservableCollection<StreamQualityViewModel>();
-
-
-        public bool IsNotAvailable
-        {
-            get => _isNotAvailable;
-            set { _isNotAvailable = value; NotifyPropertyChanged(); }
-        }
 
         public void ClearQualityList()
         {

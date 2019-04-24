@@ -118,8 +118,6 @@ namespace JaDisco_UWP
                         Stream = stream
                     });
                 }
-
-                streamQualitiesVM.IsNotAvailable = false;
             }
         }
 
