@@ -115,7 +115,7 @@
                                 </AppBarButton.Icon>
                                 <FlyoutBase.AttachedFlyout>
                                     <Flyout LightDismissOverlayMode="Auto">
-                                        <StackPanel x:Name="QualityStackPanel">
+                                        <StackPanel DataContext="{Binding StreamQualities}">
                                             <TextBlock FontSize="14" Text="Jakość Streamu"/>
                                             <TextBlock
                                                 Foreground="LightGray"

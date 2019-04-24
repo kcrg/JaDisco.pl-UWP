@@ -53,8 +53,6 @@ namespace JaDisco_UWP
 
             StreamMediaPlayer.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
             StreamMediaPlayer.MediaPlayer.Play();
-
-            QualityStackPanel.DataContext = streamQualitiesVM;
         }
 
         private void ChangeStream(string channel)
