@@ -180,7 +180,7 @@
                             Background="Black">
                             <MediaPlayerElement x:Name="StreamMediaPlayer" Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4">
                                 <MediaPlayerElement.TransportControls>
-                                    <MediaTransportControls Style="{StaticResource MediaTransportControls}"/>
+                                    <MediaTransportControls IsSeekBarVisible="False" Style="{StaticResource MediaTransportControls}"/>
                                 </MediaPlayerElement.TransportControls>
                             </MediaPlayerElement>
                         </Grid>
