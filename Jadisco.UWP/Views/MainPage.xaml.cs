@@ -138,26 +138,28 @@ namespace Jadisco.UWP
 
         private async void JadiscoApi_OnStreamWentOnline(Service obj)
         {
-            if (currentStream is null)
+
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                if (currentStream is null)
                 {
                     ChangeStream(obj.ChannelId);
-                });
-            }
+                }
 
-            var streamer = jadiscoApi.Streamers.SingleOrDefault(x => x.Id == obj.StreamerId);
 
-            var streamerName = (streamer != null) ? streamer.Name : "Unknown";
+                var streamer = jadiscoApi.Streamers.SingleOrDefault(x => x.Id == obj.StreamerId);
 
-            var navigationView = new NavigationViewItemViewModel
-            {
-                Text = $"{streamerName} - {obj.ServiceName}",
-                IsEnabled = obj.ServiceName == "twitch",
-                Service = obj
-            };
+                var streamerName = (streamer != null) ? streamer.Name : "Unknown";
 
-            mainPageVM.NavigationViewItems.Add(navigationView);
+                var navigationView = new NavigationViewItemViewModel
+                {
+                    Text = $"{streamerName} - {obj.ServiceName}",
+                    IsEnabled = obj.ServiceName == "twitch",
+                    Service = obj
+                };
+
+                mainPageVM.NavigationViewItems.Add(navigationView);
+            });
         }
 
         private async void JadiscoApi_OnStreamWentOffline(Service obj)
