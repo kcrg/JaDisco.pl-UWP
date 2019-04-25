@@ -58,84 +58,7 @@ namespace Jadisco.UWP
             StreamMediaPlayer.MediaPlayer.Play();
         }
 
-        /// <summary>
-        /// Change playing stream
-        /// </summary>
-        /// <param name="channel">Twitch channel name</param>
-        private void ChangeStream(string channel)
-        {
-            AccessToken token = TwitchApi.GetAccessToken(channel);
-
-            if (token is null)
-            {
-                return;
-            }
-
-            string url = UsherService.GetStreamLink(channel, token.Sig, token.Token);
-
-            HLSPlaylist playlist = UsherService.ParsePlaylists(url);
-
-            if (playlist is null)
-            {
-                return;
-            }
-
-            streamPlaylist = playlist;
-
-            mainPageVM.LoadQualityList(playlist);
-            ChangeStream(playlist.Playlist[0]);
-        }
-
-        /// <summary>
-        /// Change current playing stream
-        /// </summary>
-        /// <param name="stream">Stream source</param>
-        private void ChangeStream(HLSStream stream)
-        {
-            if (stream is null)
-                return;
-
-            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(stream.Url));
-            StreamMediaPlayer.MediaPlayer.Play();
-            currentStream = stream;
-
-            StreamMediaPlayer.AreTransportControlsEnabled = true;
-        }
-
-        /// <summary>
-        /// Stop current playing stream
-        /// </summary>
-        private void StopStream()
-        {
-            mainPageVM.StreamQualities.ClearQualityList();
-
-            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashAssets/SplashVideo.mp4"));
-            StreamMediaPlayer.AreTransportControlsEnabled = false;
-            StreamMediaPlayer.MediaPlayer.Play();
-        }
-
-        private void StreamQualityButton_Checked(object sender, RoutedEventArgs e)
-        {
-            var radio = sender as RadioButton;
-            var data = radio.DataContext as StreamQualityViewModel;
-
-            if (data is null)
-                return;
-
-            ChangeStream(data.Stream);
-        }
-
-        private async void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
-        {
-            if (jadiscoApi.Stream.Status == false)
-            {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    StreamMediaPlayer.MediaPlayer.Play();
-                });
-            }
-        }
-
+        #region Api events
         private async void JadiscoApi_OnStreamWentOnline(Service obj)
         {
 
@@ -192,6 +115,134 @@ namespace Jadisco.UWP
                 StatusFlyoutTextBlock.Text = topic.Text.Trim();
                 StatusDateFlyoutTextBlock.Text = "Dodane: " + topic.UpdatedAt.ToString().Replace(" +00:00", "");
             });
+        }
+        #endregion
+
+        #region Private methods
+        /// <summary>
+        /// Change playing stream
+        /// </summary>
+        /// <param name="channel">Twitch channel name</param>
+        private void ChangeStream(string channel)
+        {
+            AccessToken token = TwitchApi.GetAccessToken(channel);
+
+            if (token is null)
+            {
+                return;
+            }
+
+            string url = UsherService.GetStreamLink(channel, token.Sig, token.Token);
+
+            HLSPlaylist playlist = UsherService.ParsePlaylists(url);
+
+            if (playlist is null)
+            {
+                return;
+            }
+
+            streamPlaylist = playlist;
+
+            mainPageVM.LoadQualityList(playlist);
+            ChangeStream(playlist.Playlist[0]);
+        }
+
+        /// <summary>
+        /// Change current playing stream
+        /// </summary>
+        /// <param name="stream">Stream source</param>
+        private void ChangeStream(HLSStream stream)
+        {
+            if (stream is null)
+                return;
+
+            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(stream.Url));
+            StreamMediaPlayer.MediaPlayer.Play();
+            currentStream = stream;
+
+            StreamMediaPlayer.AreTransportControlsEnabled = true;
+        }
+
+        /// <summary>
+        /// Stop current playing stream
+        /// </summary>
+        private void StopStream()
+        {
+            mainPageVM.StreamQualities.ClearQualityList();
+
+            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashAssets/SplashVideo.mp4"));
+            StreamMediaPlayer.AreTransportControlsEnabled = false;
+            StreamMediaPlayer.MediaPlayer.Play();
+        }
+
+        private void HideChat(bool fromHideButton)
+        {
+            if (!HiddenChat)
+            {
+                chatHideToolTip.Content = "Pokaż czat";
+                ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
+
+                if (!LeftChat)
+                {
+                    RightColumn.Width = new GridLength(0);
+                }
+                else if (LeftChat)
+                {
+                    LeftColumn.Width = new GridLength(0);
+                }
+
+                ChatGrid.Visibility = Visibility.Collapsed;
+                ChatPositionButton.IsEnabled = false;
+                ChatWebView.Navigate(BlankUri);
+                HiddenChat = true;
+            }
+            else if (HiddenChat)
+            {
+                chatHideToolTip.Content = "Schowaj czat";
+                ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
+
+                if (fromHideButton)
+                {
+                    if (!LeftChat)
+                    {
+                        RightColumn.Width = new GridLength(2300, GridUnitType.Star);
+                    }
+                    else if (LeftChat)
+                    {
+                        LeftColumn.Width = new GridLength(2300, GridUnitType.Star);
+                    }
+
+                    ChatGrid.Visibility = Visibility.Visible;
+                    ChatPositionButton.IsEnabled = true;
+                    ChatWebView.Navigate(ChatUri);
+
+                    HiddenChat = false;
+                }
+            }
+        }
+        #endregion
+
+        #region Application events
+        private void StreamQualityButton_Checked(object sender, RoutedEventArgs e)
+        {
+            var radio = sender as RadioButton;
+            var data = radio.DataContext as StreamQualityViewModel;
+
+            if (data is null)
+                return;
+
+            ChangeStream(data.Stream);
+        }
+
+        private async void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
+        {
+            if (jadiscoApi.Stream.Status == false)
+            {
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    StreamMediaPlayer.MediaPlayer.Play();
+                });
+            }
         }
 
         private void ChatHideButton_Click(object sender, RoutedEventArgs e)
@@ -275,51 +326,6 @@ namespace Jadisco.UWP
 
             HideChat(false);
         }
-
-        private void HideChat(bool fromHideButton)
-        {
-            if (!HiddenChat)
-            {
-                chatHideToolTip.Content = "Pokaż czat";
-                ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
-
-                if (!LeftChat)
-                {
-                    RightColumn.Width = new GridLength(0);
-                }
-                else if (LeftChat)
-                {
-                    LeftColumn.Width = new GridLength(0);
-                }
-
-                ChatGrid.Visibility = Visibility.Collapsed;
-                ChatPositionButton.IsEnabled = false;
-                ChatWebView.Navigate(BlankUri);
-                HiddenChat = true;
-            }
-            else if (HiddenChat)
-            {
-                chatHideToolTip.Content = "Schowaj czat";
-                ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
-
-                if (fromHideButton)
-                {
-                    if (!LeftChat)
-                    {
-                        RightColumn.Width = new GridLength(2300, GridUnitType.Star);
-                    }
-                    else if (LeftChat)
-                    {
-                        LeftColumn.Width = new GridLength(2300, GridUnitType.Star);
-                    }
-
-                    ChatGrid.Visibility = Visibility.Visible;
-                    ChatPositionButton.IsEnabled = true;
-                    ChatWebView.Navigate(ChatUri);
-
-                    HiddenChat = false;
-                }
-            }
-        }
+        #endregion
     }
 }
