@@ -153,7 +153,7 @@ namespace Jadisco.UWP
 
                 var navigationView = new NavigationViewItemViewModel
                 {
-                    Text = $"{streamerName} - {obj.ServiceName}",
+                    Text = $"{streamerName} - {char.ToUpper(obj.ServiceName[0])}{obj.ServiceName.Substring(1)}",
                     IsEnabled = obj.ServiceName == "twitch",
                     Service = obj
                 };
