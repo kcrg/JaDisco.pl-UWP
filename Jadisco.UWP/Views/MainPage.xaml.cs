@@ -59,8 +59,6 @@ namespace Jadisco.UWP
 
             StreamMediaPlayer.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
             StreamMediaPlayer.MediaPlayer.Play();
-
-            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("https://video-weaver.waw01.hls.ttvnw.net/v1/playlist/CtkDl4FOI-wGthskPHgFzJy4BoxS7Uw4Xuc0ToyJPREz2wUe_UxJm9_YUcEaweUl8olM0tdrfEz35E5UD8oZZuujXUgYqQN0i7YuzRiF9V-fdj4jNVZYeTVCJTd2m8fJ6MR_5qJ_fPkCAFd8Qckx3GjKFZ7-04CU7fYjZQMRyUXhkRJksOJk4cvAo9ADzhdTCRpg8NFO858laxif4wqQnAKN3uNw9uX3-okfwwQkwQeeg2xD-03Ke3VkzYgiuAIN6Hel2jICQRs4-hHYNv1zP-o3uFuZwkrzzHAe6sOp6sPHLqRPsN8G-f5dG7WVbYE5lOwiHpV_xwQLsGX6sGMnLXNHm_5tE2SZlqt8IgUUAHQzKX0Mokhq49DHcn7Rj8yAL4AAyZe_r9iP1t3IFGbusNWyC8LjIi9QMjnTnILI7YXLZNfUjrqo-RruEfmvRENOqfYEoLSTT4AL-Ne8caIxIlrQB7udbrPM5uz8VxEUm5ttKOtYrAkSutT2fALDTwEdKt54tcuykgbnAMMY9Tf1U8YbJ233U47TrwpvMHWVA8WeTiid6CxcYjxJDqE13wlb3hyF1DOdWJ1fyr5xDpXZcyWdBwWBe73-TzSuZqqY3iYAqHV6hux_2bUVwLkSELZ3XY-odpHPh1YPaUwR-AYaDC2XrvN6TJzjw_pxPA.m3u8"));
         }
 
         #region Api events
