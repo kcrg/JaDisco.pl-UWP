@@ -38,11 +38,11 @@
     <Page.Content>
         <Grid>
             <Grid x:Name="DragArea" Style="{StaticResource DragAreaGrid}">
-
                 <Image
                     Margin="12,10,0,10"
                     Source="ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogo.png"
                     Style="{StaticResource AppLogoImage}"/>
+
                 <TextBlock x:Name="StatusTextBlock" Style="{StaticResource StatusText}"/>
             </Grid>
 
@@ -54,10 +54,10 @@
                 <muxc:NavigationView.MenuItemTemplate>
                     <DataTemplate>
                         <muxc:NavigationViewItem 
-                            Content="{Binding Text}"
-                            IsEnabled="{Binding IsEnabled}"
-                            Tag="{Binding Tag}"
-                            />
+                        Content="{Binding Text}"
+                        IsEnabled="{Binding IsEnabled}"
+                        Tag="{Binding Tag}"
+                        />
                     </DataTemplate>
                 </muxc:NavigationView.MenuItemTemplate>
                 

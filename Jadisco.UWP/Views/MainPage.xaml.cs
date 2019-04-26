@@ -18,6 +18,9 @@ using Twitch.Api.Models;
 using Jadisco.Api;
 using Jadisco.Api.Models;
 using Windows.System;
+using System.Diagnostics;
+using Jadisco.UWP.Views.CustomDialogs;
+using System.Threading.Tasks;
 
 namespace Jadisco.UWP
 {
@@ -56,19 +59,20 @@ namespace Jadisco.UWP
 
             StreamMediaPlayer.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
             StreamMediaPlayer.MediaPlayer.Play();
+
+            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("https://video-weaver.waw01.hls.ttvnw.net/v1/playlist/CtkDl4FOI-wGthskPHgFzJy4BoxS7Uw4Xuc0ToyJPREz2wUe_UxJm9_YUcEaweUl8olM0tdrfEz35E5UD8oZZuujXUgYqQN0i7YuzRiF9V-fdj4jNVZYeTVCJTd2m8fJ6MR_5qJ_fPkCAFd8Qckx3GjKFZ7-04CU7fYjZQMRyUXhkRJksOJk4cvAo9ADzhdTCRpg8NFO858laxif4wqQnAKN3uNw9uX3-okfwwQkwQeeg2xD-03Ke3VkzYgiuAIN6Hel2jICQRs4-hHYNv1zP-o3uFuZwkrzzHAe6sOp6sPHLqRPsN8G-f5dG7WVbYE5lOwiHpV_xwQLsGX6sGMnLXNHm_5tE2SZlqt8IgUUAHQzKX0Mokhq49DHcn7Rj8yAL4AAyZe_r9iP1t3IFGbusNWyC8LjIi9QMjnTnILI7YXLZNfUjrqo-RruEfmvRENOqfYEoLSTT4AL-Ne8caIxIlrQB7udbrPM5uz8VxEUm5ttKOtYrAkSutT2fALDTwEdKt54tcuykgbnAMMY9Tf1U8YbJ233U47TrwpvMHWVA8WeTiid6CxcYjxJDqE13wlb3hyF1DOdWJ1fyr5xDpXZcyWdBwWBe73-TzSuZqqY3iYAqHV6hux_2bUVwLkSELZ3XY-odpHPh1YPaUwR-AYaDC2XrvN6TJzjw_pxPA.m3u8"));
         }
 
         #region Api events
         private async void JadiscoApi_OnStreamWentOnline(Service obj)
         {
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 if (currentStream is null)
                 {
-                    ChangeStream(obj.ChannelId);
+                    await ChangeStream(obj.ChannelId);
                 }
-
 
                 var streamer = jadiscoApi.Streamers.SingleOrDefault(x => x.Id == obj.StreamerId);
 
@@ -123,7 +127,7 @@ namespace Jadisco.UWP
         /// Change playing stream
         /// </summary>
         /// <param name="channel">Twitch channel name</param>
-        private void ChangeStream(string channel)
+        private async Task ChangeStream(string channel)
         {
             AccessToken token = TwitchApi.GetAccessToken(channel);
 
@@ -133,18 +137,29 @@ namespace Jadisco.UWP
             }
 
             string url = UsherService.GetStreamLink(channel, token.Sig, token.Token);
+            Debug.WriteLine(token.Sig);
+            Debug.WriteLine(token.Token);
+            Debug.WriteLine(url);
 
-            HLSPlaylist playlist = UsherService.ParsePlaylists(url);
-
-            if (playlist is null)
+            try
             {
-                return;
+                HLSPlaylist playlist = UsherService.ParsePlaylists(url);
+
+                if (playlist is null)
+                {
+                    return;
+                }
+
+                streamPlaylist = playlist;
+
+                mainPageVM.LoadQualityList(playlist);
+                ChangeStream(playlist.Playlist[0]);
             }
-
-            streamPlaylist = playlist;
-
-            mainPageVM.LoadQualityList(playlist);
-            ChangeStream(playlist.Playlist[0]);
+            catch (Exception ex)
+            {
+                ErrorDialog errorDialog = new ErrorDialog($"Nie udało się odtworzyć strumienia.\nPowód: {ex.Message}", ErrorDialog.Type.Error);
+                await errorDialog.ShowAsync();
+            }
         }
 
         /// <summary>
@@ -289,13 +304,13 @@ namespace Jadisco.UWP
             }
         }
 
-        private void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
+        private async void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
         {
             var vm = sender.SelectedItem as NavigationViewItemViewModel;
 
             currentService = vm.Service;
 
-            ChangeStream(vm.Service.ChannelId);
+            await ChangeStream(vm.Service.ChannelId);
         }
 
         private void ShowFlyout_Click(object sender, RoutedEventArgs e)

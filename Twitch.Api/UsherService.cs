@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -42,7 +42,11 @@ namespace Twitch.Api
                 request.Timeout = 12000;
                 request.ContentType = "application/json";
 
-                return HLSParser.GetFromStream(request.GetResponse().GetResponseStream());
+                using (var response = request.GetResponse())
+                {
+                    return HLSParser.GetFromStream(response.GetResponseStream());
+                }
+
             }
 
             return null;
