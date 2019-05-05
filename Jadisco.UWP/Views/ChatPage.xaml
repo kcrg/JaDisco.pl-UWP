@@ -15,7 +15,10 @@
                 Style="{StaticResource DragAreaGrid}">
 
                 <Image Style="{StaticResource AppLogoImage}"/>
-                <TextBlock Style="{StaticResource StatusText}" Text="Czat"/>
+                <TextBlock
+                    Foreground="White"
+                    Style="{StaticResource StatusText}"
+                    Text="Czat"/>
             </Grid>
 
             <WebView x:Name="ChatWebView"

@@ -21,6 +21,7 @@ using Windows.System;
 using System.Diagnostics;
 using Jadisco.UWP.Views.CustomDialogs;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Jadisco.UWP
 {
@@ -57,6 +58,15 @@ namespace Jadisco.UWP
                 StatusTextBlock.Margin = new Thickness(90, 0, 0, 0);
             }
 
+            if (App.RunningWithDarkTheme)
+            {
+                AppLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogo.png", UriKind.Absolute));
+            }
+            else
+            {
+                AppLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoDark.png", UriKind.Absolute));
+            }
+
             StreamMediaPlayer.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
             StreamMediaPlayer.MediaPlayer.Play();
         }
@@ -64,7 +74,6 @@ namespace Jadisco.UWP
         #region Api events
         private async void JadiscoApi_OnStreamWentOnline(Service obj)
         {
-
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 if (currentStream is null)
@@ -112,10 +121,10 @@ namespace Jadisco.UWP
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                StatusTextBlock.Text = topic.Text.Trim();
+                StatusTextBlock.Text = topic.Text.Trim().Replace("\n\n", " ");
 
-                StatusFlyoutTextBlock.Text = topic.Text.Trim();
-                StatusDateFlyoutTextBlock.Text = "Dodane: " + topic.UpdatedAt.ToString().Replace(" +00:00", "");
+                StatusFlyoutTextBlock.Text = topic.Text.Trim().Replace("\n\n", " ");
+                StatusDateFlyoutTextBlock.Text = "Dodane: " + topic.UpdatedAt.ToString().Replace(" +00:00", string.Empty);
             });
         }
         #endregion
@@ -249,13 +258,19 @@ namespace Jadisco.UWP
 
         private async void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
         {
-            if (jadiscoApi.Stream.Status == false)
+            //if (jadiscoApi.Stream.Status == false)
+            //{
+            //    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            //    {
+            //        StreamMediaPlayer.MediaPlayer.Play();
+            //    });
+            //}
+
+            // do wyjebania jak >jadiscoApi.Stream.Status< zacznie zwracać poprawne wartości
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    StreamMediaPlayer.MediaPlayer.Play();
-                });
-            }
+                StreamMediaPlayer.MediaPlayer.Play();
+            });
         }
 
         private void ChatHideButton_Click(object sender, RoutedEventArgs e)

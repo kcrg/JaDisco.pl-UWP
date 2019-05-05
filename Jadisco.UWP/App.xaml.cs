@@ -16,6 +16,7 @@ namespace Jadisco.UWP
         public static bool RunningOnDesktop => AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop";
         public static bool RunningOnXbox => AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Xbox";
         public static bool RunningOnMobile => AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Mobile";
+        public static bool RunningWithDarkTheme => Current.RequestedTheme == ApplicationTheme.Dark;
 
         public App()
         {
@@ -25,11 +26,9 @@ namespace Jadisco.UWP
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
-
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (rootFrame == null)
+            if (!(Window.Current.Content is Frame rootFrame))
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
@@ -42,11 +41,22 @@ namespace Jadisco.UWP
 
                     ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
                     titleBar.ButtonBackgroundColor = Colors.Transparent;
-                    titleBar.ButtonForegroundColor = Colors.White;
                     titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-                    titleBar.ButtonHoverForegroundColor = Colors.White;
-                    titleBar.ButtonHoverBackgroundColor = Colors.Black;
-                    titleBar.BackgroundColor = Colors.Black;
+
+                    if (RunningWithDarkTheme)
+                    {
+                        titleBar.ButtonForegroundColor = Colors.White;
+                        titleBar.ButtonHoverForegroundColor = Colors.White;
+                        titleBar.ButtonHoverBackgroundColor = Colors.Black;
+                        titleBar.BackgroundColor = Colors.Black;
+                    }
+                    else
+                    {
+                        titleBar.ButtonForegroundColor = Colors.Black;
+                        titleBar.ButtonHoverForegroundColor = Colors.Black;
+                        titleBar.ButtonHoverBackgroundColor = Colors.White;
+                        titleBar.BackgroundColor = Colors.White;
+                    }
                 }
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
