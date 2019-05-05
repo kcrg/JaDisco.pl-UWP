@@ -122,7 +122,7 @@
                                         <StackPanel DataContext="{Binding StreamQualities}">
                                             <TextBlock FontSize="14" Text="Jakość Streamu"/>
                                             <TextBlock
-                                                Foreground="LightGray"
+                                                Foreground="Gray"
                                                 Text="Jakości streamu nie są dostępne"
                                                 Visibility="{Binding Qualities, Converter={StaticResource AvailableVisibility}}"/>
 
