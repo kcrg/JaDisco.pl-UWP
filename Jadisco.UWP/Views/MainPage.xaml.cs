@@ -40,12 +40,16 @@ namespace Jadisco.UWP
 
         private readonly MainPageViewModel mainPageVM;
 
+        private NavigationViewItemViewModel noStreamLabel;
+
         public MainPage()
         {
             InitializeComponent();
 
             mainPageVM = new MainPageViewModel(this);
             DataContext = mainPageVM;
+
+            AddNoStreamLabel();
 
             jadiscoApi.OnTopicChanged += JadiscoApi_OnTopicChanged;
             jadiscoApi.OnStreamWentOnline += JadiscoApi_OnStreamWentOnline;
@@ -89,10 +93,13 @@ namespace Jadisco.UWP
                 {
                     Text = $"{streamerName} - {char.ToUpper(obj.ServiceName[0])}{obj.ServiceName.Substring(1)}",
                     IsEnabled = obj.ServiceName == "twitch",
-                    Service = obj
+                    Service = obj,
+                    ToolTip = obj.ServiceName != "twitch" ? "Nie obsługiwane" : string.Empty
                 };
 
                 mainPageVM.NavigationViewItems.Add(navigationView);
+
+                noStreamLabel.Visibility = Visibility.Collapsed;
             });
         }
 
@@ -111,6 +118,11 @@ namespace Jadisco.UWP
             if (navigationView != null)
             {
                 mainPageVM.NavigationViewItems.Remove(navigationView);
+            }
+
+            if (mainPageVM.NavigationViewItems.Count == 1)
+            {
+                noStreamLabel.Visibility = Visibility.Visible;
             }
 
             streamPlaylist = null;
@@ -195,6 +207,19 @@ namespace Jadisco.UWP
             StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashAssets/SplashVideo.mp4"));
             StreamMediaPlayer.AreTransportControlsEnabled = false;
             StreamMediaPlayer.MediaPlayer.Play();
+        }
+
+        private void AddNoStreamLabel()
+        {
+            noStreamLabel = new NavigationViewItemViewModel
+            {
+                Text = $"Brak streamów",
+                IsEnabled = false,
+                Service = null,
+                ToolTip = string.Empty,
+            };
+
+            mainPageVM.NavigationViewItems.Add(noStreamLabel);
         }
 
         private void HideChat(bool fromHideButton)

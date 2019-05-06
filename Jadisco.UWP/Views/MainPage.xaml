@@ -56,13 +56,11 @@
                         <muxc:NavigationViewItem
                             Content="{Binding Text}"
                             IsEnabled="{Binding IsEnabled}"
-                            Tag="{Binding Tag}"/>
+                            Tag="{Binding Tag}"
+                            Visibility="{Binding Visibility}"
+                            ToolTipService.ToolTip="{Binding ToolTip}" />
                     </DataTemplate>
                 </muxc:NavigationView.MenuItemTemplate>
-
-                <muxc:NavigationView.MenuItems>
-                    <muxc:NavigationViewItem Content="Brak streamów" IsEnabled="False"/>
-                </muxc:NavigationView.MenuItems>
 
                 <muxc:NavigationView.PaneFooter>
                     <CommandBar Style="{StaticResource CommandBar}">
