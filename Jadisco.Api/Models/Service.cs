@@ -8,12 +8,28 @@ namespace Jadisco.Api.Models
         public long StreamerId { get; set; }
 
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string ServiceName { get; set; }
 
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public string ChannelId { get; set; }
 
         [JsonProperty("status")]
         public bool Status { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return GetHashCode() == obj.GetHashCode();
+        }
+        
+        public override int GetHashCode()
+        {
+            int hash = 13;
+
+            hash = (hash * 7) + StreamerId.GetHashCode();
+            hash = (hash * 7) + ServiceName.GetHashCode();
+            hash = (hash * 7) + ChannelId.GetHashCode();
+
+            return hash;
+        }
     }
 }
