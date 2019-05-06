@@ -85,21 +85,31 @@ namespace Jadisco.UWP
                     await ChangeStream(obj.ChannelId);
                 }
 
-                var streamer = jadiscoApi.Streamers.SingleOrDefault(x => x.Id == obj.StreamerId);
+                var navigationView = mainPageVM.NavigationViewItems.SingleOrDefault(x => {
+                    if (x.Service == null)
+                        return false;
 
-                var streamerName = (streamer != null) ? streamer.Name : "Unknown";
+                    return x.Service.Equals(obj);
+                });
 
-                var navigationView = new NavigationViewItemViewModel
+                if (navigationView is null)
                 {
-                    Text = $"{streamerName} - {char.ToUpper(obj.ServiceName[0])}{obj.ServiceName.Substring(1)}",
-                    IsEnabled = obj.ServiceName == "twitch",
-                    Service = obj,
-                    ToolTip = obj.ServiceName != "twitch" ? "Nie obsługiwane" : string.Empty
-                };
+                    var streamer = jadiscoApi.Streamers.SingleOrDefault(x => x.Id == obj.StreamerId);
 
-                mainPageVM.NavigationViewItems.Add(navigationView);
+                    var streamerName = (streamer != null) ? streamer.Name : "Unknown";
 
-                noStreamLabel.Visibility = Visibility.Collapsed;
+                    navigationView = new NavigationViewItemViewModel
+                    {
+                        Text = $"{streamerName} - {char.ToUpper(obj.ServiceName[0])}{obj.ServiceName.Substring(1)}",
+                        IsEnabled = obj.ServiceName == "twitch",
+                        Service = obj,
+                        ToolTip = obj.ServiceName != "twitch" ? "Nie obsługiwane" : string.Empty
+                    };
+
+                    mainPageVM.NavigationViewItems.Add(navigationView);
+
+                    noStreamLabel.Visibility = Visibility.Collapsed;
+                }
             });
         }
 
@@ -111,19 +121,24 @@ namespace Jadisco.UWP
                 {
                     StopStream();
                 }
+
+                var navigationView = mainPageVM.NavigationViewItems.SingleOrDefault(x => {
+                    if (x.Service == null)
+                        return false;
+
+                    return x.Service.Equals(obj);
+                });
+
+                if (navigationView != null)
+                {
+                    mainPageVM.NavigationViewItems.Remove(navigationView);
+                }
+
+                if (mainPageVM.NavigationViewItems.Count == 1)
+                {
+                    noStreamLabel.Visibility = Visibility.Visible;
+                }
             });
-
-            var navigationView = mainPageVM.NavigationViewItems.SingleOrDefault(x => x.Service.Equals(obj));
-
-            if (navigationView != null)
-            {
-                mainPageVM.NavigationViewItems.Remove(navigationView);
-            }
-
-            if (mainPageVM.NavigationViewItems.Count == 1)
-            {
-                noStreamLabel.Visibility = Visibility.Visible;
-            }
 
             streamPlaylist = null;
             currentStream = null;
