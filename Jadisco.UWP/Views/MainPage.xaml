@@ -91,18 +91,12 @@
                             </AppBarButton>
                             <AppBarButton x:Name="ChatHideButton"
                                 Click="ChatHideButton_Click"
-                                ToolTipService.ToolTip="Schowaj czat">
-                                <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xE8F2;"/>
-                                </AppBarButton.Icon>
-                            </AppBarButton>
+                                Icon="LeaveChat"
+                                ToolTipService.ToolTip="Schowaj czat"/>
                             <AppBarButton x:Name="ChatInNewWindow"
                                 Click="ChatNewWindowButton_Click"
-                                ToolTipService.ToolTip="Otwórz czat w nowym oknie">
-                                <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xE8A7;"/>
-                                </AppBarButton.Icon>
-                            </AppBarButton>
+                                Icon="NewWindow"
+                                ToolTipService.ToolTip="Otwórz czat w nowym oknie"/>
 
                             <AppBarSeparator/>
 

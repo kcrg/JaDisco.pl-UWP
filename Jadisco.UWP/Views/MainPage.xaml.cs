@@ -242,6 +242,7 @@ namespace Jadisco.UWP
             if (!HiddenChat)
             {
                 chatHideToolTip.Content = "Pokaż czat";
+                ChatHideButton.Icon = new SymbolIcon(Symbol.Message);
                 ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
 
                 if (!LeftChat)
@@ -261,6 +262,7 @@ namespace Jadisco.UWP
             else if (HiddenChat)
             {
                 chatHideToolTip.Content = "Schowaj czat";
+                ChatHideButton.Icon = new SymbolIcon(Symbol.LeaveChat);
                 ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
 
                 if (fromHideButton)
