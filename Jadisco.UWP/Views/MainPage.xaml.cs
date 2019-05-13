@@ -1,6 +1,5 @@
 using Jadisco.UWP.Views.CustomDialogs;
 using Jadisco.UWP.ViewModels;
-using Jadisco.UWP.Views;
 
 using System;
 using System.Linq;
@@ -27,7 +26,7 @@ using Jadisco.Api.Models;
 
 using muxc = Microsoft.UI.Xaml.Controls;
 
-namespace Jadisco.UWP
+namespace Jadisco.UWP.Views
 {
     public sealed partial class MainPage : Page
     {
