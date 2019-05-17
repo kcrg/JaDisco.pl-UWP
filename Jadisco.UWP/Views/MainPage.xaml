@@ -162,7 +162,7 @@
                                             <HyperlinkButton Content="Donacja dla twórcy aplikacji" NavigateUri="https://tinyurl.com/DonateMohairApps"/>
                                             <HyperlinkButton Content="Repozytorium na githubie" NavigateUri="https://github.com/kcrg/JaDisco.pl-UWP"/>
                                             <HyperlinkButton Content="#jadiscouwp - księga zażaleń" NavigateUri="https://www.wykop.pl/tag/jadiscouwp/"/>
-                                            <TextBlock Text="JaDisco.pl UWP v0.6.0.0"/>
+                                            <TextBlock Text="JaDisco.pl UWP v0.6.1.0"/>
                                         </StackPanel>
                                     </Flyout>
                                 </FlyoutBase.AttachedFlyout>

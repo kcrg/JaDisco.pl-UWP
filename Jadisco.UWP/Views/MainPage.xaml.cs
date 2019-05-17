@@ -141,7 +141,7 @@ namespace Jadisco.UWP.Views
             {
                 StatusTextBlock.Text = topic.Text.Trim().Replace("\n\n", " ").Replace("\n", " ");
 
-                StatusFlyoutTextBlock.Text = topic.Text.Trim().Replace("\n\n", " ");
+                StatusFlyoutTextBlock.Text = topic.Text.Trim();
                 StatusDateFlyoutTextBlock.Text = "Dodane: " + topic.UpdatedAt.ToString().Replace(" +00:00", string.Empty);
             });
         }
