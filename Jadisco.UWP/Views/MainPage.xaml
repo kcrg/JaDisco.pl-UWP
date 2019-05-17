@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     Background="{ThemeResource PageBackground}"
     Loaded="Page_Loaded"
     NavigationCacheMode="Required"
@@ -24,13 +25,19 @@
                     </Style>
                 </Flyout.FlyoutPresenterStyle>
                 <StackPanel>
-                    <TextBlock x:Name="StatusFlyoutTextBlock" TextWrapping="Wrap"/>
+                    <toolkit:MarkdownTextBlock x:Name="StatusFlyoutTextBlock"
+                        Background="Transparent"
+                        LinkClicked="StatusFlyoutTextBlock_LinkClicked"
+                        LinkForeground="{ThemeResource SystemAccentColor}"
+                        TextWrapping="Wrap"/>
                     <TextBlock x:Name="StatusDateFlyoutTextBlock"
                         FontSize="11"
                         Foreground="Gray"/>
                 </StackPanel>
             </Flyout>
+
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml"/>
                 <ResourceDictionary Source="ms-appx:///Views/Styles/MainPageStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -41,7 +48,7 @@
             <Grid x:Name="DragArea" Style="{StaticResource DragAreaGrid}">
                 <Image x:Name="AppLogo"
                     Margin="12,10,0,10"
-                    Source="ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogo.png"
+                    Source="ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoLight.png"
                     Style="{StaticResource AppLogoImage}"/>
 
                 <TextBlock x:Name="StatusTextBlock" Style="{StaticResource StatusText}"/>

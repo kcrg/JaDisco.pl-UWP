@@ -25,6 +25,7 @@ using Jadisco.Api;
 using Jadisco.Api.Models;
 
 using muxc = Microsoft.UI.Xaml.Controls;
+using toolkit = Microsoft.Toolkit.Uwp.UI.Controls;
 
 namespace Jadisco.UWP.Views
 {
@@ -138,7 +139,7 @@ namespace Jadisco.UWP.Views
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                StatusTextBlock.Text = topic.Text.Trim().Replace("\n\n", " ");
+                StatusTextBlock.Text = topic.Text.Trim().Replace("\n\n", " ").Replace("\n", " ");
 
                 StatusFlyoutTextBlock.Text = topic.Text.Trim().Replace("\n\n", " ");
                 StatusDateFlyoutTextBlock.Text = "Dodane: " + topic.UpdatedAt.ToString().Replace(" +00:00", string.Empty);
@@ -406,6 +407,11 @@ namespace Jadisco.UWP.Views
             {
                 AppLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoDark.png", UriKind.Absolute));
             }
+        }
+
+        private async void StatusFlyoutTextBlock_LinkClicked(object sender, toolkit.LinkClickedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri(e.Link));
         }
 
         private async void ChatNewWindowButton_Click(object sender, RoutedEventArgs e)
