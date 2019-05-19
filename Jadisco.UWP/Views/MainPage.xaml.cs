@@ -73,6 +73,7 @@ namespace Jadisco.UWP.Views
             {
                 if (currentStream is null)
                 {
+                    currentService = obj;
                     await ChangeStream(obj.ChannelId);
                 }
 
@@ -108,7 +109,7 @@ namespace Jadisco.UWP.Views
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (obj.Equals(currentService))
+                if (currentService != null && obj.Equals(currentService))
                 {
                     StopStream();
                 }
