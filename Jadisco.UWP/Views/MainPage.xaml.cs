@@ -92,7 +92,7 @@ namespace Jadisco.UWP.Views
 
                     navigationView = new NavigationViewItemViewModel
                     {
-                        Text = $"{streamerName} - {char.ToUpper(obj.ServiceName[0])}{obj.ServiceName.Substring(1)}",
+                        Text = $"{streamerName} - {char.ToUpper(obj.ServiceName[0])}{obj.ServiceName.Substring(1)}/{obj.ChannelId}",
                         IsEnabled = obj.ServiceName == "twitch",
                         Service = obj,
                         ToolTip = obj.ServiceName != "twitch" ? "Nie obsługiwane" : string.Empty
@@ -111,6 +111,7 @@ namespace Jadisco.UWP.Views
             {
                 if (currentService != null && obj.Equals(currentService))
                 {
+                    currentService = null;
                     StopStream();
                 }
 
