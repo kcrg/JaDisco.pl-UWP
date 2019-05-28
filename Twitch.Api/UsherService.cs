@@ -44,7 +44,7 @@ namespace Twitch.Api
 
                 using (var response = request.GetResponse())
                 {
-                    return HLSParser.GetFromStream(response.GetResponseStream());
+                    return HLSPlaylist.GetFromStream(response.GetResponseStream());
                 }
 
             }
