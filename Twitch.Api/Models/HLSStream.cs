@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -15,6 +15,12 @@ namespace Twitch.Api.Models
 {
     public class HLSStream
     {
+        public enum StreamStatus
+        {
+            Opened,
+            Closed
+        }
+
         #region Public fields
         public string Name { get; set; }
 
@@ -25,6 +31,10 @@ namespace Twitch.Api.Models
         public int Height { get; set; }
 
         public long Bitrate { get; set; }
+
+        public StreamStatus Status { get; set; } = StreamStatus.Closed;
+
+        public event Action<byte[]> OnVideoDownload;
         #endregion
 
         #region Private variables
@@ -36,6 +46,9 @@ namespace Twitch.Api.Models
         HLSSegment recentSegment;
 
         Queue<HLSSegment> hlsQueue = new Queue<HLSSegment>();
+
+        Task workerTask;
+        Task writerTask;
         #endregion
 
         public HLSStream()
@@ -43,10 +56,65 @@ namespace Twitch.Api.Models
         }
 
         #region Public methods
+        public void Open()
+        {
+            Status = StreamStatus.Opened;
 
+            workerTask = new Task(Worker);
+            workerTask.Start();
+
+            writerTask = new Task(Writer);
+            writerTask.Start();
+        }
+
+        public void Close()
+        {
+            Status = StreamStatus.Closed;
+        }
         #endregion
 
         #region Private methods
+        private async void Worker()
+        {
+            while (Status == StreamStatus.Opened)
+            {
+                await UpdateQueue();
+
+                await Task.Delay(1000);
+            }
+        }
+
+        private async void Writer()
+        {
+            while (Status == StreamStatus.Opened)
+            {
+                if (hlsQueue.Count == 0)
+                    continue;
+
+                var stream = await client.GetStreamAsync(hlsQueue.Dequeue().Url);
+
+                using (MemoryStream buffer = new MemoryStream())
+                {
+                    using (var reader = new BinaryReader(stream))
+                    {
+                        while (true)
+                        {
+                            var bytes = reader.ReadBytes(8192);
+
+                            var len = bytes.Length;
+
+                            if (len == 0)
+                                break;
+
+                            buffer.Write(bytes, 0, len);
+                        }
+                    }
+
+                    OnVideoDownload?.Invoke(buffer.ToArray());
+                }
+            }
+        }
+
         private async Task UpdateQueue()
         {
             var stream = await client.GetStreamAsync(Url);
