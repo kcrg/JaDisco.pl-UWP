@@ -8,7 +8,7 @@ namespace Jadisco.Api.Models
         public Streamer[] Streamers { get; set; }
 
         [JsonProperty("stream")]
-        public Stream Stream { get; set; }
+        public LiveStream Stream { get; set; }
 
         [JsonProperty("topic")]
         public Topic Topic { get; set; }

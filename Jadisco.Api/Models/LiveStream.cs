@@ -3,7 +3,7 @@ using System;
 
 namespace Jadisco.Api.Models
 {
-    public class Stream
+    public class LiveStream
     {
         [JsonProperty("status")]
         public bool Status { get; set; }
