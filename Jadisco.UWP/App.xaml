@@ -32,8 +32,8 @@
 
             <AcrylicBrush x:Key="PageBackground"
                 BackgroundSource="HostBackdrop"
-                FallbackColor="{StaticResource SystemAltHighColor}"
-                TintColor="{StaticResource SystemAltHighColor}"
+                FallbackColor="{ThemeResource SystemAltHighColor}"
+                TintColor="{ThemeResource SystemAltHighColor}"
                 TintOpacity="0.85"/>
 
             <ResourceDictionary.MergedDictionaries>

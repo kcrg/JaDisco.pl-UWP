@@ -1,29 +1,33 @@
+using Jadisco.UWP.Views.CustomDialogs;
 using Jadisco.UWP.ViewModels;
-using Jadisco.UWP.Views;
+
 using System;
 using System.Linq;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 using Windows.ApplicationModel.Core;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.System;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Media;
 
 using Twitch.Api;
 using Twitch.Api.Models;
-
 using Jadisco.Api;
 using Jadisco.Api.Models;
-using Windows.System;
-using System.Diagnostics;
-using Jadisco.UWP.Views.CustomDialogs;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Media.Imaging;
 
-namespace Jadisco.UWP
+using muxc = Microsoft.UI.Xaml.Controls;
+using toolkit = Microsoft.Toolkit.Uwp.UI.Controls;
+
+namespace Jadisco.UWP.Views
 {
     public sealed partial class MainPage : Page
     {
@@ -54,25 +58,12 @@ namespace Jadisco.UWP
             jadiscoApi.OnTopicChanged += JadiscoApi_OnTopicChanged;
             jadiscoApi.OnStreamWentOnline += JadiscoApi_OnStreamWentOnline;
             jadiscoApi.OnStreamWentOffline += JadiscoApi_OnStreamWentOffline;
-            jadiscoApi.Connect();
-
-            if (App.RunningOnXbox || App.RunningOnMobile)
-            {
-                ChatInNewWindow.Visibility = Visibility.Collapsed;
-                StatusTextBlock.Margin = new Thickness(90, 0, 0, 0);
-            }
-
-            if (App.RunningWithDarkTheme)
-            {
-                AppLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogo.png", UriKind.Absolute));
-            }
-            else
-            {
-                AppLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoDark.png", UriKind.Absolute));
-            }
+            jadiscoApi.Connect();  
 
             StreamMediaPlayer.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
             StreamMediaPlayer.MediaPlayer.Play();
+
+            Window.Current.Activated += Window_Activated;
         }
 
         #region Api events
@@ -82,6 +73,7 @@ namespace Jadisco.UWP
             {
                 if (currentStream is null)
                 {
+                    currentService = obj;
                     await ChangeStream(obj.ChannelId);
                 }
 
@@ -100,7 +92,7 @@ namespace Jadisco.UWP
 
                     navigationView = new NavigationViewItemViewModel
                     {
-                        Text = $"{streamerName} - {char.ToUpper(obj.ServiceName[0])}{obj.ServiceName.Substring(1)}",
+                        Text = $"{streamerName} - {char.ToUpper(obj.ServiceName[0])}{obj.ServiceName.Substring(1)}/{obj.ChannelId}",
                         IsEnabled = obj.ServiceName == "twitch",
                         Service = obj,
                         ToolTip = obj.ServiceName != "twitch" ? "Nie obsługiwane" : string.Empty
@@ -117,8 +109,9 @@ namespace Jadisco.UWP
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                if (obj.Equals(currentService))
+                if (currentService != null && obj.Equals(currentService))
                 {
+                    currentService = null;
                     StopStream();
                 }
 
@@ -148,9 +141,9 @@ namespace Jadisco.UWP
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                StatusTextBlock.Text = topic.Text.Trim().Replace("\n\n", " ");
+                StatusTextBlock.Text = topic.Text.Trim().Replace("\n\n", " ").Replace("\n", " ");
 
-                StatusFlyoutTextBlock.Text = topic.Text.Trim().Replace("\n\n", " ");
+                StatusFlyoutTextBlock.Text = topic.Text.Trim();
                 StatusDateFlyoutTextBlock.Text = "Dodane: " + topic.UpdatedAt.ToString().Replace(" +00:00", string.Empty);
             });
         }
@@ -242,6 +235,7 @@ namespace Jadisco.UWP
             if (!HiddenChat)
             {
                 chatHideToolTip.Content = "Pokaż czat";
+                ChatHideButton.Icon = new SymbolIcon(Symbol.Message);
                 ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
 
                 if (!LeftChat)
@@ -261,6 +255,7 @@ namespace Jadisco.UWP
             else if (HiddenChat)
             {
                 chatHideToolTip.Content = "Schowaj czat";
+                ChatHideButton.Icon = new SymbolIcon(Symbol.LeaveChat);
                 ToolTipService.SetToolTip(ChatHideButton, chatHideToolTip);
 
                 if (fromHideButton)
@@ -357,7 +352,7 @@ namespace Jadisco.UWP
             }
         }
 
-        private async void NavView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
+        private async void NavView_SelectionChanged(muxc.NavigationView sender, muxc.NavigationViewSelectionChangedEventArgs args)
         {
             var vm = sender.SelectedItem as NavigationViewItemViewModel;
 
@@ -374,6 +369,51 @@ namespace Jadisco.UWP
         private void DonateWonziu_Click(object sender, RoutedEventArgs e)
         {
             _ = Launcher.LaunchUriAsync(new Uri("https://streamlabs.com/wonziu"));
+        }
+
+        private void Window_Activated(object sender, WindowActivatedEventArgs e)
+        {
+            if (e.WindowActivationState == CoreWindowActivationState.Deactivated)
+            {
+                StatusTextBlock.Foreground = new SolidColorBrush(Colors.Gray);
+                AppLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoGray.png", UriKind.Absolute));
+            }
+            else
+            {
+                if (App.RunningWithDarkTheme)
+                {
+                    StatusTextBlock.Foreground = new SolidColorBrush(Colors.White);
+                    AppLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoLight.png", UriKind.Absolute));
+                }
+                else
+                {
+                    StatusTextBlock.Foreground = new SolidColorBrush(Colors.Black);
+                    AppLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoDark.png", UriKind.Absolute));
+                }
+            }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (App.RunningOnXbox || App.RunningOnMobile)
+            {
+                ChatInNewWindow.Visibility = Visibility.Collapsed;
+                StatusTextBlock.Margin = new Thickness(90, 0, 0, 0);
+            }
+
+            if (App.RunningWithDarkTheme)
+            {
+                AppLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoLight.png", UriKind.Absolute));
+            }
+            else
+            {
+                AppLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoDark.png", UriKind.Absolute));
+            }
+        }
+
+        private async void StatusFlyoutTextBlock_LinkClicked(object sender, toolkit.LinkClickedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri(e.Link));
         }
 
         private async void ChatNewWindowButton_Click(object sender, RoutedEventArgs e)
@@ -393,6 +433,7 @@ namespace Jadisco.UWP
             bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
 
             HideChat(false);
+            ChatHideButton.Icon = new SymbolIcon(Symbol.Message);
         }
         #endregion
     }

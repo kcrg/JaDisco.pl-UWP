@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jadisco.UWP.Views;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -42,21 +43,6 @@ namespace Jadisco.UWP
                     ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
                     titleBar.ButtonBackgroundColor = Colors.Transparent;
                     titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-
-                    if (RunningWithDarkTheme)
-                    {
-                        titleBar.ButtonForegroundColor = Colors.White;
-                        titleBar.ButtonHoverForegroundColor = Colors.White;
-                        titleBar.ButtonHoverBackgroundColor = Colors.Black;
-                        titleBar.BackgroundColor = Colors.Black;
-                    }
-                    else
-                    {
-                        titleBar.ButtonForegroundColor = Colors.Black;
-                        titleBar.ButtonHoverForegroundColor = Colors.Black;
-                        titleBar.ButtonHoverBackgroundColor = Colors.White;
-                        titleBar.BackgroundColor = Colors.White;
-                    }
                 }
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
