@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -91,16 +91,24 @@ namespace Jadisco.UWP.Views.Controls
 
         public void StopStream()
         {
-            //if (mseSourceBuffer != null)
-            //{
-            //    mseSourceBuffer.Updated -= MseSourceBuffer_Updated;
-            //    mseSourceBuffer.Abort();
-            //}
+            if (mseMediaSource != null)
+            {
+                mseMediaSource?.Reset();
+                mseMediaSource?.Dispose();
+                mseMediaSource = null;
+            }
 
-            //if (mseStreamSource != null)
-            //{
-            //    mseStreamSource.Opened -= MseStreamSource_Opened;
-            //}
+            if (mseSourceBuffer != null)
+            {
+                mseSourceBuffer.Updated -= MseSourceBuffer_Updated;
+                mseSourceBuffer = null;
+            }
+
+            if (mseStreamSource != null)
+            {
+                mseStreamSource.Opened -= MseStreamSource_Opened;
+                mseStreamSource = null;
+            }
 
             if (currentHLSStream != null)
             {
@@ -109,8 +117,7 @@ namespace Jadisco.UWP.Views.Controls
                 currentHLSStream = null;
             }
 
-            mseMediaSource?.Reset();
-            mseSourceBuffer = null;
+            StreamMediaPlayer.Source = null;
         }
 
         public void PlaySplashScreen()
