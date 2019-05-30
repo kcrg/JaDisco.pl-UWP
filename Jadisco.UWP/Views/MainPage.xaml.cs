@@ -40,11 +40,9 @@ namespace Jadisco.UWP.Views
         private readonly ToolTip chatHideToolTip = new ToolTip();
 
         private readonly JadiscoApi jadiscoApi = new JadiscoApi();
-        private HLSStream currentLiveStream = null;
+        private HLSStream currentHLSStream = null;
         private Service currentService = null;
 
-        private MseStreamSource mseStreamSource = new MseStreamSource();
-        private MseSourceBuffer mseSourceBuffer;
 
         private readonly MainPageViewModel mainPageVM;
 
@@ -62,38 +60,20 @@ namespace Jadisco.UWP.Views
             jadiscoApi.OnTopicChanged += JadiscoApi_OnTopicChanged;
             jadiscoApi.OnStreamWentOnline += JadiscoApi_OnStreamWentOnline;
             jadiscoApi.OnStreamWentOffline += JadiscoApi_OnStreamWentOffline;
-            // jadiscoApi.Connect();
-
-            mseStreamSource.Opened += MseStreamSource_Opened;
-
-            StreamMediaPlayer.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
-            StreamMediaPlayer.MediaPlayer.Play();
+            jadiscoApi.Connect();
 
             Window.Current.Activated += Window_Activated;
         }
 
-        #region Events
-        private void MseStreamSource_Opened(MseStreamSource sender, object args)
-        {
-            mseSourceBuffer = mseStreamSource.AddSourceBuffer("video/MP2T");
-            mseSourceBuffer.Mode = MseAppendMode.Sequence;
-            mseSourceBuffer.Updated += MseSourceBuffer_Updated;
-        }
-
-        private void MseSourceBuffer_Updated(MseSourceBuffer sender, object args)
-        {
-
-        }
-
-        #region Jadisco.Api
+        #region Jadisco.Api events
         private async void JadiscoApi_OnStreamWentOnline(Service obj)
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                if (currentLiveStream is null)
+                if (currentHLSStream is null)
                 {
                     currentService = obj;
-                    await ChangeStream(obj.ChannelId);
+                    await PlayStream(obj.ChannelId);
                 }
 
                 var navigationView = mainPageVM.NavigationViewItems.SingleOrDefault(x => {
@@ -128,6 +108,7 @@ namespace Jadisco.UWP.Views
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
+                // check if current playing stream has finished
                 if (currentService != null && obj.Equals(currentService))
                 {
                     currentService = null;
@@ -152,7 +133,7 @@ namespace Jadisco.UWP.Views
                 }
             });
 
-            currentLiveStream = null;
+            currentHLSStream = null;
         }
 
         private async void JadiscoApi_OnTopicChanged(Topic topic)
@@ -166,26 +147,24 @@ namespace Jadisco.UWP.Views
             });
         }
         #endregion
-        #endregion
 
         #region Private methods
         /// <summary>
-        /// Change playing stream
+        /// Play specified stream
         /// </summary>
-        /// <param name="channel">Twitch channel name</param>
-        private async Task ChangeStream(string channel)
+        /// <param name="twitchChannel">Twitch channel name</param>
+        private async Task PlayStream(string twitchChannel)
         {
-            AccessToken token = TwitchApi.GetAccessToken(channel);
+            StopStream();
+
+            AccessToken token = TwitchApi.GetAccessToken(twitchChannel);
 
             if (token is null)
             {
                 return;
             }
 
-            string url = UsherService.GetStreamLink(channel, token.Sig, token.Token);
-            Debug.WriteLine(token.Sig);
-            Debug.WriteLine(token.Token);
-            Debug.WriteLine(url);
+            string url = UsherService.GetStreamLink(twitchChannel, token.Sig, token.Token);
 
             try
             {
@@ -197,7 +176,12 @@ namespace Jadisco.UWP.Views
                 }
 
                 mainPageVM.LoadQualityList(playlist);
-                ChangeStream(playlist.Playlist[0]);
+
+                HLSStream hlsStream = playlist.Playlist[0];
+
+                currentHLSStream = hlsStream;
+
+                StreamPlayer.PlayLowLatencyStream(hlsStream);
             }
             catch (Exception ex)
             {
@@ -207,54 +191,13 @@ namespace Jadisco.UWP.Views
         }
 
         /// <summary>
-        /// Change current playing stream
-        /// </summary>
-        /// <param name="livestream">Stream source</param>
-        private void ChangeStream(HLSStream livestream)
-        {
-            if (livestream is null)
-                return;
-
-            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri(livestream.Url));
-            StreamMediaPlayer.MediaPlayer.Play();
-            currentLiveStream = livestream;
-
-            StreamMediaPlayer.AreTransportControlsEnabled = true;
-        }
-
-        private void ChangeStreamLowLatency(HLSStream livestream)
-        {
-            if (livestream is null)
-                return;
-
-            livestream.Open();
-            livestream.OnVideoDownload += Livestream_OnVideoDownload;
-
-            StreamMediaPlayer.Source = MediaSource.CreateFromMseStreamSource(mseStreamSource);
-            StreamMediaPlayer.MediaPlayer.Play();
-            currentLiveStream = livestream;
-
-            StreamMediaPlayer.AreTransportControlsEnabled = true;
-        }
-
-        private void Livestream_OnVideoDownload(byte[] obj)
-        {
-            if (mseSourceBuffer != null)
-            {
-                mseSourceBuffer.AppendBuffer(obj.AsBuffer());
-            }
-        }
-
-        /// <summary>
         /// Stop current playing stream
         /// </summary>
         private void StopStream()
         {
-            mainPageVM.StreamQualities.ClearQualityList();
+            mainPageVM?.StreamQualities?.ClearQualityList();
 
-            StreamMediaPlayer.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashAssets/SplashVideo.mp4"));
-            StreamMediaPlayer.AreTransportControlsEnabled = false;
-            StreamMediaPlayer.MediaPlayer.Play();
+            StreamPlayer.StopStream();
         }
 
         private void AddNoStreamLabel()
@@ -328,24 +271,8 @@ namespace Jadisco.UWP.Views
             if (data is null)
                 return;
 
-            ChangeStream(data.Stream);
-        }
-
-        private async void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
-        {
-            //if (jadiscoApi.Stream.Status == false)
-            //{
-            //    await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            //    {
-            //        StreamMediaPlayer.MediaPlayer.Play();
-            //    });
-            //}
-
-            // do wyjebania jak >jadiscoApi.Stream.Status< zacznie zwracać poprawne wartości
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                StreamMediaPlayer.MediaPlayer.Play();
-            });
+            StreamPlayer.StopStream();
+            StreamPlayer.PlayLowLatencyStream(data.HLSStream);
         }
 
         private void ChatHideButton_Click(object sender, RoutedEventArgs e)
@@ -386,9 +313,9 @@ namespace Jadisco.UWP.Views
             ChatWebView.Source = ChatUri;
             ChatWebView.Refresh();
 
-            if (currentLiveStream != null)
+            if (currentHLSStream != null)
             {
-                ChangeStream(currentLiveStream);
+                StreamPlayer.RefreshStream();
             }
         }
 
@@ -398,7 +325,7 @@ namespace Jadisco.UWP.Views
 
             currentService = vm.Service;
 
-            await ChangeStream(vm.Service.ChannelId);
+            await PlayStream(vm.Service.ChannelId);
         }
 
         private void ShowFlyout_Click(object sender, RoutedEventArgs e)

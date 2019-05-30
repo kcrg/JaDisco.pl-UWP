@@ -49,7 +49,7 @@ namespace Jadisco.UWP.ViewModels
                     StreamQualities.AddQuality(new StreamQualityViewModel
                     {
                         Name = stream.Name,
-                        Stream = stream
+                        HLSStream = stream
                     });
                 }
             }

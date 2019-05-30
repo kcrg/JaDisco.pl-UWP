@@ -34,21 +34,24 @@ namespace Twitch.Api.Models
 
         public StreamStatus Status { get; set; } = StreamStatus.Closed;
 
-        public event Action<byte[]> OnVideoDownload;
+        //public event Action<byte[]> OnVideoDownload;
+        public event Action<Stream> OnVideoDownload;
         #endregion
 
         #region Private variables
         static readonly string extinf_re = @"(\d+(\.\d+)?)";
         static readonly string ext_twitch_prefetch_re = @":(.*)";
 
-        readonly HttpClient client = new HttpClient();
+        HttpClient client;
 
         HLSSegment recentSegment;
 
-        Queue<HLSSegment> hlsQueue = new Queue<HLSSegment>();
+        Queue<HLSSegment> hlsQueue;
 
         Task workerTask;
         Task writerTask;
+
+        MemoryStream buffer;
         #endregion
 
         public HLSStream()
@@ -58,7 +61,13 @@ namespace Twitch.Api.Models
         #region Public methods
         public void Open()
         {
+            client = new HttpClient();
+            hlsQueue = new Queue<HLSSegment>();
+
             Status = StreamStatus.Opened;
+
+            // 32 MB buffer
+            buffer = new MemoryStream(32 * 1024 * 1024);
 
             workerTask = new Task(Worker);
             workerTask.Start();
@@ -69,61 +78,111 @@ namespace Twitch.Api.Models
 
         public void Close()
         {
+            client.Dispose();
+            client = null;
+            hlsQueue = null;
+
             Status = StreamStatus.Closed;
+
+            buffer.Close();
+            buffer = null;
+        }
+
+        public void ClearQueue()
+        {
+            hlsQueue.Clear();
         }
         #endregion
 
         #region Private methods
         private async void Worker()
         {
+            Debug.WriteLine("Worker start");
+
             while (Status == StreamStatus.Opened)
             {
                 await UpdateQueue();
 
                 await Task.Delay(1000);
             }
+
+            Debug.WriteLine("Worker end");
         }
 
         private async void Writer()
         {
+            Debug.WriteLine("Writer start");
+
             while (Status == StreamStatus.Opened)
             {
-                if (hlsQueue.Count == 0)
+                if (hlsQueue is null)
+                    break;
+
+                if (client is null)
+                    break;
+
+                if (hlsQueue.Count <= 0)
                     continue;
 
-                var stream = await client.GetStreamAsync(hlsQueue.Dequeue().Url);
+                var hlsStream = hlsQueue.Dequeue();
 
-                using (MemoryStream buffer = new MemoryStream())
+                if (hlsStream is null)
+                    continue;
+
+                var stream = await client?.GetStreamAsync(hlsStream.Url);
+
+                if (stream is null)
+                    continue;
+
+                if (!buffer.CanWrite)
+                    continue;
+
+                buffer.Position = 0;
+                buffer.SetLength(0);
+
+                using (var reader = new BinaryReader(stream))
                 {
-                    using (var reader = new BinaryReader(stream))
+                    while (true)
                     {
-                        while (true)
+                        var bytes = reader.ReadBytes(8192);
+
+                        var len = bytes.Length;
+
+                        if (len == 0)
+                            break;
+
+                        if (buffer != null && buffer.CanWrite)
                         {
-                            var bytes = reader.ReadBytes(8192);
-
-                            var len = bytes.Length;
-
-                            if (len == 0)
-                                break;
-
                             buffer.Write(bytes, 0, len);
                         }
                     }
-
-                    OnVideoDownload?.Invoke(buffer.ToArray());
                 }
+
+                // reset position to start
+                //buffer.Position = 0;
+
+                OnVideoDownload?.Invoke(buffer);
+                //OnVideoDownload?.Invoke(buffer.ToArray());
             }
+
+            Debug.WriteLine("Writer end");
         }
 
         private async Task UpdateQueue()
         {
+            if (client is null)
+                return;
+
             var stream = await client.GetStreamAsync(Url);
+
+            if (stream is null)
+                return;
 
             var lastSegment = ParseSegmentFile(stream)?.Last();
 
             if (!lastSegment.Equals(recentSegment))
             {
-                //Debug.WriteLine($"New segment!");
+                Debug.WriteLine($"New segment!");
 
                 recentSegment = lastSegment;
 

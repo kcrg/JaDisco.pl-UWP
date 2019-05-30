@@ -12,6 +12,6 @@ namespace Jadisco.UWP.ViewModels
             set { _name = value; NotifyPropertyChanged(); }
         }
 
-        public HLSStream Stream { get; set; }
+        public HLSStream HLSStream { get; set; }
     }
 }

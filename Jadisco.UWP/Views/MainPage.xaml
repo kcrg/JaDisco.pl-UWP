@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:controls="using:Jadisco.UWP.Views.Controls"
     Background="{ThemeResource PageBackground}"
     Loaded="Page_Loaded"
     NavigationCacheMode="Required"
@@ -179,14 +180,12 @@
                         </Grid.ColumnDefinitions>
 
                         <Grid x:Name="StreamGrid"
-                            Grid.Column="0"
-                            Background="Black">
-                            <MediaPlayerElement x:Name="StreamMediaPlayer" Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4">
-                                <MediaPlayerElement.TransportControls>
-                                    <MediaTransportControls IsSeekBarVisible="False" Style="{StaticResource MediaTransportControls}"/>
-                                </MediaPlayerElement.TransportControls>
-                            </MediaPlayerElement>
+                                Grid.Column="0"
+                                Background="Black">
+
+                            <controls:StreamPlayer x:Name="StreamPlayer" />
                         </Grid>
+
 
                         <Grid x:Name="ChatGrid"
                             Grid.Column="1"
