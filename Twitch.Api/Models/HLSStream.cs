@@ -99,11 +99,18 @@ namespace Twitch.Api.Models
         {
             Debug.WriteLine("Worker start");
 
-            while (Status == StreamStatus.Opened)
+            try
             {
-                await UpdateQueue();
+                while (Status == StreamStatus.Opened)
+                {
+                    await UpdateQueue();
 
-                await Task.Delay(1000);
+                    await Task.Delay(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Worker error: {ex.Message}");
             }
 
             Debug.WriteLine("Worker end");
@@ -113,56 +120,63 @@ namespace Twitch.Api.Models
         {
             Debug.WriteLine("Writer start");
 
-            while (Status == StreamStatus.Opened)
+            try
             {
-                if (hlsQueue is null)
-                    break;
-
-                if (client is null)
-                    break;
-
-                if (hlsQueue.Count <= 0)
-                    continue;
-
-                var hlsStream = hlsQueue.Dequeue();
-
-                if (hlsStream is null)
-                    continue;
-
-                var stream = await client?.GetStreamAsync(hlsStream.Url);
-
-                if (stream is null)
-                    continue;
-
-                if (!buffer.CanWrite)
-                    continue;
-
-                buffer.Position = 0;
-                buffer.SetLength(0);
-
-                using (var reader = new BinaryReader(stream))
+                while (Status == StreamStatus.Opened)
                 {
-                    while (true)
+                    if (hlsQueue is null)
+                        break;
+
+                    if (client is null)
+                        break;
+
+                    if (hlsQueue.Count <= 0)
+                        continue;
+
+                    var hlsStream = hlsQueue.Dequeue();
+
+                    if (hlsStream is null)
+                        continue;
+
+                    var stream = await client?.GetStreamAsync(hlsStream.Url);
+
+                    if (stream is null)
+                        continue;
+
+                    if (buffer is null)
+                        break;
+
+                    buffer.Position = 0;
+                    buffer.SetLength(0);
+
+                    using (var reader = new BinaryReader(stream))
                     {
-                        var bytes = reader.ReadBytes(8192);
-
-                        var len = bytes.Length;
-
-                        if (len == 0)
-                            break;
-
-                        if (buffer != null && buffer.CanWrite)
+                        while (true)
                         {
-                            buffer.Write(bytes, 0, len);
+                            var bytes = reader.ReadBytes(8192);
+
+                            var len = bytes.Length;
+
+                            if (len == 0)
+                                break;
+
+                            if (buffer != null && buffer.CanWrite)
+                            {
+                                buffer.Write(bytes, 0, len);
+                            }
                         }
                     }
+
+                    // reset position to start
+                    //buffer.Position = 0;
+                    //Debug.WriteLine($"Writing... Queue: {hlsQueue.Count}");
+                    OnVideoDownload?.Invoke(buffer);
+                    //OnVideoDownload?.Invoke(buffer.ToArray());
                 }
-
-                // reset position to start
-                //buffer.Position = 0;
-
-                OnVideoDownload?.Invoke(buffer);
-                //OnVideoDownload?.Invoke(buffer.ToArray());
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Writer error: {ex.Message}");
             }
 
             Debug.WriteLine("Writer end");
@@ -182,7 +196,7 @@ namespace Twitch.Api.Models
 
             if (!lastSegment.Equals(recentSegment))
             {
-                Debug.WriteLine($"New segment!");
+                //Debug.WriteLine($"New segment!");
 
                 recentSegment = lastSegment;
 
