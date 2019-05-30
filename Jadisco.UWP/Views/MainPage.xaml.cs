@@ -43,7 +43,6 @@ namespace Jadisco.UWP.Views
         private HLSStream currentHLSStream = null;
         private Service currentService = null;
 
-
         private readonly MainPageViewModel mainPageVM;
 
         private NavigationViewItemViewModel noStreamLabel;

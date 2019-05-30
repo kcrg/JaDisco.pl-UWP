@@ -34,8 +34,7 @@ namespace Twitch.Api.Models
 
         public StreamStatus Status { get; set; } = StreamStatus.Closed;
 
-        //public event Action<byte[]> OnVideoDownload;
-        public event Action<Stream> OnVideoDownload;
+        public event Action<byte[]> OnVideoDownload;
         #endregion
 
         #region Private variables
@@ -167,11 +166,7 @@ namespace Twitch.Api.Models
                         }
                     }
 
-                    // reset position to start
-                    //buffer.Position = 0;
-                    //Debug.WriteLine($"Writing... Queue: {hlsQueue.Count}");
-                    OnVideoDownload?.Invoke(buffer);
-                    //OnVideoDownload?.Invoke(buffer.ToArray());
+                    OnVideoDownload?.Invoke(buffer.ToArray());
                 }
             }
             catch (Exception ex)

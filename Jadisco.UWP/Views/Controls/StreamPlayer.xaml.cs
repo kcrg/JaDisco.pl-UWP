@@ -35,10 +35,11 @@ namespace Jadisco.UWP.Views.Controls
             StreamMediaPlayer.MediaPlayer.AutoPlay = true;
         }
 
+        #region Public methods
         /// <summary>
         /// Play specified stream
         /// </summary>
-        /// <param name="url">Link to stream</param>
+        /// <param name="hlsStream">HLSStream to play</param>
         /// <returns>Whether stream will play</returns>
         public bool PlayStream(HLSStream hlsStream)
         {
@@ -52,6 +53,11 @@ namespace Jadisco.UWP.Views.Controls
             return true;
         }
 
+        /// <summary>
+        /// Play specified stream in low latency mode
+        /// </summary>
+        /// <param name="hlsStream">HLSStream to play</param>
+        /// <returns>Whether stream will play</returns>
         public bool PlayLowLatencyStream(HLSStream hlsStream)
         {
             if (hlsStream is null)
@@ -65,10 +71,13 @@ namespace Jadisco.UWP.Views.Controls
                 mseMediaSource = MediaSource.CreateFromMseStreamSource(mseStreamSource);
             }
 
-            hlsStream.Open();
-            hlsStream.OnVideoDownload += HlsStream_OnVideoDownload;
+            if (hlsStream.Status == HLSStream.StreamStatus.Closed)
+            {
+                hlsStream.Open();
+                hlsStream.OnVideoDownload += HlsStream_OnVideoDownload;
 
-            currentHLSStream = hlsStream;
+                currentHLSStream = hlsStream;
+            }
 
             StreamMediaPlayer.Source = mseMediaSource;
             StreamMediaPlayer.AreTransportControlsEnabled = true;
@@ -76,20 +85,7 @@ namespace Jadisco.UWP.Views.Controls
             return true;
         }
 
-        private void HlsStream_OnVideoDownload(Stream stream)
-        {
-            if (mseSourceBuffer != null && !mseSourceBuffer.IsUpdating)
-            {
-                //Debug.WriteLine("Data write");
-
-                //mseSourceBuffer.AppendBuffer(data.AsBuffer());
-
-                stream.Position = 0;
-                mseSourceBuffer.AppendStream(stream.AsInputStream());
-            }
-        }
-
-        public void StopStream()
+        public void StopStream(bool closeHLSStream = true)
         {
             if (mseMediaSource != null)
             {
@@ -110,7 +106,7 @@ namespace Jadisco.UWP.Views.Controls
                 mseStreamSource = null;
             }
 
-            if (currentHLSStream != null)
+            if (closeHLSStream == true && currentHLSStream != null)
             {
                 currentHLSStream.Close();
                 currentHLSStream.OnVideoDownload -= HlsStream_OnVideoDownload;
@@ -131,6 +127,21 @@ namespace Jadisco.UWP.Views.Controls
             if (currentHLSStream != null)
             {
                 currentHLSStream.ClearQueue();
+
+                StopStream(false);
+                PlayLowLatencyStream(currentHLSStream);
+            }
+        }
+        #endregion
+
+        #region Private methods
+        private void HlsStream_OnVideoDownload(byte[] buffer)
+        {
+            if (mseSourceBuffer != null && !mseSourceBuffer.IsUpdating)
+            {
+                //Debug.WriteLine($"Data write {mseSourceBuffer.Buffered.Count}");
+
+                mseSourceBuffer.AppendBuffer(buffer.AsBuffer());
             }
         }
 
