@@ -149,6 +149,24 @@
                                 <FlyoutBase.AttachedFlyout>
                                     <Flyout LightDismissOverlayMode="Auto">
                                         <StackPanel>
+                                            <TextBlock FontSize="14" Text="Rodzaj odtwarzacza"/>
+                                            <RadioButton
+                                                Content="Natywny - Niskie opóźnienie (eksperymentalny)"
+                                                Tag="NativeLowLatency"
+                                                GroupName="PlayerType"
+                                                Checked="RadioButton_Checked"/>
+                                            <RadioButton
+                                                Content="Natywny - Wysokie opóźnienie (stabilny)"
+                                                Tag="NativeOld"
+                                                GroupName="PlayerType"
+                                                Checked="RadioButton_Checked"/>
+                                            <RadioButton
+                                                Content="Web"
+                                                Tag="Web"
+                                                GroupName="PlayerType"
+                                                Checked="RadioButton_Checked"/>
+
+
                                             <TextBlock FontSize="14" Text="Powiadomienia - wkrótce"/>
                                             <RadioButton
                                                 Content="Włączone"

@@ -18,10 +18,12 @@
     </UserControl.Resources>
 
     <Grid Background="Black">
-        <MediaPlayerElement x:Name="StreamMediaPlayer" Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4">
+        <MediaPlayerElement x:Name="StreamMediaPlayerNative" Source="ms-appx:///Assets/SplashAssets/SplashVideo.mp4">
             <MediaPlayerElement.TransportControls>
-                <MediaTransportControls Style="{StaticResource MediaTransportControls}"/>
+                <MediaTransportControls IsSeekBarVisible="False" Style="{StaticResource MediaTransportControls}"/>
             </MediaPlayerElement.TransportControls>
         </MediaPlayerElement>
+
+        <WebView x:Name="StreamMediaPlayerWeb" Visibility="Collapsed" />
     </Grid>
 </UserControl>

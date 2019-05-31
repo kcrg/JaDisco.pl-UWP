@@ -28,6 +28,7 @@ using Jadisco.Api.Models;
 
 using muxc = Microsoft.UI.Xaml.Controls;
 using toolkit = Microsoft.Toolkit.Uwp.UI.Controls;
+using Jadisco.UWP.Views.Controls;
 
 namespace Jadisco.UWP.Views
 {
@@ -72,7 +73,7 @@ namespace Jadisco.UWP.Views
                 if (currentHLSStream is null)
                 {
                     currentService = obj;
-                    await PlayStream(obj.ChannelId);
+                    await PlayStream(obj);
                 }
 
                 var navigationView = mainPageVM.NavigationViewItems.SingleOrDefault(x => {
@@ -112,6 +113,7 @@ namespace Jadisco.UWP.Views
                 {
                     currentService = null;
                     StopStream();
+                    StreamPlayer.PlaySplashScreen();
                 }
 
                 var navigationView = mainPageVM.NavigationViewItems.SingleOrDefault(x => {
@@ -149,38 +151,21 @@ namespace Jadisco.UWP.Views
 
         #region Private methods
         /// <summary>
-        /// Play specified stream
+        /// Play specified service
         /// </summary>
-        /// <param name="twitchChannel">Twitch channel name</param>
-        private async Task PlayStream(string twitchChannel)
+        /// <param name="service">Service to play</param>
+        private async Task PlayStream(Service service)
         {
             StopStream();
 
-            AccessToken token = TwitchApi.GetAccessToken(twitchChannel);
-
-            if (token is null)
-            {
-                return;
-            }
-
-            string url = UsherService.GetStreamLink(twitchChannel, token.Sig, token.Token);
 
             try
             {
-                HLSPlaylist playlist = UsherService.ParsePlaylists(url);
-
-                if (playlist is null)
+                if (StreamPlayer.Setup(service))
                 {
-                    return;
+                    mainPageVM.LoadQualityList(StreamPlayer.HLSPlaylist);
+                    StreamPlayer.PlayStream();
                 }
-
-                mainPageVM.LoadQualityList(playlist);
-
-                HLSStream hlsStream = playlist.Playlist[0];
-
-                currentHLSStream = hlsStream;
-
-                StreamPlayer.PlayLowLatencyStream(hlsStream);
             }
             catch (Exception ex)
             {
@@ -271,7 +256,7 @@ namespace Jadisco.UWP.Views
                 return;
 
             StreamPlayer.StopStream();
-            StreamPlayer.PlayLowLatencyStream(data.HLSStream);
+            StreamPlayer.PlayHLSStream(data.HLSStream);
         }
 
         private void ChatHideButton_Click(object sender, RoutedEventArgs e)
@@ -314,7 +299,7 @@ namespace Jadisco.UWP.Views
 
             if (currentHLSStream != null)
             {
-                StreamPlayer.RefreshStream();
+                StreamPlayer.RestartStream();
             }
         }
 
@@ -324,7 +309,7 @@ namespace Jadisco.UWP.Views
 
             currentService = vm.Service;
 
-            await PlayStream(vm.Service.ChannelId);
+            await PlayStream(vm.Service);
         }
 
         private void ShowFlyout_Click(object sender, RoutedEventArgs e)
@@ -380,6 +365,30 @@ namespace Jadisco.UWP.Views
         private async void StatusFlyoutTextBlock_LinkClicked(object sender, toolkit.LinkClickedEventArgs e)
         {
             await Launcher.LaunchUriAsync(new Uri(e.Link));
+        }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            var rb = sender as RadioButton;
+
+            if (rb is null)
+                return;
+
+            switch (rb.Tag.ToString())
+            {
+                case "NativeLowLatency":
+                    StreamPlayer.PlayerType = StreamPlayerType.NativeLowLatency;
+                    break;
+                case "NativeOld":
+                    StreamPlayer.PlayerType = StreamPlayerType.NativeOld;
+                    break;
+                case "Web":
+                    StreamPlayer.PlayerType = StreamPlayerType.Web;
+                    break;
+            }
+
+            StreamPlayer.StopStream();
+            StreamPlayer.PlayStream();
         }
 
         private async void ChatNewWindowButton_Click(object sender, RoutedEventArgs e)
