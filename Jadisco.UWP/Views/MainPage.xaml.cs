@@ -156,8 +156,10 @@ namespace Jadisco.UWP.Views
         /// <param name="service">Service to play</param>
         private async Task PlayStream(Service service)
         {
-            StopStream();
+            if (StreamPlayer.SupportedServices.SingleOrDefault(x => x == service.ServiceName) is null)
+                return;
 
+            StopStream();
 
             try
             {
