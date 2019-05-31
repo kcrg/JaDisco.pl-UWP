@@ -154,7 +154,8 @@
                                                 Content="Natywny - Niskie opóźnienie (eksperymentalny)"
                                                 Tag="NativeLowLatency"
                                                 GroupName="PlayerType"
-                                                Checked="RadioButton_Checked"/>
+                                                Checked="RadioButton_Checked"
+                                                IsChecked="True"/>
                                             <RadioButton
                                                 Content="Natywny - Wysokie opóźnienie (stabilny)"
                                                 Tag="NativeOld"

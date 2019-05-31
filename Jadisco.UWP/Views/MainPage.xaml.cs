@@ -371,6 +371,9 @@ namespace Jadisco.UWP.Views
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
+            if (StreamPlayer is null)
+                return;
+
             var rb = sender as RadioButton;
 
             if (rb is null)

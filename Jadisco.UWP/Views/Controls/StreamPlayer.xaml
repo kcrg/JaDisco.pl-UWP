@@ -24,6 +24,6 @@
             </MediaPlayerElement.TransportControls>
         </MediaPlayerElement>
 
-        <WebView x:Name="StreamMediaPlayerWeb" Visibility="Collapsed" />
+        <WebView x:Name="StreamMediaPlayerWeb" DefaultBackgroundColor="#121212" Visibility="Collapsed" />
     </Grid>
 </UserControl>
