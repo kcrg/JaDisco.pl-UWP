@@ -94,12 +94,6 @@ namespace Jadisco.UWP.Views.Controls
                 mseMediaSource = null;
             }
 
-            if (mseSourceBuffer != null)
-            {
-                mseSourceBuffer.Updated -= MseSourceBuffer_Updated;
-                mseSourceBuffer = null;
-            }
-
             if (mseStreamSource != null)
             {
                 mseStreamSource.Opened -= MseStreamSource_Opened;
@@ -113,6 +107,7 @@ namespace Jadisco.UWP.Views.Controls
                 currentHLSStream = null;
             }
 
+            mseSourceBuffer = null;
             StreamMediaPlayer.Source = null;
         }
 
@@ -151,13 +146,8 @@ namespace Jadisco.UWP.Views.Controls
             {
                 mseSourceBuffer = mseStreamSource.AddSourceBuffer("video/MP2T");
                 mseSourceBuffer.Mode = MseAppendMode.Sequence;
-                mseSourceBuffer.Updated += MseSourceBuffer_Updated;
             }
         }
-
-        private void MseSourceBuffer_Updated(MseSourceBuffer sender, object args)
-        {
-
-        }
+        #endregion
     }
 }
