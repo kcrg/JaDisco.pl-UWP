@@ -208,8 +208,6 @@ namespace Jadisco.UWP.Views.Controls
         /// </summary>
         public void PlaySplashScreen()
         {
-            return;
-
             PlayerTypeLocal = StreamPlayerTypeLocal.Native;
 
             StreamMediaPlayerNative.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/SplashAssets/SplashVideo.mp4"));
