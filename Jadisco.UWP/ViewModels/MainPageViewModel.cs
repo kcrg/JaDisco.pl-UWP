@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jadisco.UWP.Views;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Twitch.Api.Models;
@@ -48,7 +49,7 @@ namespace Jadisco.UWP.ViewModels
                     StreamQualities.AddQuality(new StreamQualityViewModel
                     {
                         Name = stream.Name,
-                        Stream = stream
+                        HLSStream = stream
                     });
                 }
             }

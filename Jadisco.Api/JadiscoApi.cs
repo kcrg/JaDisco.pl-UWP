@@ -22,7 +22,7 @@ namespace Jadisco.Api
 
         public Streamer[] Streamers => localStorage?.Data.Streamers;
         public Topic Topic => localStorage?.Data.Topic;
-        public Stream Stream => localStorage?.Data.Stream;
+        public LiveStream Stream => localStorage?.Data.Stream;
 
         public JadiscoApi()
         {
