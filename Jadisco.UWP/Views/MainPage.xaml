@@ -114,7 +114,7 @@
                                 Icon="Refresh"
                                 ToolTipService.ToolTip="Odśwież wszystko"/>
 
-                            <AppBarButton Click="ShowFlyout_Click" ToolTipService.ToolTip="Zmień jakość streamu">
+                            <AppBarButton x:Name="QualityChangeButton" Click="ShowFlyout_Click" ToolTipService.ToolTip="Zmień jakość streamu">
                                 <AppBarButton.Icon>
                                     <FontIcon Glyph="&#xE9E9;"/>
                                 </AppBarButton.Icon>

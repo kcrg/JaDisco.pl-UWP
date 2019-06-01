@@ -383,17 +383,23 @@ namespace Jadisco.UWP.Views
             {
                 case "NativeLowLatency":
                     StreamPlayer.PlayerType = StreamPlayerType.NativeLowLatency;
+                    QualityChangeButton.Visibility = Visibility.Visible;
                     break;
                 case "NativeOld":
                     StreamPlayer.PlayerType = StreamPlayerType.NativeOld;
+                    QualityChangeButton.Visibility = Visibility.Visible;
                     break;
                 case "Web":
                     StreamPlayer.PlayerType = StreamPlayerType.Web;
+                    QualityChangeButton.Visibility = Visibility.Collapsed;
                     break;
             }
 
-            StreamPlayer.StopStream();
-            StreamPlayer.PlayStream();
+            if (jadiscoApi.Stream.Status == true)
+            {
+                StreamPlayer.StopStream();
+                StreamPlayer.PlayStream();
+            }
         }
 
         private async void ChatNewWindowButton_Click(object sender, RoutedEventArgs e)
