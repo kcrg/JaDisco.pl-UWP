@@ -45,6 +45,6 @@ namespace Jadisco.UWP.ViewModels
             set { visibility = value; NotifyPropertyChanged(); }
         }
 
-        public Jadisco.Api.Models.Service Service { get; set; }
+        public Jadisco.Api.Models.Notifier.Service Service { get; set; }
     }
 }

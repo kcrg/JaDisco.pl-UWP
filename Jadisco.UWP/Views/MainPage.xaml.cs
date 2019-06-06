@@ -28,7 +28,8 @@ using Jadisco.Api.Models;
 
 using muxc = Microsoft.UI.Xaml.Controls;
 using toolkit = Microsoft.Toolkit.Uwp.UI.Controls;
-using Jadisco.UWP.Views.Controls;
+using Jadisco.Api.Models.Notifier;
+using Jadisco.UWP.Controls;
 
 namespace Jadisco.UWP.Views
 {
@@ -163,7 +164,7 @@ namespace Jadisco.UWP.Views
 
             try
             {
-                if (StreamPlayer.Setup(service))
+                if (await StreamPlayer.Setup(service))
                 {
                     mainPageVM.LoadQualityList(StreamPlayer.HLSPlaylist);
                     StreamPlayer.PlayStream();
@@ -218,7 +219,7 @@ namespace Jadisco.UWP.Views
 
                 ChatGrid.Visibility = Visibility.Collapsed;
                 ChatPositionButton.IsEnabled = false;
-                ChatWebView.Navigate(BlankUri);
+                //ChatWebView.Navigate(BlankUri);
                 HiddenChat = true;
             }
             else if (HiddenChat)
@@ -240,7 +241,7 @@ namespace Jadisco.UWP.Views
 
                     ChatGrid.Visibility = Visibility.Visible;
                     ChatPositionButton.IsEnabled = true;
-                    ChatWebView.Navigate(ChatUri);
+                    //ChatWebView.Navigate(ChatUri);
 
                     HiddenChat = false;
                 }
@@ -296,8 +297,8 @@ namespace Jadisco.UWP.Views
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            ChatWebView.Source = ChatUri;
-            ChatWebView.Refresh();
+            //ChatWebView.Source = ChatUri;
+            //ChatWebView.Refresh();
 
             if (currentHLSStream != null)
             {

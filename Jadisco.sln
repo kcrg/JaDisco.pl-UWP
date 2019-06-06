@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Twitch.Api", "Twitch.Api\Tw
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jadisco.Api", "Jadisco.Api\Jadisco.Api.csproj", "{09A387C1-37D2-49DC-A6B8-5534EB47B640}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,26 @@ Global
 		{09A387C1-37D2-49DC-A6B8-5534EB47B640}.Release|x64.Build.0 = Release|Any CPU
 		{09A387C1-37D2-49DC-A6B8-5534EB47B640}.Release|x86.ActiveCfg = Release|Any CPU
 		{09A387C1-37D2-49DC-A6B8-5534EB47B640}.Release|x86.Build.0 = Release|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Debug|ARM.Build.0 = Debug|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Debug|x64.Build.0 = Debug|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Debug|x86.Build.0 = Debug|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Release|ARM.ActiveCfg = Release|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Release|ARM.Build.0 = Release|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Release|ARM64.Build.0 = Release|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Release|x64.ActiveCfg = Release|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Release|x64.Build.0 = Release|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Release|x86.ActiveCfg = Release|Any CPU
+		{CD6ED045-8D65-4B97-8EE3-B8FF752428AB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

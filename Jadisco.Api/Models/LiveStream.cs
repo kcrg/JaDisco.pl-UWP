@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Jadisco.Api.Models.Notifier;
+using Newtonsoft.Json;
 using System;
 
 namespace Jadisco.Api.Models

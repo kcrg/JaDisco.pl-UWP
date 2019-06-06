@@ -1,4 +1,5 @@
-﻿using Jadisco.UWP.Views;
+﻿using Jadisco.UWP.ViewModels.Poorchat;
+using Jadisco.UWP.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -23,11 +24,15 @@ namespace Jadisco.UWP.ViewModels
         }
 
         public StreamQualitiesViewModel StreamQualities { get; set; } = new StreamQualitiesViewModel();
+
+        public ChatViewModel ChatViewMdoel { get; set; }
         #endregion
 
         public MainPageViewModel(MainPage mainPage)
         {
             this.mainPage = mainPage;
+
+            ChatViewMdoel = new ChatViewModel(mainPage);
         }
 
         #region Public methods

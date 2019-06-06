@@ -7,7 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:controls="using:Jadisco.UWP.Views.Controls"
+    xmlns:controls="using:Jadisco.UWP.Controls"
+    xmlns:poorchat="using:Jadisco.UWP.Controls.Poorchat"
     Background="{ThemeResource PageBackground}"
     Loaded="Page_Loaded"
     NavigationCacheMode="Required"
@@ -209,9 +210,7 @@
                         <Grid x:Name="ChatGrid"
                             Grid.Column="1"
                             Background="#121212">
-                            <WebView x:Name="ChatWebView"
-                                DefaultBackgroundColor="#121212"
-                                Source="https://client.poorchat.net/jadisco"/>
+                            <poorchat:Chat DataContext="{Binding ChatViewMdoel}" />
                         </Grid>
                     </Grid>
                 </muxc:NavigationView.Content>

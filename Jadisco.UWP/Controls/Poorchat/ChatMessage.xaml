@@ -1,0 +1,21 @@
+﻿<UserControl
+    x:Class="Jadisco.UWP.Controls.Poorchat.ChatMessage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ap="using:Jadisco.UWP.AttachedProperties"
+    mc:Ignorable="d"
+    d:DesignWidth="400" d:DesignHeight="24">
+
+    <Grid Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <RichTextBlock ap:RichTextBlockProperty.DataSource="{Binding DataSource}" />
+
+        <Image Source="{Binding Image}" Grid.Row="1" />
+    </Grid>
+</UserControl>

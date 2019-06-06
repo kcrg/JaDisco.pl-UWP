@@ -1,10 +1,12 @@
 using Jadisco.Api.Models;
+using Jadisco.Api.Models.Notifier;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Twitch.Api;
 using Twitch.Api.Models;
 using Windows.Foundation;
@@ -19,7 +21,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace Jadisco.UWP.Views.Controls
+namespace Jadisco.UWP.Controls
 {
     public enum StreamPlayerType
     {
@@ -90,7 +92,7 @@ namespace Jadisco.UWP.Views.Controls
         /// </summary>
         /// <param name="service">Stream to setup</param>
         /// <returns>Whether stream will be able to play</returns>
-        public bool Setup(Service service)
+        public async Task<bool> Setup(Service service)
         {
             currentService = service;
 
@@ -98,7 +100,7 @@ namespace Jadisco.UWP.Views.Controls
             {
                 case "twitch":
                 {
-                    AccessToken token = TwitchApi.GetAccessToken(service.ChannelId);
+                    AccessToken token = await TwitchApi.GetAccessTokenAsync(service.ChannelId);
 
                     if (token is null)
                     {
