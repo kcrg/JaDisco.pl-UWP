@@ -2,44 +2,46 @@
     x:Class="Jadisco.UWP.Views.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Jadisco.UWP.Views.Controls"
     xmlns:converters="using:Jadisco.UWP.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:controls="using:Jadisco.UWP.Views.Controls"
     Background="{ThemeResource PageBackground}"
     Loaded="Page_Loaded"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
-            <converters:StreamQualitiesAvailableConverter x:Key="AvailableVisibility"/>
+            <converters:StreamQualitiesAvailableConverter x:Key="AvailableVisibility" />
 
             <Flyout x:Key="StatusFlyout">
                 <Flyout.FlyoutPresenterStyle>
                     <Style TargetType="FlyoutPresenter">
-                        <Setter Property="IsTabStop" Value="True"/>
-                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-                        <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
-                        <Setter Property="TabNavigation" Value="Cycle"/>
+                        <Setter Property="IsTabStop" Value="True" />
+                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                        <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+                        <Setter Property="TabNavigation" Value="Cycle" />
                     </Style>
                 </Flyout.FlyoutPresenterStyle>
                 <StackPanel>
-                    <toolkit:MarkdownTextBlock x:Name="StatusFlyoutTextBlock"
+                    <toolkit:MarkdownTextBlock
+                        x:Name="StatusFlyoutTextBlock"
                         Background="Transparent"
                         LinkClicked="StatusFlyoutTextBlock_LinkClicked"
                         LinkForeground="{ThemeResource SystemAccentColor}"
-                        TextWrapping="Wrap"/>
-                    <TextBlock x:Name="StatusDateFlyoutTextBlock"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        x:Name="StatusDateFlyoutTextBlock"
                         FontSize="11"
-                        Foreground="Gray"/>
+                        Foreground="Gray" />
                 </StackPanel>
             </Flyout>
 
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml"/>
-                <ResourceDictionary Source="ms-appx:///Views/Styles/MainPageStyles.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+                <ResourceDictionary Source="ms-appx:///Views/Styles/MainPageStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
@@ -47,15 +49,17 @@
     <Page.Content>
         <Grid>
             <Grid x:Name="DragArea" Style="{StaticResource DragAreaGrid}">
-                <Image x:Name="AppLogo"
+                <Image
+                    x:Name="AppLogo"
                     Margin="12,10,0,10"
                     Source="ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoLight.png"
-                    Style="{StaticResource AppLogoImage}"/>
+                    Style="{StaticResource AppLogoImage}" />
 
-                <TextBlock x:Name="StatusTextBlock" Style="{StaticResource StatusText}"/>
+                <TextBlock x:Name="StatusTextBlock" Style="{StaticResource StatusText}" />
             </Grid>
 
-            <muxc:NavigationView x:Name="NavView"
+            <muxc:NavigationView
+                x:Name="NavView"
                 MenuItemsSource="{Binding NavigationViewItems}"
                 SelectionChanged="NavView_SelectionChanged"
                 Style="{StaticResource NavigationView}">
@@ -67,7 +71,7 @@
                             IsEnabled="{Binding IsEnabled}"
                             Tag="{Binding Tag}"
                             ToolTipService.ToolTip="{Binding ToolTip}"
-                            Visibility="{Binding Visibility}"/>
+                            Visibility="{Binding Visibility}" />
                     </DataTemplate>
                 </muxc:NavigationView.MenuItemTemplate>
 
@@ -79,53 +83,59 @@
                                 FlyoutBase.AttachedFlyout="{StaticResource StatusFlyout}"
                                 ToolTipService.ToolTip="Wyświetl cały temat">
                                 <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xE946;"/>
+                                    <FontIcon Glyph="&#xE946;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
 
                             <AppBarButton Click="DonateWonziu_Click" ToolTipService.ToolTip="Wesprzyj Wonzia">
                                 <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xEB51;"/>
+                                    <FontIcon Glyph="&#xEB51;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
 
-                            <AppBarSeparator/>
+                            <AppBarSeparator />
 
-                            <AppBarButton x:Name="ChatPositionButton"
+                            <AppBarButton
+                                x:Name="ChatPositionButton"
                                 Click="ChatPositionButton_Click"
                                 ToolTipService.ToolTip="Przenieś czat">
                                 <AppBarButton.Icon>
-                                    <FontIcon x:Name="ChatPositionIcon" Glyph="&#xE90C;"/>
+                                    <FontIcon x:Name="ChatPositionIcon" Glyph="&#xE90C;" />
                                 </AppBarButton.Icon>
                             </AppBarButton>
-                            <AppBarButton x:Name="ChatHideButton"
+                            <AppBarButton
+                                x:Name="ChatHideButton"
                                 Click="ChatHideButton_Click"
                                 Icon="LeaveChat"
-                                ToolTipService.ToolTip="Schowaj czat"/>
-                            <AppBarButton x:Name="ChatInNewWindow"
+                                ToolTipService.ToolTip="Schowaj czat" />
+                            <AppBarButton
+                                x:Name="ChatInNewWindow"
                                 Click="ChatNewWindowButton_Click"
                                 Icon="NewWindow"
-                                ToolTipService.ToolTip="Otwórz czat w nowym oknie"/>
+                                ToolTipService.ToolTip="Otwórz czat w nowym oknie" />
 
-                            <AppBarSeparator/>
+                            <AppBarSeparator />
 
                             <AppBarButton
                                 Click="RefreshButton_Click"
                                 Icon="Refresh"
-                                ToolTipService.ToolTip="Odśwież wszystko"/>
+                                ToolTipService.ToolTip="Odśwież wszystko" />
 
-                            <AppBarButton x:Name="QualityChangeButton" Click="ShowFlyout_Click" ToolTipService.ToolTip="Zmień jakość streamu">
+                            <AppBarButton
+                                x:Name="QualityChangeButton"
+                                Click="ShowFlyout_Click"
+                                ToolTipService.ToolTip="Zmień jakość streamu">
                                 <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xE9E9;"/>
+                                    <FontIcon Glyph="&#xE9E9;" />
                                 </AppBarButton.Icon>
                                 <FlyoutBase.AttachedFlyout>
                                     <Flyout LightDismissOverlayMode="Auto">
                                         <StackPanel DataContext="{Binding StreamQualities}">
-                                            <TextBlock FontSize="14" Text="Jakość Streamu"/>
+                                            <TextBlock FontSize="14" Text="Jakość Streamu" />
                                             <TextBlock
                                                 Foreground="Gray"
                                                 Text="Jakości streamu nie są dostępne"
-                                                Visibility="{Binding Qualities, Converter={StaticResource AvailableVisibility}}"/>
+                                                Visibility="{Binding Qualities, Converter={StaticResource AvailableVisibility}}" />
 
                                             <ItemsControl ItemsSource="{Binding Qualities}">
                                                 <ItemsControl.ItemTemplate>
@@ -133,7 +143,7 @@
                                                         <RadioButton
                                                             Checked="StreamQualityButton_Checked"
                                                             Content="{Binding Name}"
-                                                            GroupName="Quality"/>
+                                                            GroupName="Quality" />
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
@@ -149,40 +159,40 @@
                                 <FlyoutBase.AttachedFlyout>
                                     <Flyout LightDismissOverlayMode="Auto">
                                         <StackPanel>
-                                            <TextBlock FontSize="14" Text="Rodzaj odtwarzacza"/>
+                                            <TextBlock FontSize="14" Text="Rodzaj odtwarzacza" />
                                             <RadioButton
-                                                Content="Natywny - Niskie opóźnienie (eksperymentalny)"
-                                                Tag="NativeLowLatency"
-                                                GroupName="PlayerType"
                                                 Checked="RadioButton_Checked"
-                                                IsChecked="True"/>
+                                                Content="Natywny - Niskie opóźnienie (eksperymentalny)"
+                                                GroupName="PlayerType"
+                                                IsChecked="True"
+                                                Tag="NativeLowLatency" />
                                             <RadioButton
+                                                Checked="RadioButton_Checked"
                                                 Content="Natywny - Wysokie opóźnienie (stabilny)"
-                                                Tag="NativeOld"
                                                 GroupName="PlayerType"
-                                                Checked="RadioButton_Checked"/>
+                                                Tag="NativeOld" />
                                             <RadioButton
+                                                Checked="RadioButton_Checked"
                                                 Content="Web"
-                                                Tag="Web"
                                                 GroupName="PlayerType"
-                                                Checked="RadioButton_Checked"/>
+                                                Tag="Web" />
 
 
-                                            <TextBlock FontSize="14" Text="Powiadomienia - wkrótce"/>
+                                            <TextBlock FontSize="14" Text="Powiadomienia - wkrótce" />
                                             <RadioButton
                                                 Content="Włączone"
                                                 GroupName="Notifi"
-                                                IsEnabled="False"/>
+                                                IsEnabled="False" />
                                             <RadioButton
                                                 Content="Wyłączone"
                                                 GroupName="Notifi"
                                                 IsChecked="True"
-                                                IsEnabled="False"/>
+                                                IsEnabled="False" />
 
-                                            <HyperlinkButton Content="Donacja dla twórcy aplikacji" NavigateUri="https://tinyurl.com/DonateMohairApps"/>
-                                            <HyperlinkButton Content="Repozytorium na githubie" NavigateUri="https://github.com/kcrg/JaDisco.pl-UWP"/>
-                                            <HyperlinkButton Content="#jadiscouwp - księga zażaleń" NavigateUri="https://www.wykop.pl/tag/jadiscouwp/"/>
-                                            <TextBlock Text="JaDisco.pl UWP v0.6.1.0"/>
+                                            <HyperlinkButton Content="Donacja dla twórcy aplikacji" NavigateUri="https://tinyurl.com/DonateMohairApps" />
+                                            <HyperlinkButton Content="Repozytorium na githubie" NavigateUri="https://github.com/kcrg/JaDisco.pl-UWP" />
+                                            <HyperlinkButton Content="#jadiscouwp - księga zażaleń" NavigateUri="https://www.wykop.pl/tag/jadiscouwp/" />
+                                            <TextBlock Text="JaDisco.pl UWP v0.6.1.0" />
                                         </StackPanel>
                                     </Flyout>
                                 </FlyoutBase.AttachedFlyout>
@@ -194,24 +204,27 @@
                 <muxc:NavigationView.Content>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition x:Name="LeftColumn" Width="7700*"/>
-                            <ColumnDefinition x:Name="RightColumn" Width="2300*"/>
+                            <ColumnDefinition x:Name="LeftColumn" Width="7700*" />
+                            <ColumnDefinition x:Name="RightColumn" Width="2300*" />
                         </Grid.ColumnDefinitions>
 
-                        <Grid x:Name="StreamGrid"
-                                Grid.Column="0"
-                                Background="Black">
+                        <Grid
+                            x:Name="StreamGrid"
+                            Grid.Column="0"
+                            Background="Black">
 
                             <controls:StreamPlayer x:Name="StreamPlayer" />
                         </Grid>
 
 
-                        <Grid x:Name="ChatGrid"
+                        <Grid
+                            x:Name="ChatGrid"
                             Grid.Column="1"
                             Background="#121212">
-                            <WebView x:Name="ChatWebView"
-                                DefaultBackgroundColor="#121212"
-                                Source="https://client.poorchat.net/jadisco"/>
+                            <muxc:WebView2
+                                x:Name="ChatWebView"
+                                Background="#121212"
+                                Source="https://client.poorchat.net/jadisco" />
                         </Grid>
                     </Grid>
                 </muxc:NavigationView.Content>

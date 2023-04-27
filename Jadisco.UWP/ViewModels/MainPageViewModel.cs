@@ -1,9 +1,6 @@
 ﻿using Jadisco.UWP.Views;
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using Twitch.Api.Models;
-using Windows.System;
 
 namespace Jadisco.UWP.ViewModels
 {
@@ -18,7 +15,7 @@ namespace Jadisco.UWP.ViewModels
         #region Public properties
         public ObservableCollection<NavigationViewItemViewModel> NavigationViewItems
         {
-            get { return navigationViewItems; }
+            get => navigationViewItems;
             set { navigationViewItems = value; NotifyPropertyChanged(); }
         }
 
@@ -37,14 +34,16 @@ namespace Jadisco.UWP.ViewModels
         /// <param name="playlist">Stream playlist source</param>
         public void LoadQualityList(HLSPlaylist playlist)
         {
-            if (playlist?.Playlist != null && playlist.Playlist.Count() > 0)
+            if (playlist?.Playlist != null && playlist.Playlist.Length > 0)
             {
                 StreamQualities.ClearQualityList();
 
-                foreach (var stream in playlist.Playlist)
+                foreach (HLSStream stream in playlist.Playlist)
                 {
                     if (stream.Name.StartsWith("audio"))
+                    {
                         continue;
+                    }
 
                     StreamQualities.AddQuality(new StreamQualityViewModel
                     {

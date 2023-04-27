@@ -42,11 +42,10 @@ namespace Twitch.Api
                 request.Timeout = 12000;
                 request.ContentType = "application/json";
 
-                using (var response = request.GetResponse())
+                using (WebResponse response = request.GetResponse())
                 {
                     return HLSPlaylist.GetFromStream(response.GetResponseStream());
                 }
-
             }
 
             return null;

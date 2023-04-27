@@ -11,6 +11,6 @@
     mc:Ignorable="d">
 
     <ContentDialog.Content>
-        <TextBlock x:Name="MessageText" TextWrapping="Wrap"/>
+        <TextBlock x:Name="MessageText" TextWrapping="Wrap" />
     </ContentDialog.Content>
 </ContentDialog>

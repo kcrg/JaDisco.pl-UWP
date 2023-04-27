@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Twitch.Api
+﻿namespace Twitch.Api.Models
 {
     public class HLSSegment
     {
@@ -17,16 +11,13 @@ namespace Twitch.Api
         public override int GetHashCode()
         {
             int hash = 19;
-            hash = hash * 31 + Url.GetHashCode();
+            hash = (hash * 31) + Url.GetHashCode();
             return hash;
         }
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-
-            return GetHashCode() == obj.GetHashCode();
+            return obj != null && GetHashCode() == obj.GetHashCode();
         }
     }
 }

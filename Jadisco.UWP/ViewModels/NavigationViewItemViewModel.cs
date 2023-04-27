@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 
 namespace Jadisco.UWP.ViewModels
 {
@@ -25,7 +20,7 @@ namespace Jadisco.UWP.ViewModels
         {
             get => isEnabled;
             set { isEnabled = value; NotifyPropertyChanged(); }
-}
+        }
 
         public string Tag
         {

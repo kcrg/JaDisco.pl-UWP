@@ -4,11 +4,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Twitch.Api.Models
@@ -38,19 +35,14 @@ namespace Twitch.Api.Models
         #endregion
 
         #region Private variables
-        static readonly string extinf_re = @"(\d+(\.\d+)?)";
-        static readonly string ext_twitch_prefetch_re = @":(.*)";
-
-        HttpClient client;
-
-        HLSSegment recentSegment;
-
-        Queue<HLSSegment> hlsQueue;
-
-        Task workerTask;
-        Task writerTask;
-
-        MemoryStream buffer;
+        private static readonly string extinf_re = @"(\d+(\.\d+)?)";
+        private static readonly string ext_twitch_prefetch_re = @":(.*)";
+        private HttpClient client;
+        private HLSSegment recentSegment;
+        private Queue<HLSSegment> hlsQueue;
+        private Task workerTask;
+        private Task writerTask;
+        private MemoryStream buffer;
         #endregion
 
         public HLSStream()
@@ -124,40 +116,54 @@ namespace Twitch.Api.Models
                 while (Status == StreamStatus.Opened)
                 {
                     if (hlsQueue is null)
+                    {
                         break;
+                    }
 
                     if (client is null)
+                    {
                         break;
+                    }
 
                     if (hlsQueue.Count <= 0)
+                    {
                         continue;
+                    }
 
-                    var hlsStream = hlsQueue.Dequeue();
+                    HLSSegment hlsStream = hlsQueue.Dequeue();
 
                     if (hlsStream is null)
+                    {
                         continue;
+                    }
 
-                    var stream = await client?.GetStreamAsync(hlsStream.Url);
+                    Stream stream = await client?.GetStreamAsync(hlsStream.Url);
 
                     if (stream is null)
+                    {
                         continue;
+                    }
 
                     if (buffer is null)
+                    {
                         break;
+                    }
 
                     buffer.Position = 0;
                     buffer.SetLength(0);
 
-                    using (var reader = new BinaryReader(stream))
+                    using (BinaryReader reader = new BinaryReader(stream))
                     {
                         while (true)
                         {
-                            var bytes = reader.ReadBytes(8192);
+                            byte[] bytes = reader.ReadBytes(8192);
 
-                            var len = bytes.Length;
+                            int len = bytes.Length;
 
                             if (len == 0)
+                            {
                                 break;
+                            }
 
                             if (buffer != null && buffer.CanWrite)
                             {
@@ -180,14 +186,18 @@ namespace Twitch.Api.Models
         private async Task UpdateQueue()
         {
             if (client is null)
+            {
                 return;
+            }
 
-            var stream = await client.GetStreamAsync(Url);
+            Stream stream = await client.GetStreamAsync(Url);
 
             if (stream is null)
+            {
                 return;
+            }
 
-            var lastSegment = ParseSegmentFile(stream)?.Last();
+            HLSSegment lastSegment = ParseSegmentFile(stream)?.Last();
 
             if (!lastSegment.Equals(recentSegment))
             {
@@ -201,11 +211,11 @@ namespace Twitch.Api.Models
 
         private static IEnumerable<HLSSegment> ParseSegmentFile(Stream stream)
         {
-            using (var reader = new StreamReader(stream))
+            using (StreamReader reader = new StreamReader(stream))
             {
                 while (!reader.EndOfStream)
                 {
-                    var line = reader.ReadLine();
+                    string line = reader.ReadLine();
 
                     if (line is null)
                     {
@@ -215,9 +225,10 @@ namespace Twitch.Api.Models
                     // read normal segment data
                     if (line.StartsWith("#EXTINF"))
                     {
-                        var segment = new HLSSegment();
-
-                        segment.Duration = GetDuration(line);
+                        HLSSegment segment = new HLSSegment
+                        {
+                            Duration = GetDuration(line)
+                        };
 
                         // read next line with url
                         line = reader.ReadLine();
@@ -236,11 +247,12 @@ namespace Twitch.Api.Models
                     // read prefetch
                     if (line.StartsWith("#EXT-X-TWITCH-PREFETCH"))
                     {
-                        var segment = new HLSSegment();
+                        HLSSegment segment = new HLSSegment
+                        {
+                            Prefetch = true
+                        };
 
-                        segment.Prefetch = true;
-
-                        var match = Regex.Match(line, ext_twitch_prefetch_re);
+                        Match match = Regex.Match(line, ext_twitch_prefetch_re);
 
                         if (match.Success)
                         {
@@ -256,14 +268,9 @@ namespace Twitch.Api.Models
 
         private static float GetDuration(string line)
         {
-            var match = Regex.Match(line, extinf_re);
+            Match match = Regex.Match(line, extinf_re);
 
-            if (match.Success)
-            {
-                return float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture.NumberFormat);
-            }
-
-            return 0f;
+            return match.Success ? float.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture.NumberFormat) : 0f;
         }
         #endregion
 

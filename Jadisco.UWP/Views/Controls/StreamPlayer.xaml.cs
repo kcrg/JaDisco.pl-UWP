@@ -1,23 +1,12 @@
 using Jadisco.Api.Models;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Twitch.Api;
 using Twitch.Api.Models;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Media.Core;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace Jadisco.UWP.Views.Controls
 {
@@ -28,7 +17,7 @@ namespace Jadisco.UWP.Views.Controls
         Web
     }
 
-    enum StreamPlayerTypeLocal
+    internal enum StreamPlayerTypeLocal
     {
         Native,
         Web
@@ -41,10 +30,7 @@ namespace Jadisco.UWP.Views.Controls
 
         public HLSPlaylist HLSPlaylist { get; private set; }
 
-        public string[] SupportedServices
-        {
-            get => new string[] { "twitch" };
-        }
+        public string[] SupportedServices => new string[] { "twitch" };
         #endregion
 
         #region Private fields
@@ -79,7 +65,7 @@ namespace Jadisco.UWP.Views.Controls
 
         public StreamPlayer()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             StreamMediaPlayerNative.MediaPlayer.AutoPlay = true;
         }
@@ -97,31 +83,32 @@ namespace Jadisco.UWP.Views.Controls
             switch (service.ServiceName)
             {
                 case "twitch":
-                {
-                    AccessToken token = TwitchApi.GetAccessToken(service.ChannelId);
-
-                    if (token is null)
                     {
-                        return false;
+                        AccessToken token = TwitchApi.GetAccessToken(service.ChannelId);
+
+                        if (token is null)
+                        {
+                            return false;
+                        }
+
+                        string url = UsherService.GetStreamLink(service.ChannelId, token.Sig, token.Token);
+
+                        HLSPlaylist = UsherService.ParsePlaylists(url);
+
+                        if (HLSPlaylist is null)
+                        {
+                            return false;
+                        }
+
+                        uriToPlay = new Uri("https://player.twitch.tv/?!muted&channel=" + currentService.ChannelId);
+
+                        return true;
                     }
-
-                    string url = UsherService.GetStreamLink(service.ChannelId, token.Sig, token.Token);
-
-                    HLSPlaylist = UsherService.ParsePlaylists(url);
-
-                    if (HLSPlaylist is null)
-                    {
-                        return false;
-                    }
-
-                    uriToPlay = new Uri("https://player.twitch.tv/?!muted&channel=" + currentService.ChannelId);
-
-                    return true;
-                }
                 case "youtube":
-                {
-                    // todo
-                } break;
+                    {
+                        // todo
+                    }
+                    break;
             }
 
             return false;
@@ -135,18 +122,24 @@ namespace Jadisco.UWP.Views.Controls
             switch (PlayerType)
             {
                 case StreamPlayerType.NativeLowLatency:
-                    if (HLSPlaylist is null || HLSPlaylist.Playlist.Count() <= 0)
+                    if (HLSPlaylist is null || HLSPlaylist.Playlist.Length == 0)
+                    {
                         return false;
+                    }
 
                     return PlayNativeLowLatency(HLSPlaylist.Playlist[0]);
                 case StreamPlayerType.NativeOld:
-                    if (HLSPlaylist is null || HLSPlaylist.Playlist.Count() <= 0)
+                    if (HLSPlaylist is null || HLSPlaylist.Playlist.Length == 0)
+                    {
                         return false;
+                    }
 
                     return PlayNativeOld(HLSPlaylist.Playlist[0]);
                 case StreamPlayerType.Web:
                     if (uriToPlay is null)
+                    {
                         return false;
+                    }
 
                     return PlayWeb(uriToPlay);
             }
@@ -191,7 +184,7 @@ namespace Jadisco.UWP.Views.Controls
                 mseStreamSource = null;
             }
 
-            if (closeHLSStream == true && currentHLSStream != null)
+            if (closeHLSStream && currentHLSStream != null)
             {
                 currentHLSStream.Close();
                 currentHLSStream.OnVideoDownload -= HlsStream_OnVideoDownload;
@@ -223,10 +216,12 @@ namespace Jadisco.UWP.Views.Controls
             {
                 currentHLSStream.ClearQueue();
 
-                var closeHLS = true;
+                bool closeHLS = true;
 
                 if (PlayerType == StreamPlayerType.NativeLowLatency)
+                {
                     closeHLS = false;
+                }
 
                 StopStream(closeHLS);
 
@@ -234,10 +229,10 @@ namespace Jadisco.UWP.Views.Controls
                 {
                     case StreamPlayerType.NativeLowLatency:
                     case StreamPlayerType.NativeOld:
-                        PlayHLSStream(currentHLSStream);
+                        _ = PlayHLSStream(currentHLSStream);
                         break;
                     case StreamPlayerType.Web:
-                        StreamMediaPlayerWeb?.Refresh();
+                        StreamMediaPlayerWeb?.Reload();
                         break;
                 }
             }
@@ -249,7 +244,9 @@ namespace Jadisco.UWP.Views.Controls
         public bool PlayNativeOld(HLSStream hlsStream)
         {
             if (hlsStream is null)
+            {
                 return false;
+            }
 
             StreamMediaPlayerNative.Source = MediaSource.CreateFromUri(new Uri(hlsStream.Url));
             StreamMediaPlayerNative.AreTransportControlsEnabled = true;
@@ -262,7 +259,9 @@ namespace Jadisco.UWP.Views.Controls
         public bool PlayNativeLowLatency(HLSStream hlsStream)
         {
             if (hlsStream is null)
+            {
                 return false;
+            }
 
             if (mseMediaSource is null)
             {
@@ -292,14 +291,14 @@ namespace Jadisco.UWP.Views.Controls
         {
             PlayerTypeLocal = StreamPlayerTypeLocal.Web;
 
-            StreamMediaPlayerWeb.Navigate(url);
+            StreamMediaPlayerWeb.Source = url;
 
             return true;
         }
 
         private void HlsStream_OnVideoDownload(byte[] buffer)
         {
-            if (mseSourceBuffer != null && !mseSourceBuffer.IsUpdating)
+            if (mseSourceBuffer?.IsUpdating == false)
             {
                 //Debug.WriteLine($"Data write {mseSourceBuffer.Buffered.Count}");
 

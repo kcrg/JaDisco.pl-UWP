@@ -20,7 +20,7 @@ namespace Jadisco.Api.Models
         {
             return GetHashCode() == obj.GetHashCode();
         }
-        
+
         public override int GetHashCode()
         {
             int hash = 13;

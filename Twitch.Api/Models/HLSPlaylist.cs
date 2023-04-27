@@ -12,9 +12,9 @@ namespace Twitch.Api.Models
         #endregion
 
         #region Private members
-        static readonly string name_re = @"NAME=""(.*)""";
-        static readonly string bitrate_re = @"BANDWIDTH=(\d*),";
-        static readonly string resolution_re = @"RESOLUTION=(\d*)x(\d*)";
+        private static readonly string name_re = @"NAME=""(.*)""";
+        private static readonly string bitrate_re = @"BANDWIDTH=(\d*),";
+        private static readonly string resolution_re = @"RESOLUTION=(\d*)x(\d*)";
         #endregion
 
         #region Public methods
@@ -70,34 +70,14 @@ namespace Twitch.Api.Models
         {
             Match match = Regex.Match(line, name_re);
 
-            if (match is null)
-            {
-                return "";
-            }
-
-            if (match.Groups.Count == 2)
-            {
-                return match.Groups[1].Value;
-            }
-
-            return "";
+            return match is null ? "" : match.Groups.Count == 2 ? match.Groups[1].Value : "";
         }
 
         private static long GetBitrate(string line)
         {
             Match match = Regex.Match(line, bitrate_re);
 
-            if (match is null)
-            {
-                return 0;
-            }
-
-            if (match.Groups.Count == 2)
-            {
-                return Convert.ToInt64(match.Groups[1].Value);
-            }
-
-            return 0;
+            return match is null ? 0 : match.Groups.Count == 2 ? Convert.ToInt64(match.Groups[1].Value) : 0;
         }
 
         private static (int, int) GetResolution(string line)

@@ -7,41 +7,42 @@
         <ResourceDictionary>
             <!--  TITLEBAR  -->
             <Style x:Key="DragAreaGrid" TargetType="Grid">
-                <Setter Property="Background" Value="{ThemeResource PageBackground}"/>
-                <Setter Property="Height" Value="34"/>
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                <Setter Property="VerticalAlignment" Value="Top"/>
+                <Setter Property="Background" Value="{ThemeResource PageBackground}" />
+                <Setter Property="Height" Value="34" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Top" />
             </Style>
 
             <Style x:Key="AppLogoImage" TargetType="Image">
-                <Setter Property="HorizontalAlignment" Value="Left"/>
-                <Setter Property="Margin" Value="12,3,0,3"/>
-                <Setter Property="Source" Value="ms-appx:///Assets/TitleBarAssets/JaDiscoLogo.gif"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Margin" Value="12,3,0,3" />
+                <Setter Property="Source" Value="ms-appx:///Assets/TitleBarAssets/JaDiscoLogo.gif" />
+                <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
 
             <Style x:Key="StatusText" TargetType="TextBlock">
-                <Setter Property="FontSize" Value="14"/>
-                <Setter Property="Margin" Value="90,0,140,0"/>
-                <Setter Property="Text" Value="Ładowanie tematu..."/>
-                <Setter Property="TextLineBounds" Value="Tight"/>
-                <Setter Property="TextWrapping" Value="NoWrap"/>
-                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Margin" Value="90,0,140,0" />
+                <Setter Property="Text" Value="Ładowanie tematu..." />
+                <Setter Property="TextLineBounds" Value="Tight" />
+                <Setter Property="TextWrapping" Value="NoWrap" />
+                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
 
-            <AcrylicBrush x:Key="PageBackground"
+            <AcrylicBrush
+                x:Key="PageBackground"
                 BackgroundSource="HostBackdrop"
                 FallbackColor="{ThemeResource SystemAltHighColor}"
                 TintColor="{ThemeResource SystemAltHighColor}"
-                TintOpacity="0.85"/>
+                TintOpacity="0.85" />
 
             <ResourceDictionary.MergedDictionaries>
-                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <ResourceDictionary>
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Default">
-                            <LinearGradientBrush x:Key="NavigationViewTopPaneBackground"/>
+                            <LinearGradientBrush x:Key="NavigationViewTopPaneBackground" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="HighContrast">
                             <!--

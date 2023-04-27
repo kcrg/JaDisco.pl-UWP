@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using Twitch.Api.Models;
-
-using Newtonsoft.Json;
 
 namespace Twitch.Api
 {
     public static class TwitchApi
     {
-        private static readonly string TwitchClientId = "ot11j3ucjrcx1tid3f6yfyhoi2za4g";
+        private const string TwitchClientId = "ot11j3ucjrcx1tid3f6yfyhoi2za4g";
 
         public static AccessToken GetAccessToken(string channel)
         {
@@ -20,12 +18,7 @@ namespace Twitch.Api
 
             string result = ApiRequestHelper.ExecuteWebRequest($"https://api.twitch.tv/api/channels/{channel}/access_token.json", header);
 
-            if (result != null)
-            {
-                return JsonConvert.DeserializeObject<AccessToken>(result);
-            }
-
-            return null;
+            return result != null ? JsonConvert.DeserializeObject<AccessToken>(result) : null;
         }
     }
 }

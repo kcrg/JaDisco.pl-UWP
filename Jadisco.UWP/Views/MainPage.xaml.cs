@@ -1,16 +1,13 @@
-using Jadisco.UWP.Views.CustomDialogs;
+using Jadisco.Api;
+using Jadisco.Api.Models;
 using Jadisco.UWP.ViewModels;
-
+using Jadisco.UWP.Views.Controls;
+using Jadisco.UWP.Views.CustomDialogs;
 using System;
 using System.Linq;
-using System.Diagnostics;
 using System.Threading.Tasks;
-using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
-
+using Twitch.Api.Models;
 using Windows.ApplicationModel.Core;
-using Windows.Media.Core;
-using Windows.Media.Playback;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
@@ -18,17 +15,10 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Media;
-
-using Twitch.Api;
-using Twitch.Api.Models;
-using Jadisco.Api;
-using Jadisco.Api.Models;
-
+using Windows.UI.Xaml.Media.Imaging;
 using muxc = Microsoft.UI.Xaml.Controls;
 using toolkit = Microsoft.Toolkit.Uwp.UI.Controls;
-using Jadisco.UWP.Views.Controls;
 
 namespace Jadisco.UWP.Views
 {
@@ -76,18 +66,13 @@ namespace Jadisco.UWP.Views
                     await PlayStream(obj);
                 }
 
-                var navigationView = mainPageVM.NavigationViewItems.SingleOrDefault(x => {
-                    if (x.Service == null)
-                        return false;
-
-                    return x.Service.Equals(obj);
-                });
+                NavigationViewItemViewModel navigationView = mainPageVM.NavigationViewItems.SingleOrDefault(x => x.Service?.Equals(obj) == true);
 
                 if (navigationView is null)
                 {
-                    var streamer = jadiscoApi.Streamers.SingleOrDefault(x => x.Id == obj.StreamerId);
+                    Streamer streamer = jadiscoApi.Streamers.SingleOrDefault(x => x.Id == obj.StreamerId);
 
-                    var streamerName = (streamer != null) ? streamer.Name : "Unknown";
+                    string streamerName = (streamer != null) ? streamer.Name : "Unknown";
 
                     navigationView = new NavigationViewItemViewModel
                     {
@@ -116,16 +101,11 @@ namespace Jadisco.UWP.Views
                     StreamPlayer.PlaySplashScreen();
                 }
 
-                var navigationView = mainPageVM.NavigationViewItems.SingleOrDefault(x => {
-                    if (x.Service == null)
-                        return false;
-
-                    return x.Service.Equals(obj);
-                });
+                NavigationViewItemViewModel navigationView = mainPageVM.NavigationViewItems.SingleOrDefault(x => x.Service?.Equals(obj) == true);
 
                 if (navigationView != null)
                 {
-                    mainPageVM.NavigationViewItems.Remove(navigationView);
+                    _ = mainPageVM.NavigationViewItems.Remove(navigationView);
                 }
 
                 if (mainPageVM.NavigationViewItems.Count == 1)
@@ -157,7 +137,9 @@ namespace Jadisco.UWP.Views
         private async Task PlayStream(Service service)
         {
             if (StreamPlayer.SupportedServices.SingleOrDefault(x => x == service.ServiceName) is null)
+            {
                 return;
+            }
 
             StopStream();
 
@@ -166,13 +148,13 @@ namespace Jadisco.UWP.Views
                 if (StreamPlayer.Setup(service))
                 {
                     mainPageVM.LoadQualityList(StreamPlayer.HLSPlaylist);
-                    StreamPlayer.PlayStream();
+                    _ = StreamPlayer.PlayStream();
                 }
             }
             catch (Exception ex)
             {
                 ErrorDialog errorDialog = new ErrorDialog($"Nie udało się odtworzyć strumienia.\nPowód: {ex.Message}", ErrorDialog.Type.Error);
-                await errorDialog.ShowAsync();
+                _ = await errorDialog.ShowAsync();
             }
         }
 
@@ -190,7 +172,7 @@ namespace Jadisco.UWP.Views
         {
             noStreamLabel = new NavigationViewItemViewModel
             {
-                Text = $"Brak streamów",
+                Text = "Brak streamów",
                 IsEnabled = false,
                 Service = null,
                 ToolTip = string.Empty,
@@ -218,7 +200,7 @@ namespace Jadisco.UWP.Views
 
                 ChatGrid.Visibility = Visibility.Collapsed;
                 ChatPositionButton.IsEnabled = false;
-                ChatWebView.Navigate(BlankUri);
+                //ChatWebView.Source = BlankUri;
                 HiddenChat = true;
             }
             else if (HiddenChat)
@@ -240,7 +222,7 @@ namespace Jadisco.UWP.Views
 
                     ChatGrid.Visibility = Visibility.Visible;
                     ChatPositionButton.IsEnabled = true;
-                    ChatWebView.Navigate(ChatUri);
+                    //ChatWebView.Source = ChatUri;
 
                     HiddenChat = false;
                 }
@@ -251,14 +233,15 @@ namespace Jadisco.UWP.Views
         #region Application events
         private void StreamQualityButton_Checked(object sender, RoutedEventArgs e)
         {
-            var radio = sender as RadioButton;
-            var data = radio.DataContext as StreamQualityViewModel;
+            RadioButton radio = sender as RadioButton;
 
-            if (data is null)
+            if (!(radio.DataContext is StreamQualityViewModel data))
+            {
                 return;
+            }
 
             StreamPlayer.StopStream();
-            StreamPlayer.PlayHLSStream(data.HLSStream);
+            _ = StreamPlayer.PlayHLSStream(data.HLSStream);
         }
 
         private void ChatHideButton_Click(object sender, RoutedEventArgs e)
@@ -297,7 +280,7 @@ namespace Jadisco.UWP.Views
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             ChatWebView.Source = ChatUri;
-            ChatWebView.Refresh();
+            ChatWebView.Reload();
 
             if (currentHLSStream != null)
             {
@@ -307,7 +290,7 @@ namespace Jadisco.UWP.Views
 
         private async void NavView_SelectionChanged(muxc.NavigationView sender, muxc.NavigationViewSelectionChangedEventArgs args)
         {
-            var vm = sender.SelectedItem as NavigationViewItemViewModel;
+            NavigationViewItemViewModel vm = sender.SelectedItem as NavigationViewItemViewModel;
 
             currentService = vm.Service;
 
@@ -354,30 +337,27 @@ namespace Jadisco.UWP.Views
                 StatusTextBlock.Margin = new Thickness(90, 0, 0, 0);
             }
 
-            if (App.RunningWithDarkTheme)
-            {
-                AppLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoLight.png", UriKind.Absolute));
-            }
-            else
-            {
-                AppLogo.Source = new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoDark.png", UriKind.Absolute));
-            }
+            AppLogo.Source = App.RunningWithDarkTheme
+                ? new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoLight.png", UriKind.Absolute))
+                : (ImageSource)new BitmapImage(new Uri("ms-appx:///Assets/TitleBarAssets/JaDiscoStaticLogoDark.png", UriKind.Absolute));
         }
 
         private async void StatusFlyoutTextBlock_LinkClicked(object sender, toolkit.LinkClickedEventArgs e)
         {
-            await Launcher.LaunchUriAsync(new Uri(e.Link));
+            _ = await Launcher.LaunchUriAsync(new Uri(e.Link));
         }
 
         private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             if (StreamPlayer is null)
+            {
                 return;
+            }
 
-            var rb = sender as RadioButton;
-
-            if (rb is null)
+            if (!(sender is RadioButton rb))
+            {
                 return;
+            }
 
             switch (rb.Tag.ToString())
             {
@@ -395,10 +375,10 @@ namespace Jadisco.UWP.Views
                     break;
             }
 
-            if (jadiscoApi.Stream.Status == true)
+            if (jadiscoApi.Stream.Status)
             {
                 StreamPlayer.StopStream();
-                StreamPlayer.PlayStream();
+                _ = StreamPlayer.PlayStream();
             }
         }
 
@@ -409,7 +389,7 @@ namespace Jadisco.UWP.Views
             await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 Frame frame = new Frame();
-                frame.Navigate(typeof(ChatPage), null);
+                _ = frame.Navigate(typeof(ChatPage), null);
                 Window.Current.Content = frame;
                 // You have to activate the window in order to show it later.
                 Window.Current.Activate();
