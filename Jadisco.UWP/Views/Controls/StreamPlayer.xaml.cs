@@ -68,6 +68,7 @@ namespace Jadisco.UWP.Views.Controls
             InitializeComponent();
 
             StreamMediaPlayerNative.MediaPlayer.AutoPlay = true;
+            StreamMediaPlayerNative.MediaPlayer.IsLoopingEnabled = true;
         }
 
         #region Public methods
